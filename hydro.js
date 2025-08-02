@@ -14720,7 +14720,7 @@ case 'hitamkan': case 'hytamkan': case 'hytam': case 'ireng': {
 if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + command}*`);
   const { GoogleGenerativeAI } = require ("@google/generative-ai");
   let mime = m.quoted.mimetype || "";
-  let defaultPrompt = "Ubah warna kulit menjadi hitam natural di foto ini";
+  let defaultPrompt = "Ubah warna kulit menjadi hitam pekat di foto ini";
   if (!/image\/(jpe?g|png)/.test(mime)) return m.reply(`Format ${mime} tidak didukung! Hanya jpeg/jpg/png`);
   let promptText = text || defaultPrompt;
   m.reply(mess.wait);
