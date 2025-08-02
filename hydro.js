@@ -240,7 +240,7 @@ hydro.ev.emit('messages.upsert', msg)
         const messagesD = body.slice(0).trim().split(/ +/).shift().toLowerCase()
         const command = body.replace(prefix, '').trim().split(/ +/).shift().toLowerCase()
         const args = body.trim().split(/ +/).slice(1)
-        const pushname = m.pushName || "No Name"
+        const pushname = m.pushName || "Misterius"
         const botNumber = await hydro.decodeJid(hydro.user.id)
         const Ahmad = [botNumber, ...owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender);
         const text = q = args.join(" ")
@@ -890,13 +890,6 @@ if (m.isGroup && m.sender.startsWith('212')) return
 }
 
 
-//antispam kick
-if (global.antispam) {
-if (m.isGroup && m.message && msgFilter.isFiltered(from)) {
-console.log(`${global.themeemoji}[SPAM]`, color(moment(m.messageTimestamp * 1000).format('DD/MM/YYYY HH:mm:ss'), 'yellow'), color(`${command} [${args.length}]`), 'from', color(m.pushName))
-return await hydro.groupParticipantsUpdate(m.chat, [m.sender], 'remove')
-}
-}
 async function sendhydroMessage(chatId, message, options = {}){
     let generate = await generateWAMessage(chatId, message, options)
     let type2 = getContentType(generate.message)
@@ -2688,26 +2681,6 @@ setInterval(async () => {
         }
     }
 }, 60 * 1000); // per menit
-// ─── ANTISPAM (3 Detik Perintah, Kecuali Owner) ─────────────
-if (m.text && m.text.startsWith(prefix)) {
-  const cooldownUser = global.cooldownUser || (global.cooldownUser = new Map())
-  const userId = m.sender
-  const now = Date.now()
-  const cooldownTime = 3 * 1000 // 3 detik
-
-  if (!Ahmad) {
-    if (cooldownUser.has(userId)) {
-      const lastCommandTime = cooldownUser.get(userId)
-      const remaining = cooldownTime - (now - lastCommandTime)
-
-      if (remaining > 0) {
-        return replyhydro(`⏱️ Mohon tunggu ${Math.ceil(remaining / 1000)} detik sebelum menggunakan perintah lagi!`)
-      }
-    }
-
-    cooldownUser.set(userId, now)
-  }
-}
 //Antichlink
 if (Antilinkch && budy.match(/whatsapp\.com\/channel/gi)) {
     if (!isBotAdmins) return replyhydro('🚫 *Bot harus menjadi admin untuk menindak pelanggaran link!*');
@@ -14727,7 +14700,185 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       fs.writeFileSync(tempPath, resultImage);
       await hydro.sendMessage(m.chat, { 
         image: { url: tempPath },
-        caption: `*berhasil menghitamkan*`
+        caption: `✅ *Backgroud Berhasil Dihapus*`
+      }, { quoted: m });
+      setTimeout(() => {
+        try {
+          fs.unlinkSync(tempPath);
+        } catch {}
+      }, 30000);
+    } else {
+      m.reply("Gagal...");
+    }
+  } catch (error) {
+    console.error(error);
+    m.reply(`Error: ${error.message}`);
+  }
+}
+break
+case 'hitamkan': case 'hytamkan': case 'hytam': case 'ireng': {
+if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + command}*`);
+  const { GoogleGenerativeAI } = require ("@google/generative-ai");
+  let mime = m.quoted.mimetype || "";
+  let defaultPrompt = "Ubah warna kulit menjadi hitam natural di foto ini";
+  if (!/image\/(jpe?g|png)/.test(mime)) return m.reply(`Format ${mime} tidak didukung! Hanya jpeg/jpg/png`);
+  let promptText = text || defaultPrompt;
+  m.reply(mess.wait);
+  try {
+    let imgData = await m.quoted.download();
+    let genAI = new GoogleGenerativeAI("AIzaSyBGwsPUGFuyrfFF89ekoMO2hADt7oQYaKY");
+    const base64Image = imgData.toString("base64");
+    const contents = [
+      { text: promptText },
+      {
+        inlineData: {
+          mimeType: mime,
+          data: base64Image
+        }
+      }
+    ];
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash-exp-image-generation",
+      generationConfig: {
+        responseModalities: ["Text", "Image"]
+      },
+    });
+    const response = await model.generateContent(contents);
+    let resultImage;
+    let resultText = "";
+    for (const part of response.response.candidates[0].content.parts) {
+      if (part.text) {
+        resultText += part.text;
+      } else if (part.inlineData) {
+        const imageData = part.inlineData.data;
+        resultImage = Buffer.from(imageData, "base64");
+      }
+    }
+    if (resultImage) {
+      const tempPath = `./data/gemini_${Date.now()}.png`;
+      fs.writeFileSync(tempPath, resultImage);
+      await hydro.sendMessage(m.chat, { 
+        image: { url: tempPath },
+        caption: `✅ *Berhasil Dihitamkan*`
+      }, { quoted: m });
+      setTimeout(() => {
+        try {
+          fs.unlinkSync(tempPath);
+        } catch {}
+      }, 30000);
+    } else {
+      m.reply("Gagal...");
+    }
+  } catch (error) {
+    console.error(error);
+    m.reply(`Error: ${error.message}`);
+  }
+}
+break
+case 'putihkan': case 'cerahkan': {
+if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + command}*`);
+  const { GoogleGenerativeAI } = require ("@google/generative-ai");
+  let mime = m.quoted.mimetype || "";
+  let defaultPrompt = "Ubah warna kulit menjadi putih natural di foto ini";
+  if (!/image\/(jpe?g|png)/.test(mime)) return m.reply(`Format ${mime} tidak didukung! Hanya jpeg/jpg/png`);
+  let promptText = text || defaultPrompt;
+  m.reply(mess.wait);
+  try {
+    let imgData = await m.quoted.download();
+    let genAI = new GoogleGenerativeAI("AIzaSyBGwsPUGFuyrfFF89ekoMO2hADt7oQYaKY");
+    const base64Image = imgData.toString("base64");
+    const contents = [
+      { text: promptText },
+      {
+        inlineData: {
+          mimeType: mime,
+          data: base64Image
+        }
+      }
+    ];
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash-exp-image-generation",
+      generationConfig: {
+        responseModalities: ["Text", "Image"]
+      },
+    });
+    const response = await model.generateContent(contents);
+    let resultImage;
+    let resultText = "";
+    for (const part of response.response.candidates[0].content.parts) {
+      if (part.text) {
+        resultText += part.text;
+      } else if (part.inlineData) {
+        const imageData = part.inlineData.data;
+        resultImage = Buffer.from(imageData, "base64");
+      }
+    }
+    if (resultImage) {
+      const tempPath = `./data/gemini_${Date.now()}.png`;
+      fs.writeFileSync(tempPath, resultImage);
+      await hydro.sendMessage(m.chat, { 
+        image: { url: tempPath },
+        caption: `✅ *Berhasil Diputihkan*`
+      }, { quoted: m });
+      setTimeout(() => {
+        try {
+          fs.unlinkSync(tempPath);
+        } catch {}
+      }, 30000);
+    } else {
+      m.reply("Gagal...");
+    }
+  } catch (error) {
+    console.error(error);
+    m.reply(`Error: ${error.message}`);
+  }
+}
+break
+
+case 'hijabkan': case 'jilbabkan': case 'jilbab': case 'hijab': {
+if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + command}*`);
+  const { GoogleGenerativeAI } = require ("@google/generative-ai");
+  let mime = m.quoted.mimetype || "";
+  let defaultPrompt = "Ubah menjadi menggunakan jilbab atau hijab di foto ini";
+  if (!/image\/(jpe?g|png)/.test(mime)) return m.reply(`Format ${mime} tidak didukung! Hanya jpeg/jpg/png`);
+  let promptText = text || defaultPrompt;
+  m.reply(mess.wait);
+  try {
+    let imgData = await m.quoted.download();
+    let genAI = new GoogleGenerativeAI("AIzaSyBGwsPUGFuyrfFF89ekoMO2hADt7oQYaKY");
+    const base64Image = imgData.toString("base64");
+    const contents = [
+      { text: promptText },
+      {
+        inlineData: {
+          mimeType: mime,
+          data: base64Image
+        }
+      }
+    ];
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash-exp-image-generation",
+      generationConfig: {
+        responseModalities: ["Text", "Image"]
+      },
+    });
+    const response = await model.generateContent(contents);
+    let resultImage;
+    let resultText = "";
+    for (const part of response.response.candidates[0].content.parts) {
+      if (part.text) {
+        resultText += part.text;
+      } else if (part.inlineData) {
+        const imageData = part.inlineData.data;
+        resultImage = Buffer.from(imageData, "base64");
+      }
+    }
+    if (resultImage) {
+      const tempPath = `./data/gemini_${Date.now()}.png`;
+      fs.writeFileSync(tempPath, resultImage);
+      await hydro.sendMessage(m.chat, { 
+        image: { url: tempPath },
+        caption: `✅ *Berhasil Dihijabkan*`
       }, { quoted: m });
       setTimeout(() => {
         try {
@@ -14841,7 +14992,7 @@ await hydro.sendMessage(m.chat, { react: { text: "✖️",key: m.key,}})
 break
 case 'anime': {
     const malScraper = require('mal-scraper');
-    const baseUrl = "https://otakudesu.cloud";
+    const baseUrl = "https://otakudesu.best";
 
     async function latestAnime() {
         try {
@@ -14870,42 +15021,39 @@ case 'anime': {
     }
 
     if (args[0] === "latest") {
-        let data = await latestAnime();
-        if (data.error) return m.reply(data.error);
+    try {
+        const res = await axios.get("https://ytdlpyton.nvlgroup.my.id/otakudesu/ongoing");
+        const data = res.data;
 
-        const rows = data.slice(0, 10).map(anime => {
-            return {
-                header: "",
-                title: anime.title,
-                description: `Episode ${anime.episode} - ${anime.releaseDate}`,
-                id: `.anime detail ${anime.link}`
-            };
-        });
+        if (!data.ok || !data.data.animeList) return m.reply("Gagal mengambil data anime terbaru.");
+
+        const animeList = data.data.animeList;
+
+        const rows = animeList.slice(0, 10).map(anime => ({
+            header: "",
+            title: anime.title,
+            description: `Episode ${anime.episodes} • ${anime.releaseDay}, ${anime.latestReleaseDate}`,
+            id: `.anime detail ${anime.otakudesuUrl}/anime/${anime.animeId}`
+        }));
 
         const msg = generateWAMessageFromContent(m.chat, {
             viewOnceMessage: {
                 message: {
-                    messageContextInfo: {
-                        deviceListMetadata: {},
-                        deviceListMetadataVersion: 2
-                    },
+                    messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
                     interactiveMessage: {
-                        body: { text: `📺 Anime Terbaru` },
+                        body: { text: `📺 Anime Ongoing Terbaru` },
                         footer: { text: 'Asisten Hydro' },
                         header: {
                             title: "Anime - Latest",
                             subtitle: "",
-                            hasMediaAttachment: false,
+                            hasMediaAttachment: false
                         },
                         nativeFlowMessage: {
                             buttons: [{
                                 name: "single_select",
                                 buttonParamsJson: JSON.stringify({
                                     title: "Pilih Anime",
-                                    sections: [{
-                                        title: "Latest Anime",
-                                        rows: rows
-                                    }]
+                                    sections: [{ title: "Anime Terbaru", rows }]
                                 })
                             }]
                         }
@@ -14916,101 +15064,59 @@ case 'anime': {
 
         await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
 
-    } else if (args[0] === "search") {
-        if (!args[1]) return m.reply("Masukkan judul anime yang ingin dicari.");
-        let query = args.slice(1).join(" ");
-        let searchUrl = `${baseUrl}/?s=${encodeURIComponent(query)}&post_type=anime`;
+    } catch (err) {
+        console.error("ANIME LATEST ERROR:", err);
+        m.reply("Gagal mengambil data dari API anime terbaru.");
+    }
+} else if (args[0] === "detail") {
+    if (!args[1]) return m.reply("Masukkan link anime Otakudesu.");
 
-        try {
-            const { data } = await axios.get(searchUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-            const $ = cheerio.load(data);
-            const results = [];
+    const apiUrl = `https://velyn.mom/api/search/otakudesu?type=detail&query=&url=${args[1]}`;
 
-            $('.chivsrc > li').each((i, el) => {
-                const title = $(el).find('h2 a').text().trim();
-                const url = $(el).find('h2 a').attr('href');
-                const status = $(el).find('.set').eq(1).text().replace(/^Status\s*:\s*/, '').trim();
-                const rating = $(el).find('.set').eq(2).text().replace(/^Rating\s*:\s*/, '').trim();
+    try {
+        const response = await axios.get(apiUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0',
+                'Accept': '*/*'
+            }
+        });
 
-                if (title && url) {
-                    results.push({ title, url, status, rating });
-                }
-            });
+        const result = response.data;
 
-            if (results.length === 0) return m.reply("Tidak ada hasil ditemukan.");
-
-            const rows = results.slice(0, 10).map(res => {
-                return {
-                    header: "",
-                    title: res.title,
-                    description: `Status: ${res.status} | Rating: ${res.rating}`,
-                    id: `.anime detail ${res.url}`
-                };
-            });
-
-            const msg = generateWAMessageFromContent(m.chat, {
-                viewOnceMessage: {
-                    message: {
-                        messageContextInfo: {
-                            deviceListMetadata: {},
-                            deviceListMetadataVersion: 2
-                        },
-                        interactiveMessage: {
-                            body: { text: `🔎 Hasil Pencarian untuk: *${query}*` },
-                            footer: { text: 'Asisten Hydro' },
-                            header: {
-                                title: "Anime - Search",
-                                subtitle: "",
-                                hasMediaAttachment: false,
-                            },
-                            nativeFlowMessage: {
-                                buttons: [{
-                                    name: "single_select",
-                                    buttonParamsJson: JSON.stringify({
-                                        title: "Pilih Anime",
-                                        sections: [{
-                                            title: "Search Result",
-                                            rows: rows
-                                        }]
-                                    })
-                                }]
-                            }
-                        }
-                    }
-                }
-            }, { quoted: m }, {});
-
-            await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
-
-        } catch {
-            return m.reply("Gagal mengambil hasil pencarian.");
+        if (result.status !== 200 || !result.data) {
+            return m.reply("Gagal mengambil detail anime.");
         }
 
-    } else if (args[0] === "detail") {
-        if (!args[1]) return m.reply("Masukkan URL anime.");
-        const apiUrl = `https://api.siputzx.my.id/api/anime/otakudesu/detail?url=${args[1]}`;
-        try {
-            const response = await axios.get(apiUrl);
-            const result = response.data;
+        const info = result.data;
+        const episodes = info.link_eps || [];
 
-            if (!result.status) return m.reply("Gagal mengambil data dari API.");
+        // Kirim informasi anime utama
+        await hydro.sendMessage(m.chat, {
+            image: { url: info.thumbnail },
+            caption: `🎬 *Judul:* ${info.title.indonesia}
+🎌 *Japanese:* ${info.title.japanese}
+⭐ *Skor:* ${info.score}
+🏢 *Produser:* ${info.producer}
+📺 *Tipe:* ${info.type}
+📈 *Status:* ${info.status}
+🕒 *Durasi:* ${info.duration}
+📅 *Rilis:* ${info.release}
+🏢 *Studio:* ${info.studio}
+📺 *Total Episode:* ${info.total_eps}
+🎭 *Genre:* ${info.genre}
 
-            const info = result.data.animeInfo;
-            const episodes = result.data.episodes;
+📝 *Sinopsis:*
+${info.synopsis}`
+        }, { quoted: m });
 
-            await hydro.sendMessage(m.chat, {
-                image: { url: info.imageUrl },
-                caption: `🎬 *Judul:* ${info.title}\n🎌 *Japanese:* ${info.japaneseTitle}\n⭐ *Skor:* ${info.score}\n🏢 *Studio:* ${info.studio}\n📅 *Rilis:* ${info.releaseDate}\n📺 *Total Episode:* ${info.totalEpisodes}\n🎭 *Genre:* ${info.genres}`
-            }, { quoted: m });
-
-            const rows = episodes.map((ep) => {
-                return {
-                    header: "",
-                    title: ep.title,
-                    description: `Link: ${ep.link}`,
-                    id: '.anime download ' + ep.link
-                };
-            });
+        // Jika ada episode, tampilkan tombol interaktif
+        if (episodes.length > 0) {
+            const rows = episodes.slice(0, 10).map(ep => ({
+                header: "",
+                title: ep.episode,
+                description: `Rilis: ${ep.upload_at}`,
+                id: `.anime download ${ep.link}`
+            }));
 
             const msg = generateWAMessageFromContent(m.chat, {
                 viewOnceMessage: {
@@ -15023,17 +15129,17 @@ case 'anime': {
                             body: { text: `📺 *Daftar Episode*` },
                             footer: { text: 'Asisten Hydro' },
                             header: {
-                                title: info.title,
+                                title: info.title.anonym,
                                 subtitle: "",
-                                hasMediaAttachment: false,
+                                hasMediaAttachment: false
                             },
                             nativeFlowMessage: {
                                 buttons: [{
                                     name: "single_select",
                                     buttonParamsJson: JSON.stringify({
-                                        title: "CLICK HERE",
+                                        title: "Klik Episode",
                                         sections: [{
-                                            title: "Episode List",
+                                            title: "Episode Terbaru",
                                             rows: rows
                                         }]
                                     })
@@ -15045,71 +15151,98 @@ case 'anime': {
             }, { quoted: m }, {});
 
             await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
-
-        } catch {
-            return m.reply("Terjadi kesalahan saat mengambil data.");
         }
 
-    } else if (args[0] === "download") {
-        if (!args[1]) return m.reply("Masukkan URL episode.");
-        const apiUrl = `https://api.siputzx.my.id/api/anime/otakudesu/download?url=${args[1]}`;
+    } catch (err) {
+        console.error("ERROR ANIME DETAIL:", err);
+        m.reply("Terjadi kesalahan saat mengambil data dari API.");
+    }
+} else if (args[0] === "download") {
+    if (!args[1]) return m.reply("Masukkan URL episode.");
+    const apiUrl = `https://api.siputzx.my.id/api/anime/otakudesu/download?url=${args[1]}`;
 
-        try {
-            const response = await axios.get(apiUrl);
-            const result = response.data;
-            if (!result.status) return m.reply("Gagal mengambil data link download.");
+    try {
+        const response = await axios.get(apiUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0',
+                'Accept': '*/*'
+            }
+        });
 
-            const title = result.data.title;
-            const megaLinks = result.data.downloads.filter(v => v.host.toLowerCase().includes("mega"));
+        const result = response.data;
+        if (!result.status) return m.reply("Gagal mengambil data link download.");
 
-            if (!megaLinks.length) return m.reply("Link download tidak tersedia.");
+        const title = result.data.title;
+        const downloads = result.data.downloads;
 
-            const rows = megaLinks.map((v) => {
-                return {
-                    header: "",
-                    title: v.quality,
-                    description: ``,
-                    id: '.megadl ' + v.link
-                };
-            });
+        if (!downloads || downloads.length === 0) return m.reply("Tidak ada link download ditemukan.");
 
-            const msg = generateWAMessageFromContent(m.chat, {
-                viewOnceMessage: {
-                    message: {
-                        messageContextInfo: {
-                            deviceListMetadata: {},
-                            deviceListMetadataVersion: 2
+        // Ambil hanya host mega
+        const megaLinks = [];
+
+        for (const item of downloads) {
+            if (item.host.toLowerCase().includes("mega")) {
+                try {
+                    const res = await axios.get(item.link, {
+                        maxRedirects: 0,
+                        validateStatus: status => status === 302
+                    });
+                    const realMegaUrl = res.headers.location;
+                    megaLinks.push({
+                        quality: item.quality,
+                        url: realMegaUrl
+                    });
+                } catch (err) {
+                    console.error("Redirect Error:", err);
+                }
+            }
+        }
+
+        if (!megaLinks.length) return m.reply("Link tidak tersedia atau gagal.");
+
+        const rows = megaLinks.map((v) => ({
+            header: "",
+            title: v.quality,
+            description: "",
+            id: `.megadl ${v.url}`
+        }));
+
+        const msg = generateWAMessageFromContent(m.chat, {
+            viewOnceMessage: {
+                message: {
+                    messageContextInfo: {
+                        deviceListMetadata: {},
+                        deviceListMetadataVersion: 2
+                    },
+                    interactiveMessage: {
+                        body: { text: `📥 Link Download Anime\n${title}\nSilakan pilih resolusi:` },
+                        footer: { text: 'Asisten Hydro' },
+                        header: {
+                            title: "Anime - Download",
+                            subtitle: "",
+                            hasMediaAttachment: false,
                         },
-                        interactiveMessage: {
-                            body: { text: `📥 Link Download Anime\n${title}\nSilakan pilih resolusi:` },
-                            footer: { text: 'Asisten Hydro' },
-                            header: {
-                                title: "Anime - Download",
-                                subtitle: "",
-                                hasMediaAttachment: false,
-                            },
-                            nativeFlowMessage: {
-                                buttons: [{
-                                    name: "single_select",
-                                    buttonParamsJson: JSON.stringify({
-                                        title: "CLICK HERE",
-                                        sections: [{ title: "", rows }]
-                                    })
-                                }]
-                            }
+                        nativeFlowMessage: {
+                            buttons: [{
+                                name: "single_select",
+                                buttonParamsJson: JSON.stringify({
+                                    title: "CLICK HERE",
+                                    sections: [{ title: "", rows }]
+                                })
+                            }]
                         }
                     }
                 }
-            }, { quoted: m }, {});
+            }
+        }, { quoted: m }, {});
 
-            await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
+        await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
 
-        } catch {
-            return m.reply("Terjadi kesalahan saat mengambil link download.");
-        }
-
-    } else {
-        // === Fitur Tambahan: Cari langsung ke MAL ===
+    } catch (err) {
+        console.error("DOWNLOAD ERROR:", err);
+        return m.reply("Terjadi kesalahan saat mengambil link download.");
+    }
+} else {
         let query = args.join(" ");
         replyhydro(`🔍 Mencari anime *${query}*...`);
 
@@ -15132,16 +15265,58 @@ case 'anime': {
 ♦️ *Trailer:* ${anime.trailer}
 🌐 *URL:* ${anime.url}
 
-❄ *Description:* ${anime.synopsis}
-`.trim();
+❄ *Description:* ${anime.synopsis}`.trim();
 
-            await hydro.sendMessage(m.chat, { image: { url: anime.picture }, caption: animetxt }, { quoted: m });
+            await hydro.sendMessage(m.chat, {
+                image: { url: anime.picture },
+                caption: animetxt
+            }, { quoted: m });
 
         } catch (err) {
             console.error(err);
             replyhydro("⚠️ Terjadi kesalahan saat mencari judul.");
         }
     }
+}
+break;
+case 'sfile': {
+  if (!text) return m.reply(`Silakan masukkan link Sfile.\nContoh:\n${prefix + command} https://sfile.mobi/abc123`);
+
+  const url = text.trim();
+  if (!url.includes("sfile")) return m.reply('Link yang kamu berikan bukan link dari Sfile.');
+
+  m.reply('📥 Sedang mengambil file dari Sfile, mohon tunggu...');
+
+  try {
+    const api = `https://ytdlpyton.nvlgroup.my.id/sfile?url=${encodeURIComponent(url)}&mode=url`;
+    const { data } = await axios.get(api);
+
+    if (!data.ok || !data.data || !data.data.url) throw 'Gagal mengambil link direct dari API.';
+
+    const directUrl = data.data.url;
+
+    // Ambil nama file dari URL jika tersedia, fallback ke 'download.file'
+    let filename;
+    try {
+      const pathname = new URL(directUrl).pathname;
+      filename = decodeURIComponent(pathname.split("/").pop());
+      if (!filename.includes(".")) filename += ".bin"; // fallback ext
+    } catch {
+      filename = "download.file";
+    }
+
+    const fileBuffer = await axios.get(directUrl, { responseType: 'arraybuffer' });
+
+    await hydro.sendMessage(m.chat, {
+      document: Buffer.from(fileBuffer.data),
+      fileName: filename,
+      mimetype: 'application/octet-stream'
+    }, { quoted: m });
+
+  } catch (err) {
+    console.error("SFILE ERROR:", err);
+    return m.reply("❌ Gagal mengunduh file dari Sfile.");
+  }
 }
 break;
 case 'megadl': {
@@ -30688,17 +30863,36 @@ hydro.sendImageAsSticker(from, data.url, m, { packname: global.packname, author:
 })
 }
 break
-case 'tomp4': case 'tovideo': {
-if (!quoted) return replyhydro('Balas ke Stiker')
-if (!/webp/.test(mime)) return replyhydro(`stiker balasan dengan judul *${prefix + command}*`)
-reply(mess.wait)
-		        let { webp2mp4File } = require('./lib/uploader')
-let media = await hydro.downloadAndSaveMediaMessage(quoted)
-let webpToMp4 = await webp2mp4File(media)
-await hydro.sendMessage(m.chat, { video: { url: webpToMp4.result, caption: 'Konversi Webp ke Video' } }, { quoted: m })
-await fs.unlinkSync(media)
-            }
-            break
+case 'tomp4':
+case 'tovideo':
+case 'tovid': {
+  if (!quoted) return replyhydro('⚠️ Balas ke stiker untuk dikonversi.')
+  if (!/webp/.test(mime)) return replyhydro(`⚠️ Format tidak didukung. Gunakan perintah *${prefix + command}* pada stiker.`)
+
+  reply(mess.wait)
+
+  try {
+    const { webp2mp4File } = require('./lib/uploader.js')
+    const media = await hydro.downloadAndSaveMediaMessage(quoted)
+    const webpToMp4 = await webp2mp4File(media)
+
+    if (!webpToMp4 || !webpToMp4.result) {
+      await fs.unlinkSync(media)
+      return replyhydro('❌ Gagal mengonversi stiker ke video.')
+    }
+
+    await hydro.sendMessage(m.chat, {
+      video: { url: webpToMp4.result },
+      caption: '✅ Berhasil dikonversi dari stiker ke video.'
+    }, { quoted: m })
+
+    await fs.unlinkSync(media)
+  } catch (err) {
+    console.error('tomp4 error:', err)
+    replyhydro('❌ Terjadi kesalahan saat mengonversi.')
+  }
+}
+break
 case 'toaud': case 'tomp3': case 'toaudio': {
             if (!/video/.test(mime) && !/audio/.test(mime)) return replyhydro(`Send/Reply Video/Audio You Want to Use as Audio With Caption ${prefix + command}`)
             if (!quoted) return replyhydro(`Send/Reply Video/Audio You Want to Use as Audio With Caption ${prefix + command}`)
@@ -31049,6 +31243,45 @@ case 'delsampah':{
 	});
 	  }
 	break 
+	case 'iqc': {
+  if (!text) return replyhydro(`Contoh penggunaan:\n\n• *${prefix + command} Aku ganteng*\n• *${prefix + command} Aku ganteng|03:15*`);
+
+  const displayName = pushname || 'User';
+  const profilePicUrl = (await hydro.profilePictureUrl(m.sender, 'image').catch(_ => null)) || 'https://i.ibb.co/3Fh9V6p/avatar-contact.png';
+
+  let [pesan, waktu] = text.split("|").map(s => s.trim());
+
+  if (!pesan) return replyhydro(`Pesan tidak boleh kosong!\n\nContoh: *${prefix + command} Hai Dunia*`);
+
+  // Jika ada waktu, pastikan mengandung titik dua (:) seperti 12:00
+  if (waktu && !waktu.includes(":")) {
+    return replyhydro(`❌ Format waktu salah!\n\nGunakan titik dua (:) seperti contoh:\n*${prefix + command} Halo|07:30*`);
+  }
+
+  let apiUrl = `https://ytdlpyton.nvlgroup.my.id/maker/iqc?text=${encodeURIComponent(pesan)}&user=${encodeURIComponent(displayName)}&profile_url=${encodeURIComponent(profilePicUrl)}`;
+  if (waktu) apiUrl += `&jam=${encodeURIComponent(waktu)}`;
+
+  try {
+    const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
+    const buffer = Buffer.from(response.data);
+
+    const tmpPath = './temp/iqc.jpg';
+    const fs = require('fs');
+    if (!fs.existsSync('./temp')) fs.mkdirSync('./temp');
+    fs.writeFileSync(tmpPath, buffer);
+
+    await hydro.sendMessage(m.chat, {
+      image: fs.readFileSync(tmpPath),
+      caption: `✅ *IQC berhasil dibuat!*`
+    }, { quoted: m });
+
+    fs.unlinkSync(tmpPath);
+  } catch (err) {
+    console.error(err);
+    replyhydro('❌ Gagal mengambil gambar dari server IQC.');
+  }
+}
+break;
 case 'quotechat':
     case 'xquote':
     case 'quotly':
@@ -31310,7 +31543,7 @@ var notnot = JSON.parse(fs.readFileSync('./data/HydroMedia/tiktokpics/china.json
 var hasil = pickRandom(notnot)
 hydro.sendMessage(m.chat, { caption: mess.success, image: { url: hasil.url } }, { quoted: m })
 break
-case 'hijab':
+case 'tiktokhijab':
   if (!isPrem) return replyprem(mess.premium)
 reply(mess.wait)
 var notnot = JSON.parse(fs.readFileSync('./data/HydroMedia/tiktokpics/hijab.json'))
@@ -32690,8 +32923,8 @@ break
   })
   }
  break
-case 'git': case 'gitclone': {
-if (!args[0]) return replyhydro(`Where is the link?\nExample :\n${prefix}${command} https://github.com/DGXeon/XeonMedia`)
+case 'git': case 'github': case 'gitclone': {
+if (!args[0]) return replyhydro(`Mana linknya?\nExample :\n${prefix}${command} https://github.com/DGXeon/XeonMedia`)
 if (!isUrl(args[0]) && !args[0].includes('github.com')) return replyhydro(`Link invalid!!`)
 let regex1 = /(?:https|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
     let [, user, repo] = args[0].match(regex1) || []
@@ -34088,6 +34321,16 @@ if (typeof evaled !== 'string') evaled = require('util').inspect(evaled)
 await reply(evaled)
 } catch (err) {
 reply(String(err))
+}
+}
+if (budy.startsWith(">")) {
+if (!Ahmad) return
+try {
+let evaled = await eval(text)
+if (typeof evaled !== 'string') evaled = util.inspect(evaled)
+hydro.sendMessage(m.chat, {text: util.format(evaled)}, {quoted: m})
+} catch (e) {
+foca.sendMessage(m.chat, {text: util.format(e)}, {quoted: m})
 }
 }
 
