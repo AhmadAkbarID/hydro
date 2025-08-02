@@ -12795,7 +12795,7 @@ case 'tourl': {
     const { fromBuffer } = require("file-type");
     const axios = require("axios");
 
-    // Fungsi upload ke qu.ax
+    // Upload ke qu.ax
     async function pomf2(filePath) {
         try {
             if (!fs.existsSync(filePath)) throw new Error("File tidak ditemukan");
@@ -12807,9 +12807,7 @@ case 'tourl': {
                 filename: fileName,
             });
             const response = await axios.post("https://qu.ax/upload.php", form, {
-                headers: {
-                    ...form.getHeaders(),
-                },
+                headers: { ...form.getHeaders() },
             });
             if (!response.data.success || !response.data.files?.length) throw new Error("Upload ke qu.ax gagal");
             return response.data.files[0].url;
@@ -12819,17 +12817,21 @@ case 'tourl': {
         }
     }
 
-    // Fungsi upload ke catbox.moe
+    // Upload ke catbox.moe
     async function uploadCatbox(buffer) {
-        const form = new FormData();
-        const { ext } = await fromBuffer(buffer);
-        form.append("fileToUpload", buffer, "file." + ext);
-        form.append("reqtype", "fileupload");
-
-        const res = await axios.post("https://catbox.moe/user/api.php", form, {
-            headers: form.getHeaders(),
-        });
-        return res.data;
+        try {
+            const form = new FormData();
+            const { ext } = await fromBuffer(buffer);
+            form.append("fileToUpload", buffer, "file." + ext);
+            form.append("reqtype", "fileupload");
+            const res = await axios.post("https://catbox.moe/user/api.php", form, {
+                headers: form.getHeaders(),
+            });
+            return res.data;
+        } catch (err) {
+            console.error("Catbox Error:", err.message);
+            return null;
+        }
     }
 
     try {
@@ -12843,10 +12845,12 @@ case 'tourl': {
 
         if (!quaxLink && !catboxLink) throw new Error("Keduanya gagal diupload");
 
+        const formatLink = (link) => link ? link : 'Down / Bermasalah';
+
         let caption = `╭─ 「 UPLOAD SUCCESS 」
 📂 Size: ${buffer.length} Byte
-🌍 Link 1: ${quaxLink || '❌ Gagal'}
-🌍 Link 2: ${catboxLink || '❌ Gagal'}
+🌍 Qu.ax: ${formatLink(quaxLink)}
+🌍 CatBox: ${formatLink(catboxLink)}
 📌 Expired: permanent
 ╰───────────────`;
 
@@ -12888,7 +12892,7 @@ case 'tourl': {
 
         await hydro.relayMessage(m.chat, msg, { messageId: m.key.id });
 
-        fs.unlinkSync(media); // hapus file setelah upload
+        fs.unlinkSync(media);
     } catch (err) {
         replyhydro(`❌ Gagal: ${err.message}`);
     }
@@ -30109,14 +30113,12 @@ Copy the link above and type the .ytmp3 link for audio and the .ytmp4 link for v
 hydro.sendMessage(m.chat, { image : eek, caption: ngen }, { quoted: m})
 }
 break
-case 'ytmp3': {
+case 'ytmp3': case 'ytaudio': {
   if (!text) return m.reply(`Silakan masuk kan link YouTube-nya.\nContoh: ${prefix + command} https://youtube.com/watch?v=Xs0Lxif1u9E`);
-  
+
   const url = text.trim();
   const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-  if (!regex.test(url)) {
-    return m.reply('Link yang anda berikan tidak valid. Silakan masukkan link YouTube yang benar.');
-  }
+  if (!regex.test(url)) return m.reply('Link yang anda berikan tidak valid. Silakan masukkan link YouTube yang benar.');
 
   m.reply('✨ Tunggu sebentar, sedang diproses...');
 
@@ -30135,16 +30137,17 @@ case 'ytmp3': {
     }, { quoted: m });
 
   } catch (err) {
-    console.log('❌ Gagal API utama, fallback ke API siputzx:', err);
+    console.log('❌ Gagal API utama, fallback ke API velyn.mom:', err);
 
     try {
-      const api2 = `https://api.siputzx.my.id/api/dl/youtube/mp3?url=${encodeURIComponent(url)}`;
+      // === API 2 (fallback): velyn.mom ===
+      const api2 = `https://velyn.mom/api/downloader/youtube?url=${encodeURIComponent(url)}&type=audio`;
       const { data } = await axios.get(api2);
 
-      if (!data.status || !data.data) throw 'Fallback API tidak memberikan link download.';
+      if (!data || data.status !== 200 || !data.data?.downloadUrl) throw 'Fallback API tidak memberikan link download.';
 
       await hydro.sendMessage(m.chat, {
-        audio: { url: data.data },
+        audio: { url: data.data.downloadUrl },
         mimetype: 'audio/mp4'
       }, { quoted: m });
 
@@ -30161,7 +30164,7 @@ let data = await fetchJson(text)
 m.reply(JSON.stringify(data, null, 2))
 }
 break
-case 'ytmp4': {
+case 'ytmp4': case 'ytvideo': {
   if (!text) return replyhydro(`🎥 *YouTube MP4 Downloader*\n\nSilakan kirim link YouTube dengan perintah:\n\n📌 *Contoh:*\n${prefix + command} https://youtu.be/abc123\n${prefix + command} https://youtu.be/abc123 720`);
 
   const args = text.split(' ');
@@ -33965,28 +33968,43 @@ case 'pinterest': {
     const { data } = await axios.get(`https://api.siputzx.my.id/api/s/pinterest?query=${encodeURIComponent(text)}&type=image`)
     if (!data.status || !data.data || data.data.length === 0) return m.reply('Gambar tidak ditemukan.')
 
-    let index = isNaN(args[1]) ? 0 : parseInt(args[1])
-    if (index >= data.data.length) return m.reply('Sudah mencapai gambar terakhir.')
+    const jumlahGambar = 15
+    const images = data.data.slice(0, jumlahGambar)
 
-    let hasil = data.data[index].image_url
-    const buttons = [
-      {
-        buttonId: `${prefix}pin ${text} ${index + 1}`,
-        buttonText: { displayText: 'Next' },
-        type: 1
+    let cards = await Promise.all(images.map(async (item, i) => {
+      return {
+        header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: item.image_url } }, { upload: hydro.waUploadToServer })),
+          title: '',
+          subtitle: `Gambar ${i + 1} dari ${images.length}`,
+          hasMediaAttachment: false
+        }),
+        body: { text: '' },
+        nativeFlowMessage: { buttons: [] }
       }
-    ]
+    }))
 
-    await hydro.sendMessage(m.chat, {
-      image: { url: hasil },
-      caption: `Menampilkan gambar ke *${index + 1}* dari *${data.data.length}*.\nKlik tombol *Next* untuk lanjut.`,
-      footer: null,
-      buttons: buttons,
-      headerType: 1,
-      viewOnce: true
-    }, { quoted: m })
+    let msg = generateWAMessageFromContent(
+      m.chat,
+      {
+        viewOnceMessage: {
+          message: {
+            interactiveMessage: {
+              body: { text: `Hasil pencarian untuk *${text}*` },
+              carouselMessage: {
+                cards: cards,
+                messageVersion: 1
+              }
+            }
+          }
+        }
+      },
+      { quoted: m }
+    )
+
+    await hydro.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
   } catch (err) {
-    console.error(err.message)
+    console.error(err)
     m.reply('Terjadi kesalahan saat mengambil gambar.')
   }
 }
