@@ -911,8 +911,8 @@ isForwarded: true,
 "title": `${global.botname}`,
 "body": `${HydroWaktu} ${pushname} 👋🏻`,
 "previewType": "VIDEO",
-"thumbnailUrl": 'https://pomf2.lain.la/f/bnf6fpu.jpg',
-"sourceUrl": 'https://instagram.com/focabar'}}},
+"thumbnailUrl": 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/replyhydro.jpg',
+"sourceUrl": 'https://github.com/AhmadAkbarID/hydro'}}},
 { quoted: m})
 }
 
@@ -1090,7 +1090,7 @@ thumbnailUrl: "",
 gifPlayback: true,
 subtitle: "",
 hasMediaAttachment: true,
-...(await prepareWAMessageMedia({ image: fs.readFileSync('./data/image/menu.jpg') }, { upload: hydro.waUploadToServer })),
+...(await prepareWAMessageMedia({ image: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg'}}, { upload: hydro.waUploadToServer })),
 }),
 gifPlayback: true,
 nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
@@ -3901,7 +3901,7 @@ const bet = {
   ]
 }
 await listbut2(m.chat, teks, bet, m)
-await hydro.sendMessage(from, { audio: { url: 'https://qu.ax/pLtnT.mp3'} , mimetype: 'audio/mp4', ptt: true }, { quoted: m })
+await hydro.sendMessage(from, { audio: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.mp3'} , mimetype: 'audio/mp4', ptt: true }, { quoted: m })
 }
 break
 
