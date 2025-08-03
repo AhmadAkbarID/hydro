@@ -17003,7 +17003,7 @@ case 'payment': {
                     buttons: [
                       {
                         "name": "cta_url",
-                        "buttonParamsJson": `{\"display_text\":\"Payment QRIS\",\"url\":\"https://telegra.ph/file/a858490e3accb29943bec.jpg\",\"merchant_url\":\"https://www.google.com\"}`
+                        "buttonParamsJson": `{\"display_text\":\"Payment QRIS\",\"url\":\"https://qu.ax/xRqoK.jpg\",\"merchant_url\":\"https://www.google.com\"}`
                       },
                     ],
                   },
