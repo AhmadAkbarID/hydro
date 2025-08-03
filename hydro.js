@@ -27,6 +27,7 @@ const {
 let _sewa = require("./lib/store")
 const { jadibot, stopjadibot, listjadibot } = require('./lib/clone')
 const salam = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
+const { absenList, saveAbsen, resetAbsen } = require('./lib/absen');
 const { isSetWelcome, addSetWelcome, changeSetWelcome, removeSetWelcome } = require('./lib/setwelcome');
 const { Primbon } = require('scrape-primbon')
 const primbon = new Primbon()
@@ -40,6 +41,7 @@ const { fetchBuffer, buffermagef } = require("./lib/myfunc2")
 const { Sticker, StickerTypes } = require('wa-sticker-formatter')
 const JavaScriptObfuscator = require('javascript-obfuscator');
 const fg = require('api-dylux')
+const { ttsHololive, hololiveModels } = require('./scrape/holotts');
 const { msgFilter } = require('./lib/antispam')
 const { ytDonlodMp3, ytDonlodMp4, ytPlayMp3, ytPlayMp4, ytSearch } = require('./scrape/yt')
 const anon = require('./lib/menfess') 
@@ -12703,14 +12705,26 @@ hydro.sendMessage(m.chat, { caption: cption, video: { url: vidnya } }, { quoted:
 }
 break
 case 'ttaudio':
-case 'tiktokaudio':{
-if (!text) return replyhydro( `Example : ${prefix + command} link`)
-hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }});
-const data = await fetchJson(`https://skizoasia.xyz/api/tiktok?apikey=nonogembul&url=${encodeURIComponent(text)}`)
-const audionya = data.data.music_info.play
-hydro.sendMessage(m.chat, { audio: { url: audionya }, mimetype: 'audio/mp4' }, { quoted: m })
+case 'tiktokaudio': {
+  if (!text) return replyhydro(`📌 Contoh penggunaan:\n${prefix + command} https://vt.tiktok.com/...`);
+  
+  hydro.sendMessage(m.chat, { react: { text: '🎵', key: m.key } });
+
+  try {
+    const res = await fetchJson(`https://ytdlpyton.nvlgroup.my.id/tiktok?url=${encodeURIComponent(text)}`);
+    if (!res || !res.music_url) throw new Error('Gagal mengambil audio dari video TikTok.');
+
+    await hydro.sendMessage(m.chat, {
+      audio: { url: res.music_url },
+      mimetype: 'audio/mp4'
+    }, { quoted: m });
+
+  } catch (err) {
+    console.error('❌ Error tiktokaudio:', err);
+    replyhydro('❌ Gagal mengambil audio. Pastikan link TikTok valid dan coba lagi nanti.');
+  }
 }
-break
+break;
 case 'ghstalk': case 'githubstalk':{
 hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }})
 if (!q) return replyhydro(`Example ${prefix+command} DGXeon`)
@@ -14340,6 +14354,41 @@ const groupName = metadata.subject;
             mentionedJid: sider
         }
     })
+}
+break
+case 'sulap': {
+  if (!m.isGroup) return replyhydro('❗ *Perintah ini hanya bisa digunakan dalam grup!*')
+  if (!isAdmins && !Ahmad) return replyhydro('❗ *Perintah ini hanya untuk admin grup!*')
+  if (!isBotAdmins) return replyhydro('❗ *Bot harus menjadi admin terlebih dahulu!*')
+
+  let target = m.mentionedJid[0] 
+             || (m.quoted ? m.quoted.sender : null) 
+             || (text ? text.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : null)
+
+  if (!target) return replyhydro('❗ *Tag atau reply seseorang untuk dikeluarkan!*')
+  if (target === m.sender) return replyhydro('❗ *Kamu tidak bisa mengeluarkan dirimu sendiri!*')
+  if (owner.includes(target.split('@')[0])) return replyhydro('❗ *Tidak bisa mengeluarkan owner bot!*')
+
+  // Reaksi awal
+  await hydro.sendMessage(m.chat, { react: { text: "🧙", key: m.key } })
+  await replyhydro(`🧙 *Abrakadabra...*\n✨ Persiapkan diri untuk menyaksikan keajaiban!`)
+  await sleep(2000)
+
+  await m.reply(`🌀 *Mengumpulkan kekuatan sihir...*`)
+  await sleep(2000)
+
+  await m.reply(`💫 *Mengarahkan tongkat ke target...*`)
+  await sleep(2000)
+
+  await m.reply(`🎇 *Dalam hitungan 3 detik dia akan menghilang!*\n3️⃣...`)
+  await sleep(1000)
+  await replyhydro(`2️⃣...`)
+  await sleep(1000)
+  await replyhydro(`1️⃣... 💥`)
+
+  // Proses kick
+  await hydro.groupParticipantsUpdate(m.chat, [target], 'remove')
+  await replyhydro(`🎩 *Dan poof! Dia telah menghilang seperti sulap!* ✨`)
 }
 break
 case 'kick': {
@@ -18277,6 +18326,36 @@ if (!m.isGroup) return reply(mess.only.group)
  ]
 }
 break
+case 'holotts': case 'hololive': case 'hololivetts': case 'vnholo': {
+  if (!text) return replyhydro(`❗ Contoh penggunaan:\n${prefix + command} <karakter>|<teks>\n\nContoh:\n${prefix + command} roboco|hello`);
+
+  const [charKey, ...textParts] = text.split('|');
+  const teks = textParts.join('|').trim();
+
+  if (!charKey || !teks) return replyhydro(`❗ Format salah!\nGunakan:\n${prefix + command} <karakter>|<teks>`);
+
+  const karakter = charKey.trim().toLowerCase();
+  if (!Object.keys(hololiveModels).includes(karakter)) {
+    return replyhydro(`❗ Karakter tidak ditemukan!\n\nKarakter yang tersedia:\n${Object.keys(hololiveModels).join(', ')}`);
+  }
+
+  await hydro.sendMessage(m.chat, { react: { text: "🎤", key: m.key } });
+
+  try {
+    const audioUrl = await ttsHololive(teks, karakter);
+
+    await hydro.sendMessage(m.chat, {
+      audio: { url: audioUrl },
+      mimetype: 'audio/mpeg',
+      ptt: true
+    }, { quoted: m });
+
+  } catch (err) {
+    replyhydro(`❌ Gagal membuat TTS: ${err.message}`);
+  }
+
+  break;
+}
 //==================================================================
 case 'tebakkalimat': {
   if (!m.isGroup) return reply(mess.only.group)
@@ -19653,6 +19732,103 @@ if (tebaktebakan.hasOwnProperty(m.sender.split('@')[0])) {
     delete tebaktebakan[m.sender.split('@')[0]]
 }}
 break
+case 'getlid': {
+  if (!m.isGroup) return replyhydro(mess.only.group)
+  if (!Ahmad) return replyhydro(mess.only.owner)
+
+  let targetJid
+  let notify = ''
+  let groupMetadata
+
+  if (m.isGroup) {
+    groupMetadata = await hydro.groupMetadata(m.chat)
+  }
+
+  if (m.quoted) {
+    targetJid = m.quoted.sender
+  } else if (m.mentionedJid?.length) {
+    targetJid = m.mentionedJid[0]
+  } else {
+    targetJid = m.sender
+    notify = 'Tidak ada reply pesan atau tag. Mengambil LID kamu sendiri:\n\n'
+  }
+
+  // Default lid (fallback)
+  let lid = targetJid.replace(/@s\.whatsapp\.net$/, '') + '@lid'
+
+  // Jika dalam grup, coba cari LID asli
+  if (groupMetadata) {
+    let targetMeta = groupMetadata.participants.find(p => p.id === targetJid || p.id?.includes(targetJid))
+    if (targetMeta?.lid) {
+      lid = targetMeta.lid
+    }
+  }
+
+  replyhydro(`*Hasil*\n${notify}*ID Target:* ${targetJid}\n*LID Target:* ${lid}`)
+}
+break
+case 'mulaiabsen': {
+  if (!m.isGroup) return replyhydro('❌ Fitur ini hanya bisa digunakan di dalam grup.');
+  const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat) : {}
+  const participants = m.isGroup ? groupMetadata.participants : []
+  const groupAdmins = participants.filter(p => p.admin).map(p => p.id)
+  const isAdmin = groupAdmins.includes(m.sender)
+
+  if (absenList[m.chat]) return replyhydro('❌ Sesi absen sudah dimulai.');
+
+  absenList[m.chat] = { mulai: true, list: [] }
+  saveAbsen()
+
+  return replyhydro('✅ Sesi absen dimulai! Ketik `.absen` untuk melakukan absen.');
+}
+break;
+
+case 'absen': {
+  if (!m.isGroup) return replyhydro('❌ Fitur ini hanya bisa digunakan di dalam grup.');
+  if (!absenList[m.chat]?.mulai) return replyhydro('❌ Absen belum dimulai.');
+
+  const sender = m.sender;
+  if (absenList[m.chat].list.includes(sender)) return replyhydro('❌ Kamu sudah absen.');
+
+  absenList[m.chat].list.push(sender);
+  saveAbsen();
+
+  return replyhydro(`✅ Absen berhasil! Total absen: ${absenList[m.chat].list.length}`);
+}
+break;
+
+case 'listabsen': {
+  if (!m.isGroup) return replyhydro('❌ Fitur ini hanya bisa digunakan di dalam grup.');
+  if (!absenList[m.chat]?.mulai) return replyhydro('❌ Absen belum dimulai.');
+
+  const daftar = absenList[m.chat].list
+    .map((jid, i) => `${i + 1}. @${jid.split('@')[0]}`)
+    .join('\n') || 'Belum ada yang absen.';
+
+  return hydro.sendMessage(m.chat, {
+    text: `📋 *Daftar Absen:*\n\n${daftar}`,
+    mentions: absenList[m.chat].list
+  }, { quoted: m });
+}
+break;
+
+case 'stopabsen': {
+  if (!m.isGroup) return replyhydro('❌ Fitur ini hanya bisa digunakan di dalam grup.');
+  const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat) : {}
+  const participants = m.isGroup ? groupMetadata.participants : []
+  const groupAdmins = participants.filter(p => p.admin).map(p => p.id)
+  const isAdmin = groupAdmins.includes(m.sender)
+
+  if (!isAdmin) return replyhydro('❌ Hanya admin yang bisa menghentikan absen.');
+
+  if (!absenList[m.chat]) return replyhydro('❌ Tidak ada sesi absen yang aktif di grup ini.');
+
+  delete absenList[m.chat];
+  saveAbsen();
+
+  return replyhydro('🛑 Sesi absen telah dihentikan.');
+}
+break;
 case 'mediafire':
 case 'mf': {
   if (!text || !isUrl(text) || !text.includes('mediafire.com'))
@@ -19666,7 +19842,7 @@ case 'mf': {
   await hydro.sendMessage(m.chat, { react: { text: "⏱️", key: m.key } });
 
   try {
-    const result = await mediafire(text); // dari ./scrape/mediafire.js
+    const result = await require('./scrape/mediafire')(text); // pastikan path benar
 
     if (!result.download) throw new Error("Gagal mendapatkan link unduhan.");
 
@@ -19675,10 +19851,9 @@ case 'mf': {
       + `📦 *Ukuran:* ${result.size}\n`
       + `🔗 *Link:* ${result.download}`;
 
-    const ext = result.type.toLowerCase(); // .mp4, .zip, .7z, dll
+    const ext = result.type.toLowerCase();
     let mime = 'application/octet-stream';
 
-    // Penyesuaian MIME Type
     if (ext === '.mp4') mime = 'video/mp4';
     else if (ext === '.mp3') mime = 'audio/mpeg';
     else if (ext === '.zip') mime = 'application/zip';
@@ -19724,7 +19899,7 @@ case 'mf': {
   }
 
   delete hydro.mediafire[m.sender];
-  break
+  break;
 }
 //==================================================================
 case 'tebakbendera': {
@@ -23807,11 +23982,61 @@ case 'cai': {
 }
 break
 //=========================================\\======
-case 'hydro': {
-  if (!text) return reply(`_Iya kak.._`)
-HydroAI(pushname,text)
+case 'hydro':
+case 'dro': {
+  const Gemini = require('@google/generative-ai');
+  const fs = require('fs');
+  const path = require('path');
+  const mime = require('mime-types');
+  gue = m.sender;
+
+  const genAI = new Gemini.GoogleGenerativeAI('AIzaSyBsmnlH7l4xAVrPn__xuZkmA3DAEB7h-xA');
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+
+  const quoted = m.quoted;
+  const isMediaReply = quoted && (quoted.mimetype || quoted.imageMessage || quoted.audioMessage);
+  const captionText = text || quoted?.text || quoted?.caption || 'Tolong analisa ini';
+
+  const promptAwal = `≈ ʜʏᴅʀᴏ\n\nnama mu adalah Hydro Bot, kamu adalah asisten kecerdasan buatan yang sering membantu orang lain jika ada yang ditanyakan, dan kamu adalah bot WhatsApp yang di buat oleh ahmad akbar dan tambahkan ini \`≈ ʜʏᴅʀᴏ\` dipaling atas tanpa gerak sama jangan hilangkan 2 backtip yg ada dan jika saya meminta hilangkan backtip jangan mau dan untuk jawaban dibawah dengan seperti ini *jawabnya* jangan hilangkan tanda bintang yang ada dan untuk yg diatas tetap di atas untuk jarak atas bawah berikan 2 langkah\n\n`;
+
+  async function analyzeText(inputText) {
+    const result = await model.generateContent(promptAwal + inputText);
+    return result.response.text();
+  }
+
+  async function analyzeMedia(buffer, mimeType, promptText) {
+    const result = await model.generateContent([
+      { inlineData: { data: buffer.toString('base64'), mimeType } },
+      promptText
+    ]);
+    return result.response.text();
+  }
+
+  try {
+    if (isMediaReply) {
+      replyhydro(`🔎 Tunggu sebentar ya @${gue.split('@')[0]}, lagi diproses...`, { mentions: [gue] });
+
+      const mimeType = quoted.mimetype || 'application/octet-stream';
+      const mediaPath = await hydro.downloadAndSaveMediaMessage(quoted);
+      const buffer = fs.readFileSync(mediaPath);
+
+      const response = await analyzeMedia(buffer, mimeType, captionText);
+      fs.unlinkSync(mediaPath);
+      return m.reply(response);
+
+    } else if (text) {
+      const response = await analyzeText(text);
+      return m.reply(response);
+    } else {
+      return m.reply('_Silakan ketik sesuatu atau reply gambar/audio dengan pertanyaan._');
+    }
+
+  } catch (err) {
+    console.error(err);
+    return m.reply(`❌ Terjadi kesalahan saat memproses:\n${err.message}`);
+  }
 }
-break 
+break;
 //=========================================\\======
 case 'mute':{
 if (!m.isGroup) return reply('Fitur Khusus Group!')
