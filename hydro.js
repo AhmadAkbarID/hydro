@@ -914,7 +914,25 @@ isForwarded: true,
 "body": `${HydroWaktu} ${pushname} 👋🏻`,
 "previewType": "VIDEO",
 "thumbnailUrl": 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/replyhydro.jpg',
-"sourceUrl": 'https://github.com/AhmadAkbarID/hydro'}}},
+"sourceUrl": 'https://store.hydrohost.web.id'}}},
+{ quoted: m})
+}
+
+const replytolak = (teks) => {
+hydro.sendMessage(m.chat,
+{ text: teks,
+contextInfo:{
+mentionedJid:[sender],
+forwardingScore: 999,
+isForwarded: true,
+"externalAdReply": {
+"showAdAttribution": false,
+"containsAutoReply": true,
+"title": `${global.botname}`,
+"body": `ಠ⁠ ⁠ل͟⁠ ⁠ಠ Akses Ditolak! `,
+"previewType": "VIDEO",
+"thumbnailUrl": 'https://qu.ax/RLCnL.jpg',
+"sourceUrl": 'https://store.hydrohost.web.id'}}},
 { quoted: m})
 }
 
@@ -2605,7 +2623,7 @@ if (Antilinkgc) {
         });
       }
 
-      if (!isBotAdmins) return reply('⚠️ Bot harus menjadi admin untuk menegakkan aturan tautan.');
+      if (!isBotAdmins) return replytolak('⚠️ Bot harus menjadi admin untuk menegakkan aturan tautan.');
       if (isAdmins || Ahmad) return;
 
       // Hapus pesan link asing
@@ -2685,7 +2703,7 @@ setInterval(async () => {
 }, 60 * 1000); // per menit
 //Antichlink
 if (Antilinkch && budy.match(/whatsapp\.com\/channel/gi)) {
-    if (!isBotAdmins) return replyhydro('🚫 *Bot harus menjadi admin untuk menindak pelanggaran link!*');
+    if (!isBotAdmins) return replytolak('🚫 *Bot harus menjadi admin untuk menindak pelanggaran link!*');
 
     let senderId = m.sender;
 
@@ -2783,7 +2801,7 @@ hydro.sendMessage(from, {text:`\`\`\`「 Tautan Terdeteksi 」\`\`\`\n\n@${m.sen
 //antivirtex by xeon
   if (antiVirtex) {
   if (budy.length > 3500) {
-  if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+  if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
           await hydro.sendMessage(m.chat,
 			    {
 			        delete: {
@@ -3496,13 +3514,13 @@ Type *surrender* to surrender and admit defeat`
             }
             break 
 	case 'public': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 hydro.public = true
 replyhydro('*Berhasil Mengubah Ke Penggunaan Publik*')
             }
             break
             case 'self': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 hydro.public = false
 replyhydro('*Sukses Berubah Menjadi Pemakaian Sendiri*')
             }
@@ -3537,24 +3555,24 @@ replyhydro(`Belum ada pengguna yang menyewa bot`)
 }
 break
 case 'clearall': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 hydro.chatModify({ delete: true, lastMessages: [{ key: m.key, messageTimestamp: m.messageTimestamp }] }, m.chat)
 }
 break
 case 'pinchat': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (m.isGroup) return reply(mess.only.private)
 hydro.chatModify({ pin: true }, m.chat)
 }
 break
 case 'unpinchat': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (m.isGroup) return reply(mess.only.private)
 hydro.chatModify({ pin: false }, m.chat)
 }
 break
 case 'restart':
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 replyhydro(`restarting ${global.botname}`)
 replyhydro(`Done ✅`)
 await sleep(3000)
@@ -9916,7 +9934,7 @@ replyhydro(cap)
 }
 break
 case 'getsession':
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 replyhydro('Tunggu sebentar, saat ini sedang mengambil file sesi Anda')
 let sesi = await fs.readFileSync('./furina/creds.json')
 hydro.sendMessage(m.chat, {
@@ -9997,7 +10015,7 @@ renderLargerThumbnail: true
 }
 break
 case 'd1': {
- if (!Ahmad) return reply(mess.only.owner)
+ if (!Ahmad) return replytolak(mess.only.owner)
 function subDomain1(host, ip) {
   return new Promise((resolve) => {
     let zone = "5d00f56aee3afd9cc4e0666bc8f23746";
@@ -10053,7 +10071,7 @@ case 'hilih': {
 }
 break;
            case 'd2': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "f374d347f22dc1b0ac208973f185c1f2";
@@ -10099,7 +10117,7 @@ break;
  break
            
   case 'd3': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "c1812c92fb249258e67a28573ca34344";
@@ -10145,7 +10163,7 @@ break;
   break       
   
   case 'd4': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "3cea2e71ec2bc82ea7865da5999d04b1";
@@ -10190,7 +10208,7 @@ break;
            }); }
  break
  case 'd5': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "c2c8ddf4f1bfd0d0c11eb0ed83a634f9";
@@ -10236,7 +10254,7 @@ break;
  break                                                                               
  
  case 'd6': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "7432f024eeeaa0367fd985a18b2729cc";
@@ -10281,7 +10299,7 @@ break;
            }); }
   break  
 case 'd7': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "891a2e5d4ac5b3db4fbcef8d9088ad38";
@@ -10327,7 +10345,7 @@ case 'd7': {
  break
            
      case 'd8': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "a0cef62d7194b16e1706f5d48c41129a";
@@ -10373,7 +10391,7 @@ case 'd7': {
  break 
  
      case 'd9': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "5f4a582dd80c518fb2c7a425256fb491";
@@ -10420,7 +10438,7 @@ break
 
 
 case 'd10': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "15b97d8a42af1c00a70070e577ce7301";
@@ -10465,7 +10483,7 @@ case 'd10': {
            }); }
 break
 case 'd11': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "e60307683c18389584e9ae2f9fa707b2";
@@ -10510,7 +10528,7 @@ case 'd11': {
            }); }
 break
 case 'd12': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "ba364ec1df6998c10487aee2a61b7f0d";
@@ -10556,7 +10574,7 @@ case 'd12': {
 break
 
 case 'd13': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "2feafa10ec4054af7cb04b18515013e5";
@@ -10603,7 +10621,7 @@ break
 
 
 case 'd14': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "2dc001900c742f289eef7dbae7ab784b";
@@ -10649,7 +10667,7 @@ case 'd14': {
 break
                 
 case  'd15': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "77c6588b3b36e74d07538e62ef91d6ba";
@@ -10694,7 +10712,7 @@ case  'd15': {
            }); }
 break
 case  'd16': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "4049d75623d46e90d616fdf878a5ed84";
@@ -10739,7 +10757,7 @@ case  'd16': {
            }); }
 break
 case  'd17': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "8080d914883ed0b9e17d281f593df945";
@@ -10785,7 +10803,7 @@ case  'd17': {
 break
 
 case  'd18': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "cada0ecef8f1e8d904435d469aef1b05";
@@ -10830,7 +10848,7 @@ case  'd18': {
            }); }
 break
 case  'd19': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "d318f96a6327c5340d136415e860f545";
@@ -10875,7 +10893,7 @@ case  'd19': {
            }); }
 break
 case  'd20': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "8132a433dc4eea653e38e168f2f45fc0";
@@ -10920,7 +10938,7 @@ case  'd20': {
            }); }
 break
 case  'd21': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "5024bc4a02924cf69ddf4dfa6ee96069";
@@ -10965,7 +10983,7 @@ case  'd21': {
            }); }
 break                  
 case  'd22': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "98264c6c53c5bc9080230b077422d748";
@@ -11010,7 +11028,7 @@ case  'd22': {
            }); }
 break
 case  'd23': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "9b28f4ad0f06b36dd94cc56b01efc19a";
@@ -11055,7 +11073,7 @@ case  'd23': {
            }); }
 break
 case  'd24': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "2bb49b2de0cbf75c0462ed90d7d333e1";
@@ -11101,7 +11119,7 @@ case  'd24': {
 break
 
 case  'd25': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "d28c394ba64bf4ecfec1917829d8bced";
@@ -11354,7 +11372,7 @@ await replyhydro(teks)
 break
 
 case  'd26': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "946d5f35d0657cb8bfa442675b37ec42";
@@ -11400,7 +11418,7 @@ case  'd26': {
 break
 
 case  'd27': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "4a4818365a74cf535d5b6f16dc62481d";
@@ -11446,7 +11464,7 @@ case  'd27': {
 break      
 
 case  'd28': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "725378afbddffcc9e2c2992ba4232421";
@@ -11492,7 +11510,7 @@ case  'd28': {
 break
 
 case  'd29': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "705b7ba658c5f033b91b1b7985f53244";
@@ -11537,7 +11555,7 @@ case  'd29': {
            }); }
 break
 case  'd30': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "128fe0f8f9f09ecce73e5c34c6a31444";
@@ -11582,7 +11600,7 @@ case  'd30': {
            }); }
 break
 case  'd31': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "bc4748bba0b75e8273b04c3dea2dc59c";
@@ -11628,7 +11646,7 @@ case  'd31': {
 break
 
 case  'd32': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "3f5d5b68ea37bf7b8a10a9a96b544622";
@@ -11673,7 +11691,7 @@ case  'd32': {
            }); }
 break   
 case  'd33': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "a0206c68c9b356bdf0a96fbb5d61fbdc";
@@ -11718,7 +11736,7 @@ case  'd33': {
            }); }
 break
 case  'd34': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "80e208bb5900abc50d4483bdb8590d42";
@@ -11763,7 +11781,7 @@ case  'd34': {
            }); }
 break
 case  'd35': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "3d253d788a5ed8fecddba97d3e52cf65";
@@ -11808,7 +11826,7 @@ case  'd35': {
            }); }
 break
 case  'd36': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "583196d8ec9e16fbe5bbe944efbb3d8a";
@@ -11853,7 +11871,7 @@ case  'd36': {
            }); }
 break
 case  'd37': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "edf8e5a66859e6a1f8ccbde07c415082";
@@ -11899,7 +11917,7 @@ case  'd37': {
 break
         
 case 'd38': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "eb6a14586a737768de8eb75e417be305";
@@ -11951,7 +11969,7 @@ if (!Ahmad) return reply(mess.only.owner)
            }); }
            break
            case 'd39': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "0cf0d98bcb60af202ad5816f672ca471";
@@ -12012,7 +12030,7 @@ if (!Ahmad) return reply(mess.only.owner)
            break
            
  case 'd40': {
-    if (!Ahmad) return reply(mess.only.owner)
+    if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "583196d8ec9e16fbe5bbe944efbb3d8a";
@@ -12072,7 +12090,7 @@ if (!Ahmad) return reply(mess.only.owner)
            break
 
 case 'd41': {
-    if (!Ahmad) return reply(mess.only.owner)
+    if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "144f7c48ca035135390fe5adb49d642f";
@@ -12131,7 +12149,7 @@ if (e['success']) reply(`┏━━━━━━━━━━━━━━━━━�
            }); }
 break 
 case 'd42': {
-    if (!Ahmad) return reply(mess.only.owner)
+    if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "4fc8192dd8160307100b207d308da80c";
@@ -12190,7 +12208,7 @@ if (e['success']) reply(`┏━━━━━━━━━━━━━━━━━�
            }); }
 break 
 case 'd43': {
-    if (!Ahmad) return reply(mess.only.owner)
+    if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "a1fa0ffcde9549bd36e9ae3de4b66b4a";
@@ -12249,7 +12267,7 @@ if (e['success']) reply(`┏━━━━━━━━━━━━━━━━━�
            }); }
 break 
 case 'd44': {
-    if (!Ahmad) return reply(mess.only.owner)
+    if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "a112599ddfdd5a2bac5dc91864020015";
@@ -12308,7 +12326,7 @@ if (e['success']) reply(`┏━━━━━━━━━━━━━━━━━�
            }); }
 break 
 case 'd45': {
-    if (!Ahmad) return reply(mess.only.owner)
+    if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "fc1ee81d43fce2e42edcef622e5cf370";
@@ -12367,7 +12385,7 @@ if (e['success']) reply(`┏━━━━━━━━━━━━━━━━━�
            }); }
 break 
 case 'd46': {
-    if (!Ahmad) return reply(mess.only.owner)
+    if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
              return new Promise((resolve) => {
                let zone = "c68dc22e3ccc2aaf123f68011e3187d1";
@@ -13249,7 +13267,7 @@ case 'readviewonce': {
 }
 break;
 case 'join': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text) return replyhydro(`Contoh ${prefix+command} linkgc`)
 if (!isUrl(args[0]) && !args[0].includes('whatsapp.com')) return replyhydro('Link Invalid!')
 let result = args[0].split('https://chat.whatsapp.com/')[1]
@@ -13258,7 +13276,7 @@ await replyhydro(`*[ Done ]*`)
 }
 break
 case 'poll': {
-	if (!Ahmad) return reply(mess.only.owner)
+	if (!Ahmad) return replytolak(mess.only.owner)
             let [poll, opt] = text.split("|")
             if (text.split("|") < 2)
 return await replyhydro(
@@ -13277,7 +13295,7 @@ values: options
         }
         break
         case 'vote': {
-            if (!m.isGroup) return reply(mess.only.group)
+            if (!m.isGroup) return replytolak(mess.only.group)
             if (m.chat in vote) return replyhydro(`_Masih ada suara di chat ini!_\n\n*${prefix}deletevote* - untuk menghapus suara`)
             if (!text) return replyhydro(`Masukkan Alasan Memilih, Contoh: *${prefix + command} Pemilik Tampan*`)
             replyhydro(`Pemungutan suara dimulai!\n\n*${prefix}upvote* - untuk upvote\n*${prefix}downvote* - untuk downvote\n*${prefix}checkvote* - untuk memeriksa suara\n*${prefix} deletevote* - untuk menghapus suara`)
@@ -13311,7 +13329,7 @@ Please Type Below
 	    }
             break
                case 'upvote': {
-            if (!m.isGroup) return reply(mess.only.group)
+            if (!m.isGroup) return replytolak(mess.only.group)
             if (!(m.chat in vote)) return replyhydro(`_*tidak ada voting di grup ini!*_\n\n*${prefix}vote* - untuk memulai voting`)
             isVote = vote[m.chat][1].concat(vote[m.chat][2])
             wasVote = isVote.includes(m.sender)
@@ -13344,7 +13362,7 @@ Please Type Below
 	    }
              break
 case 'downvote': {
-            if (!m.isGroup) return reply(mess.only.group)
+            if (!m.isGroup) return replytolak(mess.only.group)
             if (!(m.chat in vote)) return replyhydro(`_*no voting in this group!*_\n\n*${prefix}vote* - to start voting`)
             isVote = vote[m.chat][1].concat(vote[m.chat][2])
             wasVote = isVote.includes(m.sender)
@@ -13378,7 +13396,7 @@ Please Type Below
             break
  
 case 'checkvote':
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!(m.chat in vote)) return replyhydro(`_*no voting in this group!*_\n\n*${prefix}vote* - to start voting`)
 teks_vote = `* VOTE *
 
@@ -13406,7 +13424,7 @@ ${vote[m.chat][2].map((v, i) => `├ ${i + 1}. @${v.split`@`[0]}`).join('\n')}
 hydro.sendTextWithMentions(m.chat, teks_vote, m)
 break
 		case 'deletevote': case 'delvote': case 'hapusvote': {
-            if (!m.isGroup) return reply(mess.only.group)
+            if (!m.isGroup) return replytolak(mess.only.group)
             if (!(m.chat in vote)) return replyhydro(`_*no voting in this group!*_\n\n*${prefix}vote* - to start voting`)
             delete vote[m.chat]
             replyhydro('Successfully Deleted Vote Session In This Group')
@@ -13569,8 +13587,8 @@ ${Object.keys(used).map(key => `${key.padEnd(12)}: ${formatp(used[key])}`).join(
 }
 break
 case 'antitagsw': {
-    if (!m.isGroup) return replyhydro('❌ Perintah ini hanya bisa digunakan di grup!');
-    if (!isGroupAdmins) return replyhydro('❌ Hanya *admin grup* yang dapat mengatur fitur ini.');
+    if (!m.isGroup) return replytolak('❌ Perintah ini hanya bisa digunakan di grup!');
+    if (!isGroupAdmins) return replytolak('❌ Hanya *admin grup* yang dapat mengatur fitur ini.');
 
     if (args[0] === 'on') {
         if (antitagsw.includes(m.chat)) return replyhydro('✅ Fitur *Anti Tag Status* sudah aktif di grup ini.');
@@ -13588,7 +13606,7 @@ case 'antitagsw': {
 }
 break;
             case 'bctext': case 'broadcasttext': case 'broadcast': {
-			    if (!Ahmad) return reply(mess.only.owner)
+			    if (!Ahmad) return replytolak(mess.only.owner)
 		            if (!q) return replyhydro(`Masukkan teks`)
 		        const data = await store.chats.all()
         for (let i of data) {
@@ -13618,14 +13636,14 @@ await hydro.sendMessage(i, { video:media,  caption: txt, mentions:participants.m
         replyhydro(`Berhasil Disiarkan di Grup ${xeoncast.length}`)      
         break
 case 'block': case 'ban': {
-		if (!Ahmad) return reply(mess.only.owner)
+		if (!Ahmad) return replytolak(mess.only.owner)
 		let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 		await hydro.updateBlockStatus(users, 'block')
 		await replyhydro(`*[ Done ]*`)
 	}
 	break
         case 'unblock': case 'unban': {
-		if (!Ahmad) return reply(mess.only.owner)
+		if (!Ahmad) return replytolak(mess.only.owner)
 		let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 		await hydro.updateBlockStatus(users, 'unblock')
 		await replyhydro(`*[ Done ]*`)
@@ -13645,14 +13663,14 @@ case 'resetlink':
 case 'resetgrouplink':
 case 'resetgclink':
 case 'resetgruplink': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 hydro.groupRevokeInvite(m.chat)
 }
 break
             case 'react': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 reactionMessage = {
 react: {
     text: args[0],
@@ -13663,9 +13681,9 @@ hydro.sendMessage(m.chat, reactionMessage)
             }
             break
 case 'group': case 'gc': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!q) return replyhydro(`Send orders ${command} _options_\nOptions : close & open\nExample : ${command} close`)
 if (args[0] == 'close') {
   reply(`┌─┉─ • ─┉─  ── .✦
@@ -13708,8 +13726,8 @@ replyhydro('auto sticker deactivated')
 }
 break
 case 'antivirus': case 'antivirtex': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (antiVirtex) return replyhydro('Already activated')
@@ -13735,8 +13753,8 @@ replyhydro('Success in turning off antivirus this group')
   }
   break
   case 'antilinkyoutubevideo': case 'antilinkyoutubevid': case 'antilinkytvid': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (AntiLinkYoutubeVid) return replyhydro('Already activated')
@@ -13762,8 +13780,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   break
     case 'antilinkyoutubech': case 'antilinkyoutubechannel': case 'antilinkytch': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (AntiLinkYoutubeChannel) return replyhydro('Already activated')
@@ -13789,8 +13807,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   break
       case 'antilinkinstagram': case 'antilinkig': case 'antilinkinsta': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (AntiLinkInstagram) return replyhydro('Already activated')
@@ -13816,8 +13834,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   break
         case 'antilinkfacebook': case 'antilinkfb': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (AntiLinkFacebook) return replyhydro('Already activated')
@@ -13843,8 +13861,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   break
           case 'antilinktelegram': case 'antilinktg': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (AntiLinkTelegram) return replyhydro('Already activated')
@@ -13870,8 +13888,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   break
             case 'antilinktiktok': case 'antilinktt': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (AntiLinkTiktok) return replyhydro('Already activated')
@@ -13897,8 +13915,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   break
             case 'antilinktwt': case 'antilinktwitter': case 'antilinktwit': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (AntiLinkTwitter) return replyhydro('Already activated')
@@ -13924,8 +13942,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   break
 case 'antilinkall': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (AntiLinkTwitter) return replyhydro('Already activated')
@@ -13951,8 +13969,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   break
 case 'antitoxic': case 'antibadword': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (antiToxic) return replyhydro('Already activated')
@@ -13978,8 +13996,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   break
 case 'antiwame': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (antiWame) return replyhydro('Already activated')
@@ -14099,8 +14117,8 @@ case 'totalchat':
   }
   break
 case 'antilinkch': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (Antilinkch) return replyhydro('Already activated')
@@ -14126,8 +14144,8 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
  }
  break
  case 'antilinkgc': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
 if (args[0] === "on") {
 if (Antilinkgc) return replyhydro('Already activated')
@@ -14198,23 +14216,23 @@ case 'domain20': {
            break
   
    case 'leavegc': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 await hydro.groupLeave(m.chat)
 await replyhydro(`*[ Done ]*`)
             }
             break
 case 'add': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 let users = m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 await hydro.groupParticipantsUpdate(m.chat, [users], 'add')
 await replyhydro(`*[ Done ]*`)
 }
 break
 case 'closetime': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (args[1] == 'second') {
 var timer = args[0] * `1000`
 } else if (args[1] == 'minute') {
@@ -14236,9 +14254,9 @@ replyhydro(close)
 }
 break
            case 'ephemeral': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
-if (!isAdmins) return reply('Khusus Admin!!')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isAdmins) return replytolak('Khusus Admin!!')
 if (!text) return replyhydro('Enter the value enable/disable')
 if (args[0] === 'enable') {
 await hydro.sendMessage(m.chat, { disappearingMessagesInChat: WA_DEFAULT_EPHEMERAL })
@@ -14250,7 +14268,7 @@ await replyhydro(`*[ Done ]*`)
             break
 
             case 'delete': case 'del': {
-if (!isAdmins) return reply(mess.only.owner)
+if (!isAdmins) return replytolak(mess.only.owner)
 if (!m.quoted) throw false
 let { chat, id } = m.quoted
  hydro.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.quoted.id, participant: m.quoted.sender } })
@@ -14263,8 +14281,8 @@ let { chat, id } = m.quoted
             }
             break
             case 'linkgroup': case 'linkgc': case 'gclink': case 'grouplink': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 let response = await hydro.groupInviteCode(m.chat)
 hydro.sendText(m.chat, `https://chat.whatsapp.com/${response}\n\nGroup Link : ${groupMetadata.subject}`, m, { detectLink: true })
             }
@@ -14277,9 +14295,9 @@ case 'd': {
             }
             break
 case 'opentime': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (args[1] == 'second') {
 var timer = args[0] * `1000`
 } else if (args[1] == 'minute') {
@@ -14357,9 +14375,9 @@ const groupName = metadata.subject;
 }
 break
 case 'sulap': {
-  if (!m.isGroup) return replyhydro('❗ *Perintah ini hanya bisa digunakan dalam grup!*')
-  if (!isAdmins && !Ahmad) return replyhydro('❗ *Perintah ini hanya untuk admin grup!*')
-  if (!isBotAdmins) return replyhydro('❗ *Bot harus menjadi admin terlebih dahulu!*')
+  if (!m.isGroup) return replytolak('❗ *Perintah ini hanya bisa digunakan dalam grup!*')
+  if (!isAdmins && !Ahmad) return replytolak('❗ *Perintah ini hanya untuk admin grup!*')
+  if (!isBotAdmins) return replytolak('❗ *Bot harus menjadi admin terlebih dahulu!*')
 
   let target = m.mentionedJid[0] 
              || (m.quoted ? m.quoted.sender : null) 
@@ -14392,9 +14410,9 @@ case 'sulap': {
 }
 break
 case 'kick': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 await hydro.groupParticipantsUpdate(m.chat, [users], 'remove')
 await replyhydro(`*[ Done ]*`)
@@ -14402,41 +14420,41 @@ await replyhydro(`*[ Done ]*`)
 break
 //=========================================\\
 case 'kickall': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 const users = participants.map(a => a.id)
 await hydro.groupParticipantsUpdate(m.chat, [users], 'remove')
 await replyhydro(`*[ Done ]*`)
 }
 break
 case 'setbotname':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text) return replyhydro(`Dimana namanya?\nContoh: ${prefix + command} Asisten Hydro`)
     await hydro.updateProfileName(text)
     replyhydro(`Success in changing the name of bot's number`)
     }
     break
 case 'setbotbio':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text) return replyhydro(`Dimana teksnya?\nContoh: ${prefix + command} Asisten Hydro`)
     await hydro.updateProfileStatus(text)
     replyhydro(`Success in changing the bio of bot's number`)
     }
     break
    case 'setnamegc': case 'setgroupname': case 'setsubject': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
-if (!isAdmins) return reply('Khusus Admin!!')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isAdmins) return replytolak('Khusus Admin!!')
 if (!text) return replyhydro('Text ?')
 await hydro.groupUpdateSubject(m.chat, text)
 await replyhydro(`*[ Done ]*`)
             }
             break
           case 'setdesc': case 'setdesk': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
-if (!isAdmins) return reply('Khusus Admin!!')
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isAdmins) return replytolak('Khusus Admin!!')
 if (!text) return replyhydro('Text ?')
 await hydro.groupUpdateDescription(m.chat, text)
 await replyhydro(`*[ Done ]*`)
@@ -14444,7 +14462,7 @@ await replyhydro(`*[ Done ]*`)
             break
 //=========================================\\
 case 'getpp':{
-if (!m.isGroup) return reply ("Digunakan Khsus Dalam Group")
+if (!m.isGroup) return replytolak ("Digunakan Khsus Dalam Group")
 let userss = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 let ghosst = userss
 	try {
@@ -14457,9 +14475,9 @@ hydro.sendMessage(from, { image: { url: ppuser }}, { quoted: m })
 break 
 //=========================================\\
 case 'setppgroup': case 'setgcpp': case 'setgrouppp': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!quoted) return replyhydro(`Where is the picture?`)
 if (!/image/.test(mime)) return replyhydro(`Kirim/Balas Gambar Dengan Caption ${prefix + command}`)
 if (/webp/.test(mime)) return replyhydro(`Kirim/Balas Gambar Dengan Caption ${prefix + command}`)
@@ -14491,31 +14509,31 @@ replyhydro(`Success`)
 }
 break
 case 'deleteppgroup': case 'delppgc': case 'deleteppgc': case 'delppgroup': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
     await hydro.removeProfilePicture(from)
     }
     break
 case 'deleteppbot': case 'delppbot': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
     await hydro.removeProfilePicture(hydro.user.id)
     replyhydro(`Success in deleting bot's profile picture`)
     }
     break
 case 'promote': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 await hydro.groupParticipantsUpdate(m.chat, [users], 'promote')
 await replyhydro(`*[ Done ]*`)
 }
 break
 case 'demote': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 let users = m.mentionedJid[0] ? m.mentionedJid[0] : m.quoted ? m.quoted.sender : text.replace(/[^0-9]/g, '')+'@s.whatsapp.net'
 await hydro.groupParticipantsUpdate(m.chat, [users], 'demote')
 await replyhydro(`*[ Done ]*`)
@@ -14523,31 +14541,31 @@ await replyhydro(`*[ Done ]*`)
 break
 case 'hidetag':
 case '.h': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 hydro.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: m })
 }
 break
 case 'ht': {
-if (!m.isGroup) return reply(mess.only.group)
-if (!Ahmad) return reply(mess.only.owner)
+if (!m.isGroup) return replytolak(mess.only.group)
+if (!Ahmad) return replytolak(mess.only.owner)
 hydro.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: m })
 }
 break
 case 'totag': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
                if (!m.quoted) return replyhydro(`Reply message with caption ${prefix + command}`)
                hydro.sendMessage(m.chat, { forward: m.quoted.fakeObj, mentions: participants.map(a => a.id) })
                }
                break
 
 case 'tagall': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 me = m.sender
 let teks = `╚»˙·٠${themeemoji}●♥ Tag All ♥●${themeemoji}٠·˙«╝ 
  
@@ -15433,7 +15451,7 @@ case 'megadl': {
 }
 break;
 case 'virtusim': {
-  if (!Ahmad) return reply(mess.only.owner)
+  if (!Ahmad) return replytolak(mess.only.owner)
   const axios = require('axios')
   const API_KEY = global.virtuSimApiKey
   const BASE_URL = 'https://virtusim.com/api/v2/json.php'
@@ -15456,7 +15474,7 @@ case 'virtusim': {
   try {
     switch (pilihan) {
       case 'saldo': {
-      if (!Ahmad) return reply(mess.only.owner)
+      if (!Ahmad) return replytolak(mess.only.owner)
         const res = await axios.get(`${BASE_URL}?api_key=${API_KEY}&action=balance`)
         const data = res.data
         if (!data?.status) return m.reply(`🚩 Gagal mengambil data saldo.
@@ -15469,7 +15487,7 @@ case 'virtusim': {
 📱 WhatsApp: ${data.whatsapp}`)
       }
       case 'deposit': {
-      if (!Ahmad) return reply(mess.only.owner)
+      if (!Ahmad) return replytolak(mess.only.owner)
         if (!arg[0] || isNaN(arg[0])) return m.reply('🚩 Contoh: virtusim deposit 5000')
         const amount = parseInt(arg[0])
         if (amount < 5000) return m.reply('🚩 Minimal deposit 5000.')
@@ -15509,7 +15527,7 @@ case 'virtusim': {
         return m.reply(`📶 Layanan di ${negara}:\n\n${layanan}`)
       }
       case 'buynokos': case 'buy': {
-  if (!Ahmad) return reply(mess.only.owner)
+  if (!Ahmad) return replytolak(mess.only.owner)
   if (arg.length < 2) return m.reply('🚩 Contoh: virtusim buynokos indonesia whatsapp')
   const negara = arg[0]
   const keyword = arg.slice(1).join(' ').toLowerCase()
@@ -15578,7 +15596,7 @@ case 'virtusim': {
   break
 }
       case 'cekotp': {
-      if (!Ahmad) return reply(mess.only.owner)
+      if (!Ahmad) return replytolak(mess.only.owner)
         if (!arg[0]) return m.reply('🚩 Contoh: virtusim cekotp 123456')
         const id = arg[0]
         const res = await axios.get(`${BASE_URL}?api_key=${API_KEY}&action=status&id=${id}`)
@@ -15588,7 +15606,7 @@ case 'virtusim': {
         return m.reply(`📬 OTP Masuk:\n\n📩 ${sms}`)
       }
       case 'cancelotp': {
-      if (!Ahmad) return reply(mess.only.owner)
+      if (!Ahmad) return replytolak(mess.only.owner)
         if (!arg[0]) return m.reply('🚩 Contoh: virtusim batalkanotp 123456')
         const id = arg[0]
         const res = await axios.get(`${BASE_URL}?api_key=${API_KEY}&action=set_status&id=${id}&status=2`)
@@ -15599,7 +15617,7 @@ case 'virtusim': {
 💬 ${res.data?.message || 'Tidak diketahui'}`)
       }
       case 'historyotp': {
-      if (!Ahmad) return reply(mess.only.owner)
+      if (!Ahmad) return replytolak(mess.only.owner)
         const res = await axios.get(`${BASE_URL}?api_key=${API_KEY}&action=order_history`)
         const list = Array.isArray(res.data?.data) ? res.data.data : []
         if (!list.length) return m.reply(`🚩 Tidak ada riwayat ditemukan.
@@ -16857,7 +16875,7 @@ ${v.translation}
 break
 //=========================================\\
 case 'nebang': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function msToTime(duration) {
     var milliseconds = parseInt((duration % 1000) / 100),
     seconds = Math.floor((duration / 1000) % 60),
@@ -16883,7 +16901,7 @@ case 'nebang': {
 break
 //=========================================\\
 case 'casino': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function pickRandom(list) {
     return list[Math.floor(Math.random() * list.length)]
 }
@@ -17027,7 +17045,7 @@ break;
 //=========================================\\
 case 'kerja':
 case 'bekerja': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function clockString(ms) {
     let h = Math.floor(ms / 3600000)
     let m = Math.floor(ms / 60000) % 60
@@ -17111,7 +17129,7 @@ return replyhydro(`_*Pilih Pekerjaan Yang Kamu Inginkan*_\n\n_• Kuli_ \n_• M
 break
 //=========================================\\
   case 'bankcek': {
-    if (!m.isGroup) return reply(mess.only.group)
+    if (!m.isGroup) return replytolak(mess.only.group)
     let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0]: m.fromMe ? hydro.user.jid: m.sender
     if (!(who in global.db.users)) return reply(`User ${who} not in database`)
     let user = global.db.users[who]
@@ -17135,7 +17153,7 @@ break
 break
 //=========================================\\
 case 'bansos': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function pickRandom(list) {
     return list[Math.floor(Math.random() * list.length)];
   }
@@ -17185,7 +17203,7 @@ break;
 
 //=========================================\\
 case 'taxy': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function clockString(ms) {
     let h = Math.floor(ms / 3600000)
     let m = Math.floor(ms / 60000) % 60
@@ -17292,7 +17310,7 @@ break
 //=========================================\\
 //=========================================\\
 case 'leaderboard': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 const getRandom = (ext) => {
             return `${Math.floor(Math.random() * 10000)}${ext}`
         }
@@ -17394,7 +17412,7 @@ ${sortedItem.slice(page * 0, page * 5 + 5).map((user, i) => `${i + 1}.*﹙${user
 break
 //=========================================\\
 case 'mulung': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function msToTime(duration) {
     var milliseconds = parseInt((duration % 1000) / 100),
     seconds = Math.floor((duration / 1000) % 60),
@@ -17541,7 +17559,7 @@ const xpperlimit = 1
  break
 case 'fightnaga':
   case 'perangnaga': {
-    if (!m.isGroup) return reply(mess.only.group)
+    if (!m.isGroup) return replytolak(mess.only.group)
 function Acakin(min,max){
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -17605,7 +17623,7 @@ hydro.level = global.db.users[m.sender]
 }
 break
 case 'fightkyubi': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function Acakin(min,max){
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -17671,7 +17689,7 @@ hydro.level = global.db.users[m.sender]
 }
 break
 case 'fightphonix': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function Acakin(min,max){
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -17735,7 +17753,7 @@ hydro.level = global.db.users[m.sender]
 }
 break
 case 'fightkucing': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function Acakin(min,max){
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -17808,7 +17826,7 @@ let penumpan = ['mas mas', 'bapak bapak', 'cewe sma', 'bocil epep', 'emak emak']
     let penumpang = penumpan[Math.floor(Math.random() * penumpan.length)]
 let nogo = ['mas mas', 'bapak bapak', 'cewe sma', 'bocil epep', 'emak emak']
     let nogorojo = penumpan[Math.floor(Math.random() * penumpan.length)]
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 hydro.level = global.db.users[m.sender]
   hydro.fightnaga = hydro.fightnaga ? hydro.fightnaga : {}
   const delay = time => new Promise(res=>setTimeout(res,time));
@@ -17864,7 +17882,7 @@ hydro.level = global.db.users[m.sender]
 break
 case 'fightcentaur': 
 case 'perangcentaur': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function Acakin(min,max){
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -17929,7 +17947,7 @@ hydro.level = global.db.users[m.sender]
 break
 
 case 'berburu': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
     function clockString(ms) {
   let h = Math.floor(ms / 3600000)
   let m = Math.floor(ms / 60000) % 60
@@ -18024,7 +18042,7 @@ break
 
 //=========================================\\
 case 'polisi': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function clockString(ms) {
   let h = Math.floor(ms / 3600000)
   let m = Math.floor(ms / 60000) % 60
@@ -18117,7 +18135,7 @@ break
 //=========================================\\
 // let pajak = 0.02
 case 'berdagang': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function pickRandom(list) {
     return list[Math.floor(Math.random() * list.length)]
 }
@@ -18203,7 +18221,7 @@ break
 //=========================================\\
 case 'merampok':
   case 'rampok': {
-    if (!m.isGroup) return reply(mess.only.group)
+    if (!m.isGroup) return replytolak(mess.only.group)
 function pickRandom(list) {
     return list[Math.floor(Math.random() * list.length)]
 }
@@ -18262,7 +18280,7 @@ replyhydro("Berhasil menghapus semua Kenangan di folder session")
 break
 //================================================================
 case 'tebakgambar': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 let timeout = 60000
 let id = m.chat
 if (id in hydro.tebakkata) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
@@ -18290,7 +18308,7 @@ async function tebakgambar() {
 break
 //==================================================================
 case 'tebaklagu': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 if (tebaklagu.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
  let anu = await JSON.parse(fs.readFileSync('./lib/tebaklagu.json'));
  let result = anu[Math.floor(Math.random() * anu.length)]
@@ -18307,7 +18325,7 @@ if (tebaklagu.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih A
 }
 break
 case 'tebakkata': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
   let timeout = 60000
   let id = m.chat
 	if (id in hydro.tebakkata) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
@@ -18358,7 +18376,7 @@ case 'holotts': case 'hololive': case 'hololivetts': case 'vnholo': {
 }
 //==================================================================
 case 'tebakkalimat': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 if (tebakkalimat.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
  let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkalimat.json')
  let result = anu[Math.floor(Math.random() * anu.length)]
@@ -18375,7 +18393,7 @@ if (tebakkalimat.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masi
 break
 //==================================================================
 case 'tebaklirik':{
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 let users = global.db.users[m.sender]
 	let timeout = 60000
 	let poin = 10000
@@ -18405,7 +18423,7 @@ replyhydro(`*GAME TEBAK LIRIK*\n\nWaktu habis!\n𖦹 Jawabannya adalah; *${json.
 	break
 //==================================================================
 case 'caklontong': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 if (caklontong.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
  let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/caklontong.json')
  let result = anu[Math.floor(Math.random() * anu.length)]
@@ -18424,7 +18442,7 @@ delete caklontong_desk[m.sender.split('@')[0]]
 break
 //==================================================================
 case 'family100': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   let winScore = 10000
  let id = m.chat
 	if (id in hydro.family100) return replyhydro('Masih Ada Sesi Yang Belum Diselesaikan!')
@@ -18442,7 +18460,7 @@ case 'family100': {
 break
 //==================================================================
 case 'upvn':{
-if (!Ahmad) return reply(`Ngapain ? Fitur Ini Khusus Tuan Saya😜`)
+if (!Ahmad) return replytolak(`Ngapain ? Fitur Ini Khusus Tuan Saya😜`)
 function getRandomHexColor() {
   return "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0");
 }
@@ -18515,7 +18533,7 @@ Tipe: ${json.surah.revelationType}
         }   
 break
 case 'tebaklogo': {
-    if (!m.isGroup) return reply('❌ Hanya bisa digunakan di grup!')
+    if (!m.isGroup) return replytolak('❌ Hanya bisa digunakan di grup!')
     let timeout = 60000 // Waktu 60 detik
     let src = JSON.parse(fs.readFileSync('./database/tebaklogo.json')) // Load data soal
     let json = src[Math.floor(Math.random() * src.length)] // Pilih soal acak
@@ -18552,7 +18570,7 @@ Ketik *nyerah* untuk menyerah
 }
 break
 case 'tebakgame': {
-    if (!m.isGroup) return reply('❌ Hanya bisa digunakan di grup!')
+    if (!m.isGroup) return replytolak('❌ Hanya bisa digunakan di grup!')
     let timeout = 120000 // Waktu 120 detik
     let poin = 4999
     let src = JSON.parse(fs.readFileSync('./database/tebakgame.json')) // Load data soal
@@ -18592,8 +18610,8 @@ Ketik *nyerah* untuk menyerah
 }
 break
 case 'autoco': {
-    if (!m.isGroup) return replyhydro("❗ *Fitur ini hanya bisa digunakan di grup.*");
-    if (!isAdmins && !Ahmad) return replyhydro("🔒 *Perintah ini hanya bisa digunakan oleh admin grup atau owner bot.*");
+    if (!m.isGroup) return replytolak("❗ *Fitur ini hanya bisa digunakan di grup.*");
+    if (!isAdmins && !Ahmad) return replytolak("🔒 *Perintah ini hanya bisa digunakan oleh admin grup atau owner bot.*");
 
     const groupId = m.chat;
 
@@ -18686,7 +18704,7 @@ Contoh: *.autoco set 22:00|06:00*
 }
 break;
 case 'tebakanml': {
-    if (!m.isGroup) return reply('❌ Fitur ini hanya bisa digunakan di grup!')
+    if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di grup!')
 
     if (tebakanml[m.sender]) return reply('❗ Kamu masih punya tebakan yang belum dijawab!')
 
@@ -19145,7 +19163,7 @@ case 'perangsarung': {
 }
 break
 case 'petualang': {
-    if (!m.isGroup) return reply('❌ Hanya bisa digunakan di grup!')
+    if (!m.isGroup) return replytolak('❌ Hanya bisa digunakan di grup!')
 
 
 // Fungsi bantuan
@@ -19234,7 +19252,7 @@ Hasil petualanganmu:
 }
 break;
 case 'duel': {
-    if (!m.isGroup) return reply('❌ Hanya bisa digunakan di grup!')
+    if (!m.isGroup) return replytolak('❌ Hanya bisa digunakan di grup!')
 
 function clockString(ms) {
     let d = isNaN(ms) ? '--' : Math.floor(ms / 86400000)
@@ -19319,7 +19337,7 @@ function clockString(ms) {
 }
 break;
 case 'ewe-paksa': {
-    if (!m.isGroup) return reply('❌ Hanya bisa digunakan di grup!')
+    if (!m.isGroup) return replytolak('❌ Hanya bisa digunakan di grup!')
 
 // Fungsi bantuan
 function clockString(ms) {
@@ -19408,7 +19426,7 @@ Total order sebelumnya: ${user.ojekk}
 }
 break;
 case 'ulartangga': {
-    if (!m.isGroup) return reply('❌ Hanya bisa digunakan di grup!')
+    if (!m.isGroup) return replytolak('❌ Hanya bisa digunakan di grup!')
 
 class GameSession {
     constructor(id, sMsg) {
@@ -19718,7 +19736,7 @@ ${spins7}|${spins8}|${spins9}
     }
 //==================================================================
 case 'tebaktebakan': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 if (tebaktebakan.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
 let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebaktebakan.json')
 let result = anu[Math.floor(Math.random() * anu.length)]
@@ -19733,8 +19751,8 @@ if (tebaktebakan.hasOwnProperty(m.sender.split('@')[0])) {
 }}
 break
 case 'getlid': {
-  if (!m.isGroup) return replyhydro(mess.only.group)
-  if (!Ahmad) return replyhydro(mess.only.owner)
+  if (!m.isGroup) return replytolak(mess.only.group)
+  if (!Ahmad) return replytolak(mess.only.owner)
 
   let targetJid
   let notify = ''
@@ -19768,7 +19786,7 @@ case 'getlid': {
 }
 break
 case 'mulaiabsen': {
-  if (!m.isGroup) return replyhydro('❌ Fitur ini hanya bisa digunakan di dalam grup.');
+  if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di dalam grup.');
   const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat) : {}
   const participants = m.isGroup ? groupMetadata.participants : []
   const groupAdmins = participants.filter(p => p.admin).map(p => p.id)
@@ -19784,7 +19802,7 @@ case 'mulaiabsen': {
 break;
 
 case 'absen': {
-  if (!m.isGroup) return replyhydro('❌ Fitur ini hanya bisa digunakan di dalam grup.');
+  if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di dalam grup.');
   if (!absenList[m.chat]?.mulai) return replyhydro('❌ Absen belum dimulai.');
 
   const sender = m.sender;
@@ -19798,7 +19816,7 @@ case 'absen': {
 break;
 
 case 'listabsen': {
-  if (!m.isGroup) return replyhydro('❌ Fitur ini hanya bisa digunakan di dalam grup.');
+  if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di dalam grup.');
   if (!absenList[m.chat]?.mulai) return replyhydro('❌ Absen belum dimulai.');
 
   const daftar = absenList[m.chat].list
@@ -19813,7 +19831,7 @@ case 'listabsen': {
 break;
 
 case 'stopabsen': {
-  if (!m.isGroup) return replyhydro('❌ Fitur ini hanya bisa digunakan di dalam grup.');
+  if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di dalam grup.');
   const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat) : {}
   const participants = m.isGroup ? groupMetadata.participants : []
   const groupAdmins = participants.filter(p => p.admin).map(p => p.id)
@@ -19903,7 +19921,7 @@ case 'mf': {
 }
 //==================================================================
 case 'tebakbendera': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 if (tebakbendera.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
 let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakbendera.json')
 let result = anu[Math.floor(Math.random() * anu.length)]
@@ -19927,7 +19945,7 @@ if (tebakbendera.hasOwnProperty(m.sender.split('@')[0])) {
 break
 //==================================================================
 case 'tebakbenderav2': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
  if (tebakbendera.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
 let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakbendera.json')
 let result = anu[Math.floor(Math.random() * anu.length)]
@@ -19951,7 +19969,7 @@ if (tebakbendera.hasOwnProperty(m.sender.split('@')[0])) {
 break
 //==================================================================
 case 'tebakkabupaten': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 if (tebakkabupaten.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
 let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkabupaten.json')
 let result = anu[Math.floor(Math.random() * anu.length)]
@@ -19968,7 +19986,7 @@ if (tebakkabupaten.hasOwnProperty(m.sender.split('@')[0])) {
 break
 //==================================================================
 case 'tebakkimia': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 if (tebakkimia.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
 let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakkimia.json')
 let result = anu[Math.floor(Math.random() * anu.length)]
@@ -19985,7 +20003,7 @@ if (tebakkimia.hasOwnProperty(m.sender.split('@')[0])) {
 break
 //==================================================================
 case 'asahotak': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 if (tebakasahotak.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
 let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/asahotak.json')
 let result = anu[Math.floor(Math.random() * anu.length)]
@@ -20001,7 +20019,7 @@ if (tebakasahotak.hasOwnProperty(m.sender.split('@')[0])) {
 break
 //==================================================================
 case 'siapaaku':{
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   let users = global.db.users[m.sender]
 	let timeout = 60000 
 	let poin = 10000
@@ -20030,7 +20048,7 @@ replyhydro(`*GAME SIAPAKAH AKU*\n\nWaktu habis!\n𖦹 Jawabannya adalah; *${json
 	break
 //==================================================================
 case 'susunkata':{
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 	let timeout = 60000
 	let poin = 10000
 	let id = m.chat
@@ -20056,7 +20074,7 @@ replyhydro(`*GAME SUSUN KATA*\n\nWaktu habis!\n𖦹 Jawabannya adalah; *${json.j
 	break
 //==================================================================
 case 'tekateki':{
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 	let timeout = 60000
 	let users = global.db.users[m.sender]
 	let poin = 10000
@@ -20086,7 +20104,7 @@ replyhydro(`*GAME TEKA-TEKI*\n\nWaktu habis!\n𖦹 Jawabannya adalah; *${json.ja
 	break
 //==================================================================
 case 'tebakbendera2': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 if (tebakbendera2.hasOwnProperty(m.sender.split('@')[0])) return replyhydro("Masih Ada Sesi Yang Belum Diselesaikan!")
 let anu = await fetchJson('https://raw.githubusercontent.com/BochilTeam/database/master/games/tebakbendera2.json')
 let result = anu[Math.floor(Math.random() * anu.length)]
@@ -20110,7 +20128,7 @@ if (tebakbendera2.hasOwnProperty(m.sender.split('@')[0])) {
 break
 //==================================================================
 case 'banknabung': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 const xpperlimit = 1
   let user = global.db.users[m.sender]
   let all = command.replace(/^tarik/i, '')
@@ -20129,7 +20147,7 @@ const xpperlimit = 1
 break
 //==================================================================
 case 'banktarik': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 const xpperlimit = 1
   let user = global.db.users[m.sender]
   let all = command.replace(/^tarik/i, '')
@@ -20146,7 +20164,7 @@ const xpperlimit = 1
 break
 //==================================================================
 case 'berkebon':{
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function clockString(ms) {
     let h = Math.floor(ms / 3600000)
     let m = Math.floor(ms / 60000) % 60
@@ -20229,7 +20247,7 @@ replyhydro('Sedang Menanam Bibit...')
 break
 //==================================================================
 case 'bet': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function number(x = 0) {
     x = parseInt(x)
     return !isNaN(x) && typeof x == 'number'
@@ -20272,7 +20290,7 @@ break
 //==================================================================
 case 'claim':
 case 'bonus': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function msToTime(duration) {
     var milliseconds = parseInt((duration % 1000) / 100),
     seconds = Math.floor((duration / 1000) % 60),
@@ -20295,7 +20313,7 @@ function msToTime(duration) {
 break
 //==================================================================
 case 'buah': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 	let user = global.db.users[m.sender]
 	let ini_txt = `[ *GUDANG BUAH KAMU* ]\n\n`
 	ini_txt += `🍌 ${user.pisang} Pisang\n`
@@ -20310,7 +20328,7 @@ break
 //==================================================================
 case 'bunuh':
 case 'hitman': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function clockString(ms) {
         let h = Math.floor(ms / 3600000)
         let m = Math.floor(ms / 60000) % 60
@@ -20402,7 +20420,7 @@ case 'hitman': {
 break
 //==================================================================
 case 'collect': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   function clockString(ms) {
   let h = Math.floor(ms / 3600000)
   let m = Math.floor(ms / 60000) % 60
@@ -20426,7 +20444,7 @@ break
 //==================================================================
 case 'craft':
 case 'crafting': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   let type = (args[0] || '').toLowerCase()
   let _type = (args[0] || '').toLowerCase()
   let user = global.db.users[m.sender]
@@ -20572,7 +20590,7 @@ contoh *${command} pickaxe*
 break
 //==================================================================
 case 'feed': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function clockString(ms) {
   let h = isNaN(ms) ? '--' : Math.floor(ms / 310000)
   let m = isNaN(ms) ? '--' : Math.floor(ms / 60000) % 60
@@ -20730,7 +20748,7 @@ case 'fighting':
    function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-   if (!m.isGroup) return reply(mess.only.group)
+   if (!m.isGroup) return replytolak(mess.only.group)
     hydro.fight = hydro.fight ? hydro.fight: {}
     let user = global.db.users[m.sender]
     if (typeof hydro.fight[m.sender] != "undefined" && hydro.fight[m.sender] == true) return replyhydro(`Kamu masih bertarung.`)
@@ -20771,7 +20789,7 @@ case 'fighting':
 break
 //==================================================================
 case 'gajian': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function JaM(ms) {
   let h = isNaN(ms) ? '60' : Math.floor(ms / 3600000) % 60
   return [h].map(v => v.toString().padStart(2, 0) ).join(':')
@@ -20805,7 +20823,7 @@ case 'me':
 case 'profil':
 case 'profile':
 case 'inventory': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 let inventory = {
   others: {
     joinlimit: true,
@@ -20986,7 +21004,7 @@ ${cooldowns}` : ''}
 break
 //==================================================================
 case 'upgrade': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
         let user = global.db.users[m.sender]
         let wood = user.wood * 1
         let rock = user.rock * 1
@@ -21135,7 +21153,7 @@ ${diamond < __diamond ? `\n${rpg.emoticon('diamond')}Diamond kamu kurang *${__di
 break
 //==================================================================
 case 'transfer': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function special(type) {
     let b = type.toLowerCase()
     let special = (['common', 'uncommon', 'mythic', 'legendary', 'pet'].includes(b) ? ' Crate' : '')
@@ -21183,7 +21201,7 @@ ${item.map(v => `${rpg.emoticon(v)}${v}`.trim()).join('\n')}
 break
 //==================================================================
 case 'buy': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function isNumber(number) {
     if (!number) return number
     number = parseInt(number)
@@ -21438,7 +21456,7 @@ ${command} potion 10
 break
 //==================================================================
 case 'selectskill': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 let user = global.db.users[m.sender]
 let skill = ["swordmaster", "necromancer", "witch", "Archer", "magicswordmaster", "thief", "shadow"]
 let bintang = {
@@ -21470,7 +21488,7 @@ ${command} necromancer
 break
 //==================================================================
 case 'sampah': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 const rewards = {
     exp: 500,
     money: 20999,
@@ -21491,7 +21509,7 @@ break
 
 //==================================================================
 case 'roket': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function clockString(ms) {
     let h = Math.floor(ms / 3600000)
     let m = Math.floor(ms / 60000) % 60
@@ -21614,7 +21632,7 @@ function clockString(ms) {
 //==================================================================
 case 'rob':
 case 'robery': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function clockString(ms) {
     let h = Math.floor(ms / 3600000)
     let m = Math.floor(ms / 60000) % 60
@@ -21717,7 +21735,7 @@ Dan health anda berkurang -80
     break
 //==================================================================
 case 'repair': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 const {default: MessageType } = require ('@whiskeysockets/baileys')
 
   let type = (args[0] || '').toLowerCase()
@@ -21851,7 +21869,7 @@ const listMessage = {
 break
 //==================================================================
 case 'referal': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 const { crypto } = require ("crypto")
 const xp_first_time = 2500
 const xp_link_creator = 15000
@@ -21911,7 +21929,7 @@ break
 //==================================================================
 case 'petstore': 
 case 'petshop': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
   let type = (args[0] || '').toLowerCase()
   let _type = (args[0] || '').toLowerCase()
   let user = global.db.users[m.sender]
@@ -22086,7 +22104,7 @@ const listMessage = {
   break
 //==================================================================
 case 'kolam': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 let user = global.db.users[m.sender]
 let past = `
 ╭━━━━「 *BIO* 」   
@@ -22114,7 +22132,7 @@ let past = `
 break
 //==================================================================
 case 'koboy': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function random(arr) {
   return arr[Math.floor(Math.random() * arr.length)]
 }
@@ -22230,7 +22248,7 @@ function random(arr) {
 break
 //==================================================================
 case 'pasar': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 const Skepiting = 7000
 const Slobster = 7000
 const Sudang = 7000
@@ -22736,7 +22754,7 @@ let e = String(err)
 break
 //==================================================================
 case 'ojek': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function clockString(ms) {
     let h = Math.floor(ms / 3600000)
     let m = Math.floor(ms / 60000) % 60
@@ -22843,7 +22861,7 @@ function clockString(ms) {
 break
 //==================================================================
 case 'maling': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function msToTime(duration) {
   var milliseconds = parseInt((duration % 1000) / 100),
     seconds = Math.floor((duration / 1000) % 60),
@@ -22877,7 +22895,7 @@ const timeout = 604800000
 break
 //==================================================================
 case 'mancing': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
 function clockString(ms) {
   let h = Math.floor(ms / 3600000)
   let m = Math.floor(ms / 60000) % 60
@@ -22977,7 +22995,7 @@ break
 
 //==================================================================
 case 'nguli': {
-  if (!m.isGroup) return reply(mess.only.group)
+  if (!m.isGroup) return replytolak(mess.only.group)
     if (new Date - global.db.users[m.sender].lastnguli > 86400000) {
       global.db.users[m.sender].limit += 10
       m.reply('_🎉Selamat kamu mendapatkan +10 limit_')
@@ -22988,7 +23006,7 @@ break
 //==================================================================
   
 case 'backup': {
- if (!Ahmad) return replyhydro(msg.only.owner)
+ if (!Ahmad) return replytolak(msg.only.owner)
  try {
  reply('Loading...')
  const {
@@ -23023,7 +23041,7 @@ case 'intro': case 'intronya': {
 break
 
 case 'addowner':
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!args[0]) return replyhydro(`Use ${prefix+command} number\nExample ${prefix+command} ${ownernumber}`)
 bnnd = q.split("|")[0].replace(/[^0-9]/g, '')
 let ceknye = await hydro.onWhatsApp(bnnd)
@@ -23033,7 +23051,7 @@ fs.writeFileSync('./database/owner.json', JSON.stringify(owner))
 replyhydro(`Number ${bnnd} Has Become An Owner!!!`)
 break
 case 'delowner':
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!args[0]) return replyhydro(`Use ${prefix+command} nomor\nExample ${prefix+command} 6285187063723`)
 ya = q.split("|")[0].replace(/[^0-9]/g, '')
 unp = owner.indexOf(ya)
@@ -23042,7 +23060,7 @@ fs.writeFileSync('./database/owner.json', JSON.stringify(owner))
 replyhydro(`The Numbrr ${ya} Has been deleted from owner list by the owner!!!`)
 break
 case 'addcase': {
-    if (!Ahmad) return reply(mess.only.owner)
+    if (!Ahmad) return replytolak(mess.only.owner)
     if (!text) return replyhydro('Mana case nya');
     const fs = require('fs');
 // Nama file yang akan dimodifikasi
@@ -23340,7 +23358,7 @@ if (!isPrem) return replyhydro(mess.premium)
 break;
 case 'generateimages':
   case 'aiimg': {
-if (!Ahmad) return replyhydro(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 async function generateImages(prompt) {
     const randomIP = `${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`
     const userAgentList = [
@@ -24039,7 +24057,7 @@ case 'dro': {
 break;
 //=========================================\\======
 case 'mute':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!isAdmins && !Ahmad) return reply('Fitur Khusus admin!')
 if (args[0] === "on") {
 addCountCmd('#mute', m.sender, _cmd)
@@ -24061,7 +24079,7 @@ reply(`${prefix+command} on -- _mengaktifkan_\n${prefix+command} off -- _Menonak
 break
 //=========================================\\======
 case 'autoaigrup':case 'aigrup': case 'autoaigc':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!isAdmins && !Ahmad) return reply('Fitur Khusus admin!')
 if (args[0] === "on") {
 addCountCmd('#autoaigrup', m.sender, _cmd)
@@ -24081,7 +24099,7 @@ reply(`${prefix+command} on -- _mengaktifkan_\n${prefix+command} off -- _Menonak
 }}
 break
 case 'autoread':
-                if (!Ahmad) return reply(mess.only.owner)
+                if (!Ahmad) return replytolak(mess.only.owner)
                 if (args.length < 1) return replyhydro(`Contoh: ${prefix + command} on/off`)
                 if (q === 'on') {
                     db.settings[botNumber].autoread = true
@@ -24092,7 +24110,7 @@ case 'autoread':
                 }
 break
 case 'autosimi':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!isAdmins && !Ahmad) return reply('Fitur Khusus admin!')
 if (args[0] === "on") {
 addCountCmd('#autosimi', m.sender, _cmd)
@@ -24112,7 +24130,7 @@ reply(`${prefix+command} on -- _mengaktifkan_\n${prefix+command} off -- _Menonak
 }}
 break
 case 'hydrochat':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!isAdmins && !Ahmad) return reply('Fitur Khusus admin!')
 if (args[0] === "on") {
 addCountCmd('#hydrochat', m.sender, _cmd)
@@ -24147,7 +24165,7 @@ case 'cekkhodam':
   break;
 //=========================================\\======
 case 'welcome':
-if (!m.isGroup) return reply('Fitur Khusus Group!!!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!!!')
 if (!isAdmins && !Ahmad) return reply('Fitur Khusus admin!')
 if (args[0] === "on") {
 addCountCmd('#welcome', m.sender, _cmd)
@@ -24167,7 +24185,7 @@ reply(`${prefix+command} on -- _mengaktifkan_\n${prefix+command} off -- _Menonak
 }
 break
 case 'left': case 'goodbye':
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!isAdmins && !Ahmad) return reply('Fitur Khusus admin!')
 if (args[0] === "on") {
 addCountCmd('#left', m.sender, _cmd)
@@ -24188,7 +24206,7 @@ reply(`${prefix+command} on -- _mengaktifkan_\n${prefix+command} off -- _Menonak
 break
 case 'onlygroup':
             case 'onlygc':
-                if (!Ahmad) return reply('Fitur Khusus owner!')
+                if (!Ahmad) return replytolak('Fitur Khusus owner!')
                 if (args.length < 1) return replyhydro(`Contoh: ${prefix + command} on/off`)
                 if (q == 'on') {
                     db.settings[botNumber].onlygrub = true
@@ -24200,7 +24218,7 @@ case 'onlygroup':
             break
             case 'onlyprivatechat':
             case 'onlypc':
-                if (!Ahmad) return reply('Fitur Khusus owner!')
+                if (!Ahmad) return replytolak('Fitur Khusus owner!')
                 if (args.length < 1) return replyhydro(`Contoh: ${prefix + command} on/off`)
                 if (q == 'on') {
                     db.settings[botNumber].onlypc = true
@@ -24211,7 +24229,7 @@ case 'onlygroup':
                 }
             break
 case 'setwelcome': {
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!Ahmad && !isAdmins) return reply('Fitur Khusus owner!')
 if (!text) return reply(`Gunakan dengan cara ${prefix+command} *teks_welcome*\n\n_Contoh_\n\n${prefix+command} Halo @user, Selamat datang di @group`)
 if (isSetWelcome(m.chat, set_welcome_db)) return reply(`Set welcome already active`)
@@ -24221,7 +24239,7 @@ reply(`Successfully set welcome!`)
 }
 break
 case 'changewelcome':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!Ahmad && !isAdmins) return reply('Fitur Khusus owner!')
 if (!text) return reply(`Gunakan dengan cara ${prefix+command} *teks_welcome*\n\n_Contoh_\n\n${prefix+command} Halo @user, Selamat datang di @group`)
 if (isSetWelcome(m.chat, set_welcome_db)) {
@@ -24236,7 +24254,7 @@ reply(`Sukses change set welcome teks!`)
 }
 break
 case 'delsetwelcome':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!Ahmad && !isAdmins) return reply('Fitur Khusus owner!')
 if (!isSetWelcome(m.chat, set_welcome_db)) return reply(`Belum ada set welcome di sini..`)
 removeSetWelcome(m.chat, set_welcome_db)
@@ -24245,7 +24263,7 @@ reply(`Sukses delete set welcome`)
 }
 break
 case 'setleft':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!Ahmad && !isAdmins) return reply('Fitur Khusus owner!')
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *teks_left*\n\n_Contoh_\n\n${prefix + command} Halo @user, Selamat tinggal dari @group`)
 if (isSetLeft(m.chat, set_left_db)) return reply(`Set left already active`)
@@ -24255,7 +24273,7 @@ reply(`Successfully set left!`)
 }
 break
 case 'changeleft':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!Ahmad && !isAdmins) return reply('Fitur Khusus owner!')
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *teks_left*\n\n_Contoh_\n\n${prefix + command} Halo @user, Selamat tinggal dari @group`)
 if (isSetLeft(m.chat, set_left_db)) {
@@ -24270,7 +24288,7 @@ reply(`Sukses change set left teks!`)
 }
 break
 case 'delsetleft':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 if (!Ahmad && !isAdmins) return reply('Fitur Khusus owner!')
 if (!isSetLeft(m.chat, set_left_db)) return reply(`Belum ada set left di sini..`)
 addCountCmd('#delsetleft', m.sender, _cmd)
@@ -24923,7 +24941,7 @@ HydroAI(pushname, text);
 break
 //==================================================================
 case 'viral':{
-  if (!Ahmad) return reply(mess.only.owner)
+  if (!Ahmad) return replytolak(mess.only.owner)
   hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }})
 var asupan = JSON.parse(fs.readFileSync('./database/anuu.json'))
 var hasil = pickRandom(asupan)
@@ -25727,7 +25745,7 @@ case 'stkbaik': {
   break
 //================================================================================
 case 'uninstalltema': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text || !text.split("|")) return m.reply("ipvps|pwvps")
 let vii = text.split("|")
 if (vii.length < 2) return m.reply("ipvps|pwvps")
@@ -25776,7 +25794,7 @@ m.reply('Katasandi atau IP tidak valid');
 break
 //================================================================================
 case 'installtemastellar': case 'installtemastelar': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text || !text.split("|")) return m.reply("ipvps|pwvps")
 let vii = text.split("|")
 if (vii.length < 2) return m.reply("ipvps|pwvps")
@@ -25785,7 +25803,7 @@ vps: vii[0],
 pwvps: vii[1]
 }
 
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (global.installtema == undefined) return m.reply("Ip / Password Vps Tidak Ditemukan")
 
 let ipvps = global.installtema.vps
@@ -25828,7 +25846,7 @@ break
 
 //================================================================================
 case 'installtemabilling': case 'instaltemabiling': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text || !text.split("|")) return m.reply("ipvps|pwvps")
 let vii = text.split("|")
 if (vii.length < 2) return m.reply("ipvps|pwvps")
@@ -25877,7 +25895,7 @@ m.reply('Katasandi atau IP tidak valid');
 break
 //================================================================================
 case 'installtemanebula': {
-  if (!Ahmad) return reply(mess.only.owner)
+  if (!Ahmad) return replytolak(mess.only.owner)
   if (!text || !text.split("|")) return m.reply(example("ipvps|pwvps"));
   let vii = text.split("|");
   if (vii.length < 2) return m.reply(example("ipvps|pwvps"));
@@ -25937,7 +25955,7 @@ case 'installtemanebula': {
 break;
 case 'installtemaenigma': 
 case 'instaltemaenigma': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text || !text.split("|")) return m.reply("ipvps|pwvps")
 let vii = text.split("|")
 if (vii.length < 2) return m.reply("ipvps|pwvps")
@@ -26047,7 +26065,7 @@ m.reply('Katasandi atau IP tidak valid')
 break
 //================================================================================
 case 'installpanel': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text) return m.reply(example("ipvps|pwvps|panel.com|node.com|ramserver *(contoh 100000)*"))
 let vii = text.split("|")
 if (vii.length < 5) return m.reply(example("ipvps|pwvps|panel.com|node.com|ramserver *(contoh 100000)*"))
@@ -26246,7 +26264,7 @@ console.log('Stderr : ' + data);
 break  
 //================================================================================
 case 'startwings': case 'configurewings': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 let t = text.split('|')
 if (t.length < 3) return m.reply(example("ipvps|pwvps|token_node"))
 
@@ -26286,7 +26304,7 @@ m.reply('Katasandi atau IP tidak valid');
 break
 //================================================================================
 case 'hbpanel': case 'hackbackpanel': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 let t = text.split('|')
 if (t.length < 2) return m.reply("ipvps|pwvps")
 
@@ -26336,7 +26354,7 @@ m.reply('Katasandi atau IP tidak valid');
 break
 //==================================================================
 case 'listdroplet': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 try {
 const getDroplets = async () => {
 try {
@@ -26383,7 +26401,7 @@ m.reply('Terjadi kesalahan saat mengambil data droplet: ' + err);
 break
 //================================================\\
 case 'restartvps': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text) return m.reply("iddroplet")
 let dropletId = text
 const restartVPS = async (dropletId) => {
@@ -26425,7 +26443,7 @@ m.reply(err);
 break
 //================================================\\
 case 'rebuild': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text) return m.reply("iddroplet")
 let dropletId = text 
 let rebuildVPS = async () => {
@@ -26478,7 +26496,7 @@ rebuildVPS();
 break
 //================================================\\
 case 'sisadroplet': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 async function getDropletInfo() {
 try {
 const accountResponse = await axios.get('https://api.digitalocean.com/v2/account', {
@@ -26511,7 +26529,7 @@ return err;
 }}
 async function sisadropletHandler() {
 try {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 
 const dropletInfo = await getDropletInfo();
 m.reply(`Sisa droplet yang dapat kamu pakai: ${dropletInfo.remainingDroplets}
@@ -26525,7 +26543,7 @@ sisadropletHandler();
 break
 //================================================\\
 case 'deldroplet': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!text) return m.reply("iddroplet")
 let dropletId = text
 let deleteDroplet = async () => {
@@ -26613,7 +26631,7 @@ return hydro.sendMessage(m.chat, {
 break
 //================================================\\
 case 'r1c1': case 'r2c1': case 'r2c2': case 'r4c2': case 'r8c4': case 'r16c4': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 function generateRandomPassword() {
 const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#%^&*';
 const length = 10;
@@ -26711,7 +26729,7 @@ break
 
 //==================================================================
 case 'listusr': {
-  if (!Ahmad) return reply(mess.only.owner)
+  if (!Ahmad) return replytolak(mess.only.owner)
   let page = args[0] ? args[0] : '1';
   let f = await fetch(domain + "/api/application/users?page=" + page, {
     "method": "GET",
@@ -26743,7 +26761,7 @@ case 'listusr': {
 }
 break;
         case 'delsrv': {
-      if (!Ahmad) return reply(`Khusus ${global.botname} Aja`)
+      if (!Ahmad) return replytolak(`Khusus ${global.botname} Aja`)
 
 let srv = args[0]
 if (!srv) return reply('ID nya mana?')
@@ -26763,7 +26781,7 @@ reply('*SUCCESSFULLY DELETE THE SERVER*')
 }
         break
         case 'delusr': {
-  if (!Ahmad) return reply(`Khusus ${global.botname} Aja`)
+  if (!Ahmad) return replytolak(`Khusus ${global.botname} Aja`)
 let usr = args[0]
 if (!usr) return reply('ID nya mana?')
 let f = await fetch(domain + "/api/application/users/" + usr, {
@@ -26783,7 +26801,7 @@ reply('*SUCCESSFULLY DELETE THE USER*')
         break
                 
 case 'listsrv': {
-  if (!Ahmad) return reply(`Maaf, Anda tidak dapat melihat daftar server.`);
+  if (!Ahmad) return replytolak(`Maaf, Anda tidak dapat melihat daftar server.`);
   let page = args[0] ? args[0] : '1';
   let f = await fetch(domain + "/api/application/servers?page=" + page, {
     "method": "GET",
@@ -26885,7 +26903,7 @@ hydro.sendMessage(from, { text: text12, contextInfo: { mentionedJid: [sender, ow
 hydro.sendMessage(m.chat, {audio: freya, mimetype:'audio/mpeg', ptt:true }, {quoted:m})
 break
 case 'premlist':{
-if (!Ahmad) return reply(mess.owner)
+if (!Ahmad) return replytolak(mess.owner)
 let listprem =`*LIST SELER ${global.botname}*\n\nTotal Seller : ${owner.length}\n`
 var no = 1
 for (let x of owner) {
@@ -26896,7 +26914,7 @@ hydro.sendMessage(m.chat, {text: listprem },{quoted: hydro.chat})
 }
 break
 case 'addsrv': {
-if (!Ahmad) return reply(`Ngapain ? Fitur Ini Khusus Tuan Saya😜`)
+if (!Ahmad) return replytolak(`Ngapain ? Fitur Ini Khusus Tuan Saya😜`)
 let s = text.split(',');
 if (s.length < 7) return reply(`*Format salah!*
 
@@ -26977,7 +26995,7 @@ CREATED AT: ${server.created_at}`)
 }
         break
 case 'suspend': {
-            if (!Ahmad) return reply(`Khusus ${global.botname} Ajah`)
+            if (!Ahmad) return replytolak(`Khusus ${global.botname} Ajah`)
             let srv = args[0]
             if (!srv) return reply('ID nya mana?')
             let f = await fetch(domain + "/api/application/servers/" + srv + "/suspend", {
@@ -26996,7 +27014,7 @@ case 'suspend': {
         }
             break
             case 'unsuspend': {
-            if (!Ahmad) return reply(`Khusus ${global.botname} Ajah`)
+            if (!Ahmad) return replytolak(`Khusus ${global.botname} Ajah`)
             let srv = args[0]
             if (!srv) return reply('ID nya mana?')
             let f = await fetch(domain + "/api/application/servers/" + srv + "/unsuspend", {
@@ -27015,7 +27033,7 @@ case 'suspend': {
         }
             break
 case 'createadmin': case 'cadmin': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isPT && !isOwn && !Ahmad) return replyhigh(mess.high)
 let s = q.split(',')
 let email = s[0];
@@ -27101,7 +27119,7 @@ TYPE: user
 }
 break
                 case 'createadmin2': {
-if (!Ahmad) return reply(mess.owner)
+if (!Ahmad) return replytolak(mess.owner)
 
 let s = q.split(',')
 let email = s[0];
@@ -27180,7 +27198,7 @@ LOGIN: ${domain2}
 } 
         break
         case 'listadmin': {
-  if (!Ahmad) return reply(`Maaf, Anda tidak dapat melihat daftar pengguna.`);
+  if (!Ahmad) return replytolak(`Maaf, Anda tidak dapat melihat daftar pengguna.`);
   let page = args[0] ? args[0] : '1';
   let f = await fetch(domain + "/api/application/users?page=" + page, {
     "method": "GET",
@@ -27214,7 +27232,7 @@ LOGIN: ${domain2}
 }
 break;
 case '1gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -27339,7 +27357,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case '2gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -27463,7 +27481,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case '3gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -27585,7 +27603,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case '4gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -27708,7 +27726,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case '5gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -27832,7 +27850,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case '6gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -27956,7 +27974,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case '7gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -28080,7 +28098,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case '8gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -28204,7 +28222,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case '9gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -28328,7 +28346,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case '10gb': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -28452,7 +28470,7 @@ CPU: ${server.limits.cpu}%
 
 break
 case 'unli': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!isReseller && !isAdminP && !isPT && !isOwn) return replyall(mess.all)
 let t = text.split(',');
 if (t.length < 2) return reply(`*Format salah!*
@@ -28789,7 +28807,7 @@ case 'bratgambar':
 case 'bratimg':  {
 if (!text) return m.reply('teksnya')
 const axios = require('axios');
-const brat = `https://api.siputzx.my.id/api/m/brat?text=${encodeURIComponent(text)}&isAnimated=false&delay=500`
+const brat = `https://brat.siputzx.my.id/image?text=${encodeURIComponent(text)}&background=%23ffffff&color=%23000000&emojiStyle=apple`
 await hydro.sendImageAsSticker(m.chat, brat, m, {packname: global.packname})
 }
 break
@@ -28802,7 +28820,7 @@ case 'bratvideo': {
     const { join } = require('path');
     const fs = require('fs');
     const { spawn } = require('child_process');
-    const videoUrl = `https://api.siputzx.my.id/api/m/brat?text=${encodeURIComponent(text)}&isAnimated=true&delay=500`
+    const videoUrl = `https://brat.siputzx.my.id/gif?text=${encodeURIComponent(text)}&background=%23ffffff&color=%23000000&emojiStyle=apple&delay=500&endDelay=1000&width=352&height=352`
     const res = await axios.get(videoUrl, { responseType: 'arraybuffer' });
     const tmpMp4 = join(tmpdir(), `brat-${Date.now()}.mp4`);
     const tmpWebp = join(tmpdir(), `brat-${Date.now()}.webp`);
@@ -29961,8 +29979,8 @@ await listbut2(m.chat, teks, bet, m);
 }
 break
 case 'dellist':
-if (!m.isGroup) return reply('Fitur Khusus Group!')
-if (!isAdmins) return reply('Fitur Khusus admin!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
+if (!isAdmins) return replytolak('Fitur Khusus admin!')
 if (db_respon_list.length === 0) return reply(`Belum ada list message di database`)
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *key*\n\n_Contoh_\n\n${prefix + command} hello`)
 if (!isAlreadyResponList(m.chat, q.toLowerCase(), db_respon_list)) return reply(`List respon dengan key *${q}* tidak ada di database!`)
@@ -29970,8 +29988,8 @@ delResponList(m.chat, q.toLowerCase(), db_respon_list)
 reply(`Sukses delete list message dengan key *${q}*`)
 break
 case 'addlist':
-if (!m.isGroup) return reply('Fitur Khusus Group!')
-if (!isAdmins) return reply('Fitur Khusus admin!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
+if (!isAdmins) return replytolak('Fitur Khusus admin!')
 var args1 = q.split("|")[0].toLowerCase()
 var args2 = q.split("|")[1]
 if (!q.includes("|")) return reply(`Gunakan dengan cara ${prefix+command} *key|response*\n\n_Contoh_\n\n${prefix+command} tes|apa`)
@@ -29988,8 +30006,8 @@ reply(`Sukses set list message dengan key : *${args1}*`)
 }
 break
 case 'updatelist': case 'update':
-if (!m.isGroup) return reply('Fitur Khusus Group!')
-if (!isAdmins) return reply('Fitur Khusus admin!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
+if (!isAdmins) return replytolak('Fitur Khusus admin!')
 var args1 = q.split("|")[0].toLowerCase()
 var args2 = q.split("|")[1]
 if (!q.includes("|")) return reply(`Gunakan dengan cara ${prefix+command} *key|response*\n\n_Contoh_\n\n${prefix+command} tes|apa`)
@@ -30042,16 +30060,16 @@ var nilai_two = Number(bawah)
 reply(`${nilai_one / nilai_two}`)}
 break
 case 'setproses': case 'setp':
-if (!m.isGroup) return reply('Fitur Khusus Group!')
-if (!isAdmins) return reply('Fitur Khusus admin!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
+if (!isAdmins) return replytolak('Fitur Khusus admin!')
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *teks*\n\n_Contoh_\n\n${prefix + command} Pesanan sedang di proses ya @user\n\n- @user (tag org yg pesan)\n- @pesanan (pesanan)\n- @jam (waktu pemesanan)\n- @tanggal (tanggal pemesanan) `)
 if (isSetProses(m.chat, set_proses)) return reply(`Set proses already active`)
 addSetProses(text, m.chat, set_proses)
 reply(`✅ Done set proses!`)
 break
 case 'changeproses': case 'changep':
-if (!m.isGroup) return reply('Fitur Khusus Group!')
-if (!isAdmins) return reply('Fitur Khusus admin!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
+if (!isAdmins) return replytolak('Fitur Khusus admin!')
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *teks*\n\n_Contoh_\n\n${prefix + command} Pesanan sedang di proses ya @user\n\n- @user (tag org yg pesan)\n- @pesanan (pesanan)\n- @jam (waktu pemesanan)\n- @tanggal (tanggal pemesanan) `)
 if (isSetProses(m.chat, set_proses)) {
 changeSetProses(text, m.chat, set_proses)
@@ -30062,15 +30080,15 @@ reply(`Sukses ubah set proses!`)
 }
 break
 case 'delsetproses': case 'delsetp':
-if (!m.isGroup) return reply('Fitur Khusus Group!')
-if (!isAdmins) return reply('Fitur Khusus admin!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
+if (!isAdmins) return replytolak('Fitur Khusus admin!')
 if (!isSetProses(m.chat, set_proses)) return reply(`Belum ada set proses di gc ini`)
 removeSetProses(m.chat, set_proses)
 reply(`Sukses delete set proses`)
 break
 case 'setdone':{
-if (!m.isGroup) return reply('Fitur Khusus Group!')
-if (!isAdmins) return reply('Fitur Khusus admin!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
+if (!isAdmins) return replytolak('Fitur Khusus admin!')
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *teks*\n\n_Contoh_\n\n${prefix + command} Done @user\n\n- @user (tag org yg pesan)\n- @pesanan (pesanan)\n- @jam (waktu pemesanan)\n- @tanggal (tanggal pemesanan) `)
 if (isSetDone(m.chat, set_done)) return reply(`Udh set done sebelumnya`)
 addSetDone(text, m.chat, set_done)
@@ -30078,8 +30096,8 @@ reply(`Sukses set done!`)
 break
 }
 case 'changedone': case 'changed':
-if (!m.isGroup) return reply('Fitur Khusus Group!')
-if (!isAdmins) return reply('Fitur Khusus admin!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
+if (!isAdmins) return replytolak('Fitur Khusus admin!')
 if (!text) return reply(`Gunakan dengan cara ${prefix + command} *teks*\n\n_Contoh_\n\n${prefix + command} Done @user\n\n- @user (tag org yg pesan)\n- @pesanan (pesanan)\n- @jam (waktu pemesanan)\n- @tanggal (tanggal pemesanan) `)
 if (isSetDone(m.chat, set_done)) {
 changeSetDone(text, m.chat, set_done)
@@ -30090,14 +30108,14 @@ reply(`Sukses ubah set done!`)
 }
 break
 case 'delsetdone': case 'delsetd':
-if (!m.isGroup) return reply('Fitur Khusus Group!')
-if (!isAdmins) return reply('Fitur Khusus admin!')
+if (!m.isGroup) return replytolak('Fitur Khusus Group!')
+if (!isAdmins) return replytolak('Fitur Khusus admin!')
 if (!isSetDone(m.chat, set_done)) return reply(`Belum ada set done di gc ini`)
 removeSetDone(m.chat, set_done)
 reply(`Sukses delete set done`)
 break
 case'proses':{
-  if (!m.isGroup) return reply('Fitur Khusus Group!')
+  if (!m.isGroup) return replytolak('Fitur Khusus Group!')
 			if (!m.quoted) return m.reply('Reply pesanan yang akan proses')
             let tek = m.quoted ? quoted.text : quoted.text.split(args[0])[1]
             let proses = `── 「 *DETAIL PESANAN* 」 ──\n\n\`\`\`› Status : 「 Transaksi Pending 」\n› Pesanan : @user\n› Date : @tanggal\n› Clock : @jam\n› Status Pesanan : Diproses ⌛\n› Catatan Pesanan 📝 :\`\`\`\n*@pesanan*\n\n_*Tunggu Sebentar, Orderan Kamu Sedang Diproses Oleh Admin @admin.*_`
@@ -30305,7 +30323,7 @@ searchYouTube(text)
           }
             break
 case 'warcall': {
- if (!m.isGroup) return reply(mess.only.group)
+ if (!m.isGroup) return replytolak(mess.only.group)
 if(!text) return reply(`contoh: \n.warcall kontol`)
 hydro.relayMessage(m.chat, {
 scheduledCallCreationMessage: {
@@ -30576,7 +30594,7 @@ downloadMp3(text)
 }
 break  
 case 'getcase':
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 const getCase = (cases) => {
 return "case"+`'${cases}'`+fs.readFileSync("hydro.js").toString().split('case \''+cases+'\'')[1].split("break")[0]+"break"
 }
@@ -30584,7 +30602,7 @@ replyhydro(`${getCase(q)}`)
 break
 //=========================================\\
 case 'addprem': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!args[0]) return replyhydro(`Use ${prefix+command} number\nExample ${prefix+command} 6285892928715`)
 prrkek = q.split("|")[0].replace(/[^0-9]/g, '')+`@s.whatsapp.net`
 let ceknya = await hydro.onWhatsApp(prrkek)
@@ -30628,7 +30646,7 @@ replyhydro(`Woah Lu ${prrkek} Jadi PT Panel!`)
 }
 break
 case 'addownp': {
-if (!Ahmad) return replyhydro(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!args[0]) return replyhydro(`Use ${prefix+command} number\nExample ${prefix+command} 6285187063723`)
 prrkek = q.split("|")[0].replace(/[^0-9]/g, '')+`@s.whatsapp.net`
 let ceknya = await hydro.onWhatsApp(prrkek)
@@ -30640,7 +30658,7 @@ replyhydro(`Woah Lu ${prrkek} Jadi Owner Panel!`)
 break
 //=========================================\\
 case 'delprem':
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!args[0]) return replyhydro(`Use ${prefix+command} nomor\nExample ${prefix+command} 6285892928715`)
 ya = q.split("|")[0].replace(/[^0-9]/g, '')+`@s.whatsapp.net`
 unp = prem.indexOf(ya)
@@ -30676,7 +30694,7 @@ fs.writeFileSync('./database/ptpanel.json', JSON.stringify(ptp))
 replyhydro(`The Number ${ya} Has Been Removed PT Panel!`)
 break
 case 'delownp':
-if (!Ahmad) return replyhydro(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!args[0]) return replyhydro(`Use ${prefix+command} nomor\nExample ${prefix+command} 6285187063723`)
 ya = q.split("|")[0].replace(/[^0-9]/g, '')+`@s.whatsapp.net`
 unp = ownp.indexOf(ya)
@@ -30685,7 +30703,7 @@ fs.writeFileSync('./database/ownerpanel.json', JSON.stringify(ownp))
 replyhydro(`The Number ${ya} Has Been Removed Owner Panel!`)
 break
 case 'addbadword':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Whats the word?')
 if (BadHydro.includes(q)) return replyhydro("The word is already in use")
 BadHydro.push(q)
@@ -30694,7 +30712,7 @@ replyhydro(`Success Adding Bad Word\nCheck by typing ${prefix}listbadword`)
 }
 break
 case 'delbadword':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Enter the word')
 if (!BadHydro.includes(q)) return replyhydro("The word does not exist in the database")
 let wanu = BadHydro.indexOf(q)
@@ -30713,7 +30731,7 @@ replyhydro(teks)
 }
 break
 case 'addvideo':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Whats the video name?')
 if (VideoHydro.includes(q)) return replyhydro("The name is already in use")
 let delb = await hydro.downloadAndSaveMediaMessage(quoted)
@@ -30725,7 +30743,7 @@ replyhydro(`Success Adding Video\nCheck by typing ${prefix}listvideo`)
 }
 break
 case 'delvideo':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Enter the video name')
 if (!VideoHydro.includes(q)) return replyhydro("The name does not exist in the database")
 let wanu = VideoHydro.indexOf(q)
@@ -30745,7 +30763,7 @@ replyhydro(teks)
 }
 break
 case 'addimage':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Whats the image name?')
 if (ImageHydro.includes(q)) return replyhydro("The name is already in use")
 let delb = await hydro.downloadAndSaveMediaMessage(quoted)
@@ -30757,7 +30775,7 @@ replyhydro(`Success Adding Image\nCheck by typing ${prefix}listimage`)
 }
 break
 case 'delimage':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Enter the image name')
 if (!ImageHydro.includes(q)) return replyhydro("The name does not exist in the database")
 let wanu = ImageHydro.indexOf(q)
@@ -30777,7 +30795,7 @@ replyhydro(teks)
 }
 break
 case 'addsticker':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Whats the sticker name?')
 if (HydroSticker.includes(q)) return replyhydro("The name is already in use")
 let delb = await hydro.downloadAndSaveMediaMessage(quoted)
@@ -30789,7 +30807,7 @@ replyhydro(`Success Adding Sticker\nCheck by typing ${prefix}liststicker`)
 }
 break
 case 'delsticker':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Enter the sticker name')
 if (!HydroSticker.includes(q)) return replyhydro("The name does not exist in the database")
 let wanu = HydroSticker.indexOf(q)
@@ -30809,7 +30827,7 @@ replyhydro(teks)
 }
 break
 case 'addvn':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Whats the audio name?')
 if (HydroVoiceNote.includes(q)) return replyhydro("The name is already in use")
 let delb = await hydro.downloadAndSaveMediaMessage(quoted)
@@ -30821,7 +30839,7 @@ replyhydro(`Success Adding Audio\nCheck by typing ${prefix}listvn`)
 }
 break
 case 'delvn':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (args.length < 1) return replyhydro('Enter the vn name')
 if (!HydroVoiceNote.includes(q)) return replyhydro("The name does not exist in the database")
 let wanu = HydroVoiceNote.indexOf(q)
@@ -30882,7 +30900,7 @@ hydro.sendText(m.chat, teks, m, { mentions: Object.values(global.db.sticker).map
             }
             break 
 case 'lockcmd': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!m.quoted) return replyhydro('Reply Message!')
 if (!m.quoted.fileSha256) return replyhydro('SHA256 Hash Missing')
 let hash = m.quoted.fileSha256.toString('base64')
@@ -30929,7 +30947,7 @@ let msgs = JSON.parse(fs.readFileSync('./database/database.json'))
             }
 	    break
 case 'setexif': {
-               if (!Ahmad) return reply(mess.only.owner)
+               if (!Ahmad) return replytolak(mess.only.owner)
                if (!text) return replyhydro(`Example : ${prefix + command} packname|author`)
           global.packname = text.split("|")[0]
           global.author = text.split("|")[1]
@@ -31010,7 +31028,7 @@ case 'toreal': {
 }
 break;
 case 'setppbot': case 'setbotpp': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!quoted) return replyhydro(`Kirim/Balas Gambar Dengan Caption ${prefix + command}`)
 if (!/image/.test(mime)) return replyhydro(`Kirim/Balas Gambar Dengan Caption ${prefix + command}`)
 if (/webp/.test(mime)) return replyhydro(`Kirim/Balas Gambar Dengan Caption ${prefix + command}`)
@@ -31042,7 +31060,7 @@ replyhydro(`Success`)
 }
 break
 case 'creategc': case 'creategroup': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!args.join(" ")) return replyhydro(`Use ${prefix+command} groupname`)
 try {
 let cret = await hydro.groupCreate(args.join(" "), [])
@@ -31610,7 +31628,7 @@ case 'awesomecheck':
  case 'prettycheck':
 case 'lovelycheck':
   case 'uglycheck':
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 const cex = body.slice(0)
 const cek1 = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50','51','52','53','54','55','56','57','58','59','60','61','62','63','64','65','66','67','68','69','70','71','72','73','74','75','76','77','78','79','80','81','82','83','84','85','86','87','88','89','90','91','92','93','94','95','96','97','98','99','100']
 const cek2 = cek1[Math.floor(Math.random() * cek1.length)]
@@ -31974,7 +31992,7 @@ hydro.sendMessage(m.chat, { caption: `Title : ${result.title}\nCategory : ${resu
             }
             break
 case 'afk': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!text) return replyhydro(`Example ${prefix+command} want to sleep`)
 let user = global.db.users[m.sender]
 user.afkTime = + new Date
@@ -32127,7 +32145,7 @@ hydro.sendMessage(m.chat, { image: { url: yeha }, caption : mess.success }, { qu
 }
 break
 case '>':
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 var err = new TypeError
 err.name = "EvalError "
 err.message = "Code Not Found (404)"
@@ -32149,8 +32167,8 @@ replyhydro(util.format(_syntax + _err))
 }
 break
 case 'pushkontak': {
-    if (!Ahmad) return reply(mess.only.owner)
-      if (!m.isGroup) return replyhydro(`The feature works only in grup`)
+    if (!Ahmad) return replytolak(mess.only.owner)
+      if (!m.isGroup) return replytolak(`The feature works only in grup`)
     if (!text) return replyhydro(`text?`)
     let mem = await participants.filter(v => v.id.endsWith('.net')).map(v => v.id)
     replyhydro(`Success in pushing the message to contacts`)
@@ -32161,7 +32179,7 @@ case 'pushkontak': {
       }
       break
 case 'pushkontakv2':{
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!q) return replyhydro(`Incorrect Usage Please Use Command Like This\n${prefix+command} idgc|text`)
 reply(mess.wait)
 const metadata2 = await hydro.groupMetadata(q.split("|")[0])
@@ -32174,7 +32192,7 @@ replyhydro(`Success`)
 }
 break
 case 'pushkontakv3': {
-if (!Ahmad) return reply(`Khusus Owner Aja`)
+if (!Ahmad) return replytolak(`Khusus Owner Aja`)
 if (!text) return reply(`Penggunaan Salah Silahkan Gunakan Command Seperti Ini\n${prefix+command} idgroup|jeda|teks\nUntuk Liat Id Group Silahkan Ketik .idgroup`)
 await replyhydro("Otw Boskuuu")
 const groupMetadataa = !m.isGroup? await hydro.groupMetadata(`${q.split("|")[0]}`).catch(e => {}) : ""
@@ -32196,8 +32214,8 @@ replyhydro("Succes Boss!")
 }
 break
 case 'pushkontakv4': {
-if (!Ahmad) return reply(`Khusus Owner Aja`)
-if (!m.isGroup) return reply(mess.only.private)
+if (!Ahmad) return replytolak(`Khusus Owner Aja`)
+if (!m.isGroup) return replytolak(mess.only.private)
 if (!text) return reply(`Penggunaan Salah Silahkan Gunakan Command Seperti Ini\n${prefix+command} jeda|teks`)
 await replyhydro("Otw Boskuuu")
 const halsss = await participants.filter(v => v.id.endsWith('.net')).map(v => v.id)
@@ -32280,8 +32298,8 @@ async function jadwalSholat(kota) {
 }
 break
 case 'savekontak': case 'svkontak':{
-if (!Ahmad) return reply(`Khusus Owner Ajah`)
-if (!m.isGroup) return reply(`Fitur Ini Khusus Group`)
+if (!Ahmad) return replytolak(`Khusus Owner Ajah`)
+if (!m.isGroup) return replytolak(`Fitur Ini Khusus Group`)
 let cmiggc = await hydro.groupMetadata(m.chat)
 let orgiggc = participants.map(a => a.id)
 vcard = ''
@@ -32328,8 +32346,8 @@ reply(teks + `Untuk Penggunaan Silahkan Ketik Command ${prefix}pushkontakv3 id|t
 }
 break
 case 'savekontakv2': {
-if (!Ahmad) return reply(`Khusus Owner Aja`)
-if (!m.isGroup) return reply(mess.only.private)
+if (!Ahmad) return replytolak(`Khusus Owner Aja`)
+if (!m.isGroup) return replytolak(mess.only.private)
 if (!text) return reply(`Penggunaan Salah Silahkan Gunakan Command Seperti Ini\n${prefix+command} idgroup\nUntuk Liat Id Group Silahkan Ketik .cekidgc`)
 await replyhydro("_Wᴀɪᴛɪɴɢ ɪɴ ᴘʀᴏɢʀᴇss !!_")
 const groupMetadataa = !m.isGroup? await hydro.groupMetadata(`${text}`).catch(e => {}) : ""
@@ -32363,7 +32381,7 @@ fs.writeFileSync("./database/contacts.json", JSON.stringify(contacts))
 break
 
 case 'jpm':{
-if (!Ahmad) return reply(`Khusus Owner Aja`)
+if (!Ahmad) return replytolak(`Khusus Owner Aja`)
 if (!text) return reply(`*Penggunaan Salah Silahkan Gunakan Seperti Ini*\n${prefix+command} teks|jeda\n\nReply Gambar Untuk Mengirim Gambar Ke Semua Group\nUntuk Jeda Itu Delay Jadi Nominal Jeda Itu 1000 = 1 detik`)
 await replyhydro("_Wait Tuan Ku✅_")
 let getGroups = await hydro.groupFetchAllParticipating()
@@ -32386,7 +32404,7 @@ replyhydro("*SUCCESFUL TUAN ONWER✅*")
 break
 
 case 'jpm2':{
-if (!Ahmad) return reply(`Khusus Owner Aja`)
+if (!Ahmad) return replytolak(`Khusus Owner Aja`)
 if (!text) return reply(`*Penggunaan Salah Silahkan Gunakan Seperti Ini*\n${prefix+command} teks|jeda\n\nReply Gambar Untuk Mengirim Gambar Ke Semua Group\nUntuk Jeda Itu Delay Jadi Nominal Jeda Itu 1000 = 1 detik`)
 await replyhydro("_Wait Tuan Ku✅_")
 let getGroups = await hydro.groupFetchAllParticipating()
@@ -32409,8 +32427,8 @@ replyhydro("*SUCCESFUL TUAN ONWER✅*")
 break
 
 case 'sendkontak': case 'kontak':
-if (!Ahmad) return reply(`Khusus Owner Aja`)
-if (!m.isGroup) return reply(`Khusus Group`)
+if (!Ahmad) return replytolak(`Khusus Owner Aja`)
+if (!m.isGroup) return replytolak(`Khusus Group`)
 if (!m.mentionedJid[0]) return reply('Ex; .kontak @tag|nama')
 let snContact = {
 	displayName: "Contact", contacts: [{displayName: ownername, vcard: "BEGIN:VCARD\nVERSION:3.0\nN:;"+ownername+";;;\nFN:"+ownername+"\nitem1.TEL;waid="+m.mentionedJid[0].split('@')[0]+":"+m.mentionedJid[0].split('@')[0]+"\nitem1.X-ABLabel:Ponsel\nEND:VCARD"}]
@@ -32419,8 +32437,8 @@ hydro.sendMessage(m.chat, {contacts: snContact}, {ephemeralExpiration: 86400})
 break
 
 case 'getcontact': case 'getkontak':
-if (!Ahmad) return reply(`Khusus Owner Aja`)
-if (!m.isGroup) return reply(`Fitur Ini Khusus Group`)
+if (!Ahmad) return replytolak(`Khusus Owner Aja`)
+if (!m.isGroup) return replytolak(`Fitur Ini Khusus Group`)
 huhuhs = await hydro.sendMessage(m.chat, {
     text: `Grup; *${groupMetadata.subject}*\nTotal peserta; *${participants.length}*`
 }, {quoted: m, ephemeralExpiration: 86400})
@@ -32604,7 +32622,7 @@ var xeonyresult = pickRandom(ahegaonsfw)
 hydro.sendMessage(m.chat, { caption: mess.success, image: { url: xeonyresult.url } }, { quoted: m })
 break
 case 'gifblowjob':
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!AntiNsfw) return replyhydro(mess.nsfw)
 reply(mess.wait)
   let assss = await axios.get ("https://api.waifu.pics/nsfw/blowjob")
@@ -32614,7 +32632,7 @@ reply(mess.wait)
     })
     break
 case 'gifhentai':
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!AntiNsfw) return replyhydro(mess.nsfw)
 reply(mess.wait)
 var ahegaonsfw = JSON.parse(fs.readFileSync('./data/HydroMedia/nsfw/gifs.json'))
@@ -32623,7 +32641,7 @@ var xeonyresultx = pickRandom(ahegaonsfw)
     })
     break
     case 'gifs': case 'foot': {
-if (!m.isGroup) return reply(mess.only.group)
+if (!m.isGroup) return replytolak(mess.only.group)
 if (!AntiNsfw) return replyhydro(mess.nsfw)
 reply(mess.wait)
 let heyy
@@ -33384,7 +33402,7 @@ hydro.sendMessage(m.chat, { text: xeonkak }, { quoted: m })
 break
            case 'jodoh':
             case 'jodohku': {
-            if (!m.isGroup) return reply(mess.only.group)
+            if (!m.isGroup) return replytolak(mess.only.group)
             let member = participants.map(u => u.id)
             let me = m.sender
             let jodoh = member[Math.floor(Math.random() * member.length)]
@@ -33409,7 +33427,7 @@ isForwarded: true,
             }
             break
  case 'couple': {
-            if (!m.isGroup) return reply(mess.only.group)
+            if (!m.isGroup) return replytolak(mess.only.group)
             let member = participants.map(u => u.id)
             let orang = member[Math.floor(Math.random() * member.length)]
             let jodoh = member[Math.floor(Math.random() * member.length)]
@@ -33455,7 +33473,7 @@ hydro.sendMessage(m.chat, {caption: `${themeemoji} Title : ${result.title}\n${th
             }
             break
             case 'pick': {
-            	if (!m.isGroup) return reply(mess.only.group)
+            	if (!m.isGroup) return replytolak(mess.only.group)
             	if (!text) return replyhydro(`What do you want to pick?\nExample: ${prefix + command} idiot`)
              const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat)
  .catch((e) => {}) : ""
@@ -34004,7 +34022,7 @@ const { Sticker } = require('wa-sticker-formatter');
 break
 
 case 'myip': {
-        if (!Ahmad) return reply(mess.only.owner)
+        if (!Ahmad) return replytolak(mess.only.owner)
 var http = require('http')
 http.get({
 'host': 'api.ipify.org',
@@ -34149,8 +34167,8 @@ case 'gdrive': {
 }
 break
 case 'invite': {
-	if (!m.isGroup) return reply(mess.only.group)
-	if (!isBotAdmins) return reply('_Bot Harus Menjadi Admin Terlebih Dahulu_')
+	if (!m.isGroup) return replytolak(mess.only.group)
+	if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
 if (!text) return replyhydro(`Silakan Masukkan Nomer yang Ingin Anda Invite\n\nContoh :\n*${prefix + command}* 6285745522549`)
 if (text.includes('+')) return replyhydro(`Enter the number together without *+*`)
 if (isNaN(text)) return replyhydro(`Enter only the numbers plus your country code without spaces`)
@@ -34294,7 +34312,7 @@ encmedia = await hydro.sendImageAsSticker(from, wifegerakx, m, { packname: globa
 }
 break
 case 'upch': {
-if (!Ahmad) return reply(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
         		try {
 					ppuser = await hydro.profilePictureUrl(m.sender, 'image');
 				} catch (err) {
@@ -34550,7 +34568,7 @@ reply(e)
 
 
 if (budy.startsWith('$')) {
-if (!Ahmad) return replyhydro(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 exec(budy.slice(2), (err, stdout) => {
 if(err) return hydro.sendMessage(m.chat, {text: err.toString()}, {quoted: m})
 if (stdout) return hydro.sendMessage(m.chat, {text: util.format(stdout)}, {quoted: m})
