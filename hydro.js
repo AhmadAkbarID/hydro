@@ -14268,7 +14268,7 @@ await replyhydro(`*[ Done ]*`)
             break
 
             case 'delete': case 'del': {
-if (!isAdmins) return replytolak(mess.only.owner)
+if (!Ahmad) return replytolak(mess.only.owner)
 if (!m.quoted) throw false
 let { chat, id } = m.quoted
  hydro.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.quoted.id, participant: m.quoted.sender } })
