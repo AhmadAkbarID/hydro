@@ -2407,89 +2407,65 @@ if (
   hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }});
 
   try {
-    // API 1: TiklyDown
-    const data1 = await fetchJson(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(budy)}`);
-    const stats = data1.stats || {};
-    const author = data1.author || {};
-    const title = data1.title || '-';
+    const res = await fetchJson(`https://api.siputzx.my.id/api/d/tiktok?url=${encodeURIComponent(budy)}`);
+    if (!res.status || !res.data) return reply('Gagal mengambil data.');
 
-    if (data1.video && data1.video.noWatermark) {
-      // Jika video ditemukan
-      let cap = `✨━━━〔 🎞️ 𝐓𝐢𝐤𝐭𝐨𝐤 𝐃𝐋 〕━━━✨
-👤 User: *${author.name || '-'} (@${author.unique_id || '-'})*
-❤️ Likes: *${stats.likeCount || '-'}*
-💬 Comments: *${stats.commentCount || '-'}*
-🔄 Shares: *${stats.shareCount || '-'}*
-▶️ Plays: *${stats.playCount || '-'}*
-💾 Saves: *${stats.saveCount || '-'}*
-🎯 Title: *${title}*
+    const { type, urls, metadata } = res.data;
 
-⏤͟͟͞͞  ${botname}`;
+    if (type === 'video') {
+      const videoUrl = urls[1] || urls[0];
+
+      const cap = `🎥 *Tiktok Video*
+👤 Creator: *${metadata?.creator || '-'}*
+🎯 Title: *${metadata?.title || '-'}*`;
 
       await hydro.sendMessage(m.chat, {
-        video: { url: data1.video.noWatermark },
+        video: { url: videoUrl },
         caption: cap
       }, { quoted: m });
 
-    } else if (data1.images && data1.images.length > 0) {
-      // Jika gambar (photo mode)
-      for (let i = 0; i < data1.images.length; i++) {
-        let img = data1.images[i];
-        let cap = data1.images.length === 1 ? `🖼️ *Tiktok Photo*\n🎯 Title: *${title}*` : `🖼️ Gambar ke-${i + 1}`;
+    } else if (type === 'slideshow' && Array.isArray(urls)) {
+      const jumlahGambar = urls.length;
+      const cards = await Promise.all(urls.map(async (img, i) => {
+        return {
+          header: proto.Message.InteractiveMessage.Header.create({
+            ...(await prepareWAMessageMedia({ image: { url: img } }, { upload: hydro.waUploadToServer })),
+            title: '',
+            subtitle: `Gambar ${i + 1} dari ${jumlahGambar}`,
+            hasMediaAttachment: false
+          }),
+          body: { text: '' },
+          nativeFlowMessage: { buttons: [] }
+        }
+      }));
 
-        await hydro.sendMessage(m.chat, {
-          image: { url: img.url },
-          caption: cap
-        }, { quoted: m });
-      }
+      const msg = generateWAMessageFromContent(
+        m.chat,
+        {
+          viewOnceMessage: {
+            message: {
+              interactiveMessage: {
+                body: { text: `📷 *Tiktok Photo*\n🎯 Title: *${metadata?.title || '-'}*` },
+                carouselMessage: {
+                  cards,
+                  messageVersion: 1
+                }
+              }
+            }
+          }
+        },
+        { quoted: m }
+      );
+
+      await hydro.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
 
     } else {
-      // API 1 gagal atau kosong, fallback API 2
-      const data2 = await fetchJson(`https://ytdlpyton.nvlgroup.my.id/tiktok?url=${encodeURIComponent(budy)}`);
-      
-      if (data2.video_url) {
-        let cap2 = `✨━━━〔 🎞️ 𝐓𝐢𝐤𝐭𝐨𝐤 𝐃𝐋 〕━━━✨
-👤 User: *${data2.author} (@${data2.username})*
-❤️ Likes: *${data2.like_count}*
-💬 Comments: *${data2.comment_count}*
-🔄 Shares: *${data2.share_count}*
-▶️ Plays: *${data2.play_count}*
-🎯 Title: *${data2.title}*
-
-⏤͟͟͞͞  ${botname}`;
-
-        await hydro.sendMessage(m.chat, {
-          video: { url: data2.video_url },
-          caption: cap2
-        }, { quoted: m });
-
-      } else if (data2.slide_images && data2.slide_images.length > 0) {
-        // Jika slide photo mode di API 2
-        for (let i = 0; i < data2.slide_images.length; i++) {
-          let img = data2.slide_images[i];
-          let cap = data2.slide_images.length === 1 ? `🖼️ *Tiktok Photo*\n🎯 Title: *${data2.title}*` : `🖼️ Gambar ke-${i + 1}`;
-
-          await hydro.sendMessage(m.chat, {
-            image: { url: img },
-            caption: cap
-          }, { quoted: m });
-        }
-
-      } else if (data2.thumbnail) {
-        // Hanya thumbnail yang tersedia
-        await hydro.sendMessage(m.chat, {
-          image: { url: data2.thumbnail },
-          caption: `🖼️ *Tiktok Thumbnail*\n🎯 Title: *${data2.title}*`
-        }, { quoted: m });
-
-      } else {
-        reply('Maaf, tidak bisa mendeteksi media pada link tersebut.');
-      }
+      reply('Tidak dapat memproses media dari link tersebut.');
     }
 
-  } catch (error) {
-    console.error(error);
-    reply('Terjadi kesalahan saat memproses link TikTok.');
+  } catch (err) {
+    console.error(err);
+    reply('Terjadi kesalahan saat mengambil data dari TikTok.');
   }
 }
 //=========================================\\
@@ -12592,89 +12568,69 @@ break
 //=========================================\\
 case 'tiktok':
 case 'tt': {
-  if (!text) return replyhydro(`Contoh: ${prefix + command} link`);
-  hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }});
+  if (!text) return replyhydro(`Contoh: ${prefix + command} https://vt.tiktok.com/...`);
+  hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key } });
 
   try {
-    // API 1: TiklyDown
-    const data1 = await fetchJson(`https://api.tiklydown.eu.org/api/download?url=${encodeURIComponent(text)}`);
-    const stats = data1.stats || {};
-    const author = data1.author || {};
-    const title = data1.title || '-';
+    const res = await fetchJson(`https://api.siputzx.my.id/api/d/tiktok?url=${encodeURIComponent(text)}`);
+    if (!res.status || !res.data) return reply('Gagal mengambil data.');
 
-    if (data1.video && data1.video.noWatermark) {
-      // Jika video ditemukan
-      let cap = `🎥 *Tiktok Video*
-👤 Author: *${author.name || '-'} (@${author.unique_id || '-'})*
-❤️ Likes: *${stats.likeCount || '-'}*
-💬 Comments: *${stats.commentCount || '-'}*
-🔄 Shares: *${stats.shareCount || '-'}*
-▶️ Plays: *${stats.playCount || '-'}*
-💾 Saves: *${stats.saveCount || '-'}*
-🎯 Title: *${title}*`;
+    const { type, urls, metadata } = res.data;
+
+    if (type === 'video') {
+      const videoUrl = urls[1] || urls[0];
+
+      const cap = `🎥 *Tiktok Video*
+👤 Creator: *${metadata?.creator || '-'}*
+🎯 Title: *${metadata?.title || '-'}*`;
 
       await hydro.sendMessage(m.chat, {
-        video: { url: data1.video.noWatermark },
+        video: { url: videoUrl },
         caption: cap
       }, { quoted: m });
 
-    } else if (data1.images && data1.images.length > 0) {
-      // Jika gambar (photo mode)
-      for (let i = 0; i < data1.images.length; i++) {
-        let img = data1.images[i];
-        let cap = data1.images.length === 1 ? `🖼️ *Tiktok Photo*\n🎯 Title: *${title}*` : `🖼️ Gambar ke-${i + 1}`;
+    } else if (type === 'slideshow' && Array.isArray(urls)) {
+      const jumlahGambar = urls.length;
+      const cards = await Promise.all(urls.map(async ([img], i) => {
+        return {
+          header: proto.Message.InteractiveMessage.Header.create({
+            ...(await prepareWAMessageMedia({ image: { url: img } }, { upload: hydro.waUploadToServer })),
+            title: '',
+            subtitle: `Gambar ${i + 1} dari ${jumlahGambar}`,
+            hasMediaAttachment: false
+          }),
+          body: { text: '' },
+          nativeFlowMessage: { buttons: [] }
+        }
+      }));
 
-        await hydro.sendMessage(m.chat, {
-          image: { url: img.url },
-          caption: cap
-        }, { quoted: m });
-      }
+      const msg = generateWAMessageFromContent(
+        m.chat,
+        {
+          viewOnceMessage: {
+            message: {
+              interactiveMessage: {
+                body: { text: `📷 *Tiktok Photo*\n🎯 Title: *${metadata?.title || '-'}*` },
+                carouselMessage: {
+                  cards,
+                  messageVersion: 1
+                }
+              }
+            }
+          }
+        },
+        { quoted: m }
+      );
+
+      await hydro.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
 
     } else {
-      // API 1 gagal / tidak ada video maupun gambar, coba API 2
-      const data2 = await fetchJson(`https://ytdlpyton.nvlgroup.my.id/tiktok?url=${encodeURIComponent(text)}`);
-      
-      if (data2.video_url) {
-        let cap2 = `🎥 *Tiktok Video*
-👤 Author: *${data2.author} (@${data2.username})*
-❤️ Likes: *${data2.like_count}*
-💬 Comments: *${data2.comment_count}*
-🔄 Shares: *${data2.share_count}*
-▶️ Plays: *${data2.play_count}*
-🎯 Title: *${data2.title}*`;
-
-        await hydro.sendMessage(m.chat, {
-          video: { url: data2.video_url },
-          caption: cap2
-        }, { quoted: m });
-
-      } else if (data2.slide_images && data2.slide_images.length > 0) {
-        // Jika photo mode di API kedua
-        for (let i = 0; i < data2.slide_images.length; i++) {
-          let img = data2.slide_images[i];
-          let cap = data2.slide_images.length === 1 ? `🖼️ *Tiktok Photo*\n🎯 Title: *${data2.title}*` : `🖼️ Gambar ke-${i + 1}`;
-
-          await hydro.sendMessage(m.chat, {
-            image: { url: img },
-            caption: cap
-          }, { quoted: m });
-        }
-
-      } else if (data2.thumbnail) {
-        // Jika hanya thumbnail tersedia
-        await hydro.sendMessage(m.chat, {
-          image: { url: data2.thumbnail },
-          caption: `🖼️ *Tiktok Thumbnail*\n🎯 Title: *${data2.title}*`
-        }, { quoted: m });
-
-      } else {
-        reply('Maaf, tidak bisa mendeteksi media pada link tersebut.');
-      }
+      reply('Tidak dapat memproses media dari link tersebut.');
     }
 
   } catch (err) {
-    console.log(err);
-    reply('Terjadi kesalahan saat memproses.');
+    console.error(err);
+    reply('Terjadi kesalahan saat mengambil data dari TikTok.');
   }
 }
 break;
