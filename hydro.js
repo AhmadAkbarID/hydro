@@ -12678,8 +12678,7 @@ const cption = data.result.title || ''
 hydro.sendMessage(m.chat, { caption: cption, video: { url: vidnya } }, { quoted: m });
 }
 break
-case 'ttaudio':
-case 'tiktokaudio': {
+case 'ttaudio': case 'tiktokaudio': case 'ttmp3': case 'tiktokmp3': {
   if (!text) return replyhydro(`📌 Contoh penggunaan:\n${prefix + command} https://vt.tiktok.com/...`);
   
   hydro.sendMessage(m.chat, { react: { text: '🎵', key: m.key } });
