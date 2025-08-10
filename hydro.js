@@ -6,12 +6,39 @@
 require('./settings')
 require('./lib/listmenu')
 const {
-	downloadContentFromMessage,
+    downloadContentFromMessage,
 	extractImageThumb
 } = require('@whiskeysockets/baileys')
 const { modul } = require('./module')
 const path = require('path')
-const { os, axios, baileys, chalk, cheerio, child_process, crypto, cookie, FormData, FileType, fetch, fs, fsx, ffmpeg, Jimp, jsobfus, PhoneNumber, process, moment, ms, speed, syntaxerror, util, ytdl, googleTTS, nodecron, maker } = modul
+const { os, 
+    axios, 
+    baileys, 
+    chalk, 
+    cheerio, 
+    child_process, 
+    crypto, 
+    cookie, 
+    FormData, 
+    FileType, 
+    fetch, 
+    fs, 
+    fsx, 
+    ffmpeg, 
+    Jimp, 
+    jsobfus, 
+    PhoneNumber, 
+    process, 
+    moment, 
+    ms, 
+    speed, 
+    syntaxerror, 
+    util, 
+    ytdl, 
+    googleTTS, 
+    nodecron, 
+    maker 
+} = modul
 const { exec, spawn, execSync } = child_process
 const { BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType, generateForwardMessageContent } = baileys
 const { clockString, parseMention, formatp, tanggal, getTime, isUrl, sleep, runtime, fetchJson, getBuffer, jsonformat, format, reSize, generateProfilePicture, getRandom } = require('./lib/myfunc')
@@ -1121,7 +1148,9 @@ hasMediaAttachment: true,
 ...(await prepareWAMessageMedia(
     { video: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menuvid.mp4' }, gifPlayback: true }, 
     { upload: hydro.waUploadToServer }
-)),
+)), 
+// Cara ganti kefoto 
+// ...(await prepareWAMessageMedia({ image: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg'}}, { upload: hydro.waUploadToServer })),
 }),
 gifPlayback: true,
 nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
