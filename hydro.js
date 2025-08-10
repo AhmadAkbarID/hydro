@@ -1118,7 +1118,10 @@ thumbnailUrl: "",
 gifPlayback: true,
 subtitle: "",
 hasMediaAttachment: true,
-...(await prepareWAMessageMedia({ image: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg'}}, { upload: hydro.waUploadToServer })),
+...(await prepareWAMessageMedia(
+    { video: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menuvid.mp4' }, gifPlayback: true }, 
+    { upload: hydro.waUploadToServer }
+)),
 }),
 gifPlayback: true,
 nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
