@@ -262,18 +262,26 @@ hydro.ev.emit('messages.upsert', msg)
         const isQuotedAudio = type === 'extendedTextMessage' && content.includes('audioMessage')
         const isQuotedContact = type === 'extendedTextMessage' && content.includes('contactMessage')
         const isQuotedDocument = type === 'extendedTextMessage' && content.includes('documentMessage')
-        const sender = m.isGroup ? (m.key.participant ? m.key.participant : m.participant) : m.key.remoteJid
-        const senderNumber = sender.split('@')[0]
+
         const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat).catch(e => {}) : ''
         const groupName = m.isGroup ? groupMetadata.subject : ''
         const participants = m.isGroup ? await groupMetadata.participants : ''
-        const groupAdmins = m.isGroup ? participants.filter((v) => v.admin !== null).map((i) => i.id) : [];
+
+        if (m.isGroup && m.sender.endsWith("@lid")) {
+            m.sender = participants.find(p => p.lid === m.sender)?.jid || m.sender;
+        }
+
+        const groupAdmins = m.isGroup ? participants.filter((v) => v.admin !== null).map((i) => i.jid || i.id) : [];
         const groupOwner = m.isGroup ? groupMetadata.owner : ''
         const groupMembers = m.isGroup ? groupMetadata.participants : ''
     	const isBotAdmins = m.isGroup ? groupAdmins.includes(botNumber) : false
         const isGroupAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
     	const isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
-     const jangan = m.isGroup ? pler.includes(m.chat) : false
+
+        const sender = m.sender
+        const senderNumber = sender.split('@')[0]
+
+        const jangan = m.isGroup ? pler.includes(m.chat) : false
     	const isPrem = prem.includes(m.sender)
     	const isReseller = resellerp.includes(m.sender)
     	const isAdminP = adminp.includes(m.sender)
@@ -28551,7 +28559,8 @@ break
 case 'hdvid':
 case 'vidhd':
 case "hdvideo": {
-  if (!quoted || !/video/.test(mime)) return m.reply("❗Reply video yang ingin dijadikan HD!");
+  if (!quoted || !/video/.test(mime)) 
+    return replyhydro("❗ Reply video yang ingin dijadikan HD!");
 
   let [res, fpsText] = text?.trim().toLowerCase().split(" ");
   let fps = 60;
@@ -28559,7 +28568,7 @@ case "hdvideo": {
   if (fpsText && fpsText.endsWith("fps")) {
     fps = parseInt(fpsText.replace("fps", ""));
     if (isNaN(fps) || fps < 30 || fps > 240) {
-      return m.reply("❗ FPS harus antara 30 - 240 (contoh: 60fps)");
+      return replyhydro("❗ FPS antara 30 - 240 (contoh: 60fps)");
     }
   }
 
@@ -28573,24 +28582,18 @@ case "hdvideo": {
   };
 
   if (!resolutions[res]) {
-    return m.reply(`❗ Resolusi tidak valid.\nContoh: ${prefix + command} 720\nAtau: ${prefix + command} 1080 60fps`);
+    return replyhydro(`Contoh penggunaan:\n${prefix + command} 720\n${prefix + command} 1080 60fps`);
   }
 
   const targetHeight = resolutions[res];
   const id = m.sender.split("@")[0];
-  const inputFile = `./temp/input_${id}.mp4`;
-  const outputFile = `./temp/hdvideo_${id}.mp4`;
+  const inputnya = `input_${id}.mp4`;
+  const outputnya = `hdvideo_${id}.mp4`;
+
+  replyhydro(`⏳ Mengubah video ke ${res.toUpperCase()} ${fps}FPS...`);
 
   try {
-    if (!fs.existsSync('./temp')) fs.mkdirSync('./temp'); // Pastikan folder ada
-
-    m.reply(`⏳ Mengubah video ke ${res.toUpperCase()} ${fps}FPS...`);
-    
-    const downloaded = await hydro.downloadAndSaveMediaMessage(quoted, inputFile);
-    const FormData = require("form-data");
-    const axios = require("axios");
-    const fs = require("fs");
-
+    const downloaded = await hydro.downloadAndSaveMediaMessage(m.quoted, inputnya);
     const form = new FormData();
     form.append("video", fs.createReadStream(downloaded));
     form.append("resolution", targetHeight);
@@ -28603,34 +28606,25 @@ case "hdvideo": {
       maxContentLength: Infinity,
     });
 
-    const writer = fs.createWriteStream(outputFile);
+    const fileOutput = `./temp/${outputnya}`;
+    const writer = fs.createWriteStream(fileOutput);
     response.data.pipe(writer);
 
     writer.on("finish", async () => {
-      try {
-        const buffer = fs.readFileSync(outputFile);
-        await hydro.sendMessage(m.chat, {
-          video: buffer,
-          caption: `✅ Berhasil diubah ke ${res.toUpperCase()} ${fps}FPS`
-        }, { quoted: m });
-      } catch (err) {
-        m.reply("❌ Gagal membaca hasil file.");
-      } finally {
-        fs.unlinkSync(downloaded);
-        fs.unlinkSync(outputFile);
-      }
+      const buffer = fs.readFileSync(fileOutput);
+      await hydro.sendMessage(m.chat, {
+        video: buffer,
+        caption: `✅ Video berhasil diubah ke ${res.toUpperCase()} ${fps}FPS`
+      }, { quoted: m });
+
+      fs.unlinkSync(downloaded);
+      fs.unlinkSync(fileOutput);
     });
 
-    writer.on("error", (err) => {
-      console.error("Write stream error:", err);
-      m.reply("❌ Gagal menyimpan hasil video (write stream error)");
-      fs.existsSync(downloaded) && fs.unlinkSync(downloaded);
-    });
+    writer.on("error", () => replyhydro("❌ Gagal menyimpan hasil video"));
   } catch (err) {
-    console.error("Processing error:", err);
-    m.reply("❌ Terjadi kesalahan saat memproses video.");
-    if (fs.existsSync(inputFile)) fs.unlinkSync(inputFile);
-    if (fs.existsSync(outputFile)) fs.unlinkSync(outputFile);
+    console.error(err);
+    replyhydro("❌ Terjadi kesalahan saat memproses video");
   }
 }
 break;
@@ -30362,7 +30356,8 @@ let data = await fetchJson(text)
 m.reply(JSON.stringify(data, null, 2))
 }
 break
-case 'ytmp4': case 'ytvideo': {
+case 'ytmp4':
+case 'ytvideo': {
   if (!text) return replyhydro(`🎥 *YouTube MP4 Downloader*\n\nSilakan kirim link YouTube dengan perintah:\n\n📌 *Contoh:*\n${prefix + command} https://youtu.be/abc123\n${prefix + command} https://youtu.be/abc123 720`);
 
   const args = text.split(' ');
@@ -30422,7 +30417,6 @@ case 'ytmp4': case 'ytvideo': {
     }
 
     try {
-      // Tambahkan reaction ⏳ saat proses dimulai
       await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
 
       const apiUrl = `https://ytdlpyton.nvlgroup.my.id/download/?url=${encodeURIComponent(link)}&resolution=${resolution}&mode=url`;
@@ -30431,13 +30425,23 @@ case 'ytmp4': case 'ytvideo': {
       if (!data.download_url) throw "Gagal mendapatkan URL download dari API utama.";
 
       const buffer = await getBuffer(data.download_url);
-      await hydro.sendMessage(m.chat, {
-        document: buffer,
-        fileName: `${data.title}.mp4`,
-        mimetype: 'video/mp4'
-      }, { quoted: m });
+      const fileSizeMB = buffer.length / (1024 * 1024);
 
-      // Tambahkan reaction ✅ saat berhasil dikirim
+      if (fileSizeMB > 80) {
+        await hydro.sendMessage(m.chat, {
+          document: buffer,
+          fileName: `${data.title}.mp4`,
+          mimetype: 'video/mp4'
+        }, { quoted: m });
+      } else {
+        await hydro.sendMessage(m.chat, {
+          video: buffer,
+          fileName: `${data.title}.mp4`,
+          mimetype: 'video/mp4',
+          caption: data.title
+        }, { quoted: m });
+      }
+
       await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
     } catch (err) {
@@ -30479,11 +30483,23 @@ case 'ytmp4': case 'ytvideo': {
           title: info.title || "yt-video"
         };
 
-        await hydro.sendMessage(m.chat, {
-          document: { url: fallback.url },
-          mimetype: 'video/mp4',
-          fileName: `${fallback.title}.mp4`
-        }, { quoted: m });
+        const fallbackBuffer = await getBuffer(fallback.url);
+        const fallbackSizeMB = fallbackBuffer.length / (1024 * 1024);
+
+        if (fallbackSizeMB > 80) {
+          await hydro.sendMessage(m.chat, {
+            document: fallbackBuffer,
+            mimetype: 'video/mp4',
+            fileName: `${fallback.title}.mp4`
+          }, { quoted: m });
+        } else {
+          await hydro.sendMessage(m.chat, {
+            video: fallbackBuffer,
+            mimetype: 'video/mp4',
+            fileName: `${fallback.title}.mp4`,
+            caption: fallback.title
+          }, { quoted: m });
+        }
 
         await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
