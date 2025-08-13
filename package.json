@@ -23,6 +23,7 @@
   "dependencies": {
   "cfonts": "^3.3.0",
   "@adiwajshing/keyed-db": "^0.2.4",
+  "@supabase/supabase-js": "^2.55.0",
   "@bochilteam/scraper": "4.0.22-alpha.0",
   "@saipulanuar/jadianime-ts": "^2.0.0",
   "@whiskeysockets/baileys": "npm:baileys-mod",
