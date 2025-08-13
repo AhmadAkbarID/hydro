@@ -11,34 +11,7 @@ const {
 } = require('@whiskeysockets/baileys')
 const { modul } = require('./module')
 const path = require('path')
-const { os, 
-    axios, 
-    baileys, 
-    chalk, 
-    cheerio, 
-    child_process, 
-    crypto, 
-    cookie, 
-    FormData, 
-    FileType, 
-    fetch, 
-    fs, 
-    fsx, 
-    ffmpeg, 
-    Jimp, 
-    jsobfus, 
-    PhoneNumber, 
-    process, 
-    moment, 
-    ms, 
-    speed, 
-    syntaxerror, 
-    util, 
-    ytdl, 
-    googleTTS, 
-    nodecron, 
-    maker 
-} = modul
+const { os, axios, baileys, chalk, cheerio, child_process, crypto, cookie, FormData, FileType, fetch, fs, fsx, ffmpeg, Jimp, jsobfus, PhoneNumber, process, moment, ms, speed, syntaxerror, util, ytdl, googleTTS, nodecron, maker } = modul
 const { exec, spawn, execSync } = child_process
 const { BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType, generateForwardMessageContent } = baileys
 const { clockString, parseMention, formatp, tanggal, getTime, isUrl, sleep, runtime, fetchJson, getBuffer, jsonformat, format, reSize, generateProfilePicture, getRandom } = require('./lib/myfunc')
@@ -55,6 +28,12 @@ let _sewa = require("./lib/store")
 const { jadibot, stopjadibot, listjadibot } = require('./lib/clone')
 const salam = moment(Date.now()).tz('Asia/Jakarta').locale('id').format('a')
 const { absenList, saveAbsen, resetAbsen } = require('./lib/absen');
+const { createClient } = require('@supabase/supabase-js');
+
+const SUPABASE_URL = 'https://uzyzpgujphlmesbmcwca.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6eXpwZ3VqcGhsbWVzYm1jd2NhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjQwMjcsImV4cCI6MjA3MDY0MDAyN30.SwjgDAcEDLvjmzKzxHPdtHdjLbH1Zsr20MbPI4s6F94';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const { isSetWelcome, addSetWelcome, changeSetWelcome, removeSetWelcome } = require('./lib/setwelcome');
 const { Primbon } = require('scrape-primbon')
 const primbon = new Primbon()
@@ -3924,8 +3903,12 @@ const bet = {
       rows: [
         {
           title: "sᴄʀɪᴘᴛ",
-          description: "💳 sᴄ ɪɴɪ ғʀᴇᴇ ɴᴏ ᴇɴᴄ 100%",
-          id: `script`, 
+          description: "💳 sᴄ ɪɴɪ ғʀᴇᴇ ɴᴏ ᴇɴᴄ 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "ɪɴғᴏ ʙᴏᴛ",
@@ -4123,8 +4106,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -4341,8 +4328,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -4535,8 +4526,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -4729,8 +4724,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -4923,8 +4922,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -5117,8 +5120,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -5311,8 +5318,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -5505,8 +5516,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -5699,8 +5714,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -5892,8 +5911,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -6085,8 +6108,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -6278,8 +6305,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -6559,8 +6590,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -6753,8 +6788,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -6946,8 +6985,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -7138,8 +7181,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -7331,8 +7378,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -7524,8 +7575,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -7717,8 +7772,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -7910,8 +7969,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -8103,8 +8166,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -8296,8 +8363,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -8489,8 +8560,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -8682,8 +8757,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -8875,8 +8954,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -9068,8 +9151,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -9261,8 +9348,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -9454,8 +9545,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -9647,8 +9742,12 @@ const bet = {
       rows: [
         {
           title: "Script",
-          description: "💳 script ini gratis 100%",
-          id: `script`, 
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
         },
         {
           title: "Info Bot",
@@ -14963,41 +15062,75 @@ break
 //=========================================\\
 case 'hd':
 case 'remini': {
-  if (!quoted || !/image/.test(mime)) return replyhydro(`Kirim atau reply gambar dengan caption *${command}*`);
-  hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key } });
-  try {
-    const media = await hydro.downloadAndSaveMediaMessage(quoted);
-    console.log('✔ Gambar berhasil didownload:', media);
+    if (!quoted || !/image/.test(mime)) return replyhydro(`📸 Kirim atau reply gambar dengan caption *${command}* untuk meningkatkan kualitas.`);
+    hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key } });
 
-    const link = await uploadwidipe(media); // tourl
-    if (!link) {
-      console.error('❌ Upload ke qu.ax gagal.');
-      return replyhydro('Gagal upload gambar ke URL.');
+    const FormData = require("form-data");
+    const { fromBuffer } = require("file-type");
+
+    // Upload ke catbox.moe
+    async function uploadCatbox(buffer) {
+        try {
+            const form = new FormData();
+            const { ext } = await fromBuffer(buffer);
+            form.append("fileToUpload", buffer, "file." + ext);
+            form.append("reqtype", "fileupload");
+            const res = await axios.post("https://catbox.moe/user/api.php", form, {
+                headers: form.getHeaders(),
+            });
+            return res.data;
+        } catch (err) {
+            console.error("Catbox Error:", err.message);
+            return null;
+        }
     }
-    console.log('✔ URL hasil upload:', link);
 
-    const upscaleUrl = `https://api.siputzx.my.id/api/iloveimg/upscale?image=${link}&scale=4`;
-    console.log('🔗 Mengakses API:', upscaleUrl);
+    try {
+        const start = Date.now();
+        const media = await hydro.downloadAndSaveMediaMessage(quoted);
+        console.log('✔ Gambar berhasil didownload:', media);
 
-    const response = await axios.get(upscaleUrl, { responseType: 'arraybuffer' });
+        const buffer = fs.readFileSync(media);
+        const sizeKB = (buffer.length / 1024).toFixed(2);
+        const link = await uploadCatbox(buffer);
+        if (!link) {
+            console.error('❌ Upload ke Catbox gagal.');
+            return replyhydro('Gagal upload gambar ke URL.');
+        }
+        console.log('✔ URL hasil upload:', link);
 
-    const hdPath = './hd.jpg'; // simpan di root
-    fs.writeFileSync(hdPath, response.data);
-    console.log('✔ File hasil upscale disimpan:', hdPath);
+        const upscaleUrl = `https://api.siputzx.my.id/api/iloveimg/upscale?image=${link}&scale=4`;
+        console.log('🔗 Mengakses API:', upscaleUrl);
 
-    await hydro.sendMessage(m.chat, {
-      image: fs.readFileSync(hdPath),
-      caption: `*✅ Kualitas foto telah ditingkatkan*`,
-    }, { quoted: m });
+        const response = await axios.get(upscaleUrl, { responseType: 'arraybuffer' });
 
-    fs.unlinkSync(hdPath);
-    fs.unlinkSync(media);
-  } catch (e) {
-    const status = e.response?.status;
-    const data = e.response?.data?.message || e.response?.data || e.message;
-    console.error(`❌ ERROR ${status || ''}:`, data);
-    replyhydro(`Ups! Gagal saat memproses gambar:\n${status ? `Status: ${status}\n` : ''}Pesan: ${data}`);
-  }
+        const hdPath = './hd.jpg';
+        fs.writeFileSync(hdPath, response.data);
+        console.log('✔ File hasil upscale disimpan:', hdPath);
+
+        const processTime = ((Date.now() - start) / 1000).toFixed(2);
+        const hdSizeKB = (fs.statSync(hdPath).size / 1024).toFixed(2);
+
+        let caption = `╭───『 *IMAGE UPSCALE* 』───╮
+📂 *Ukuran Asli:* ${sizeKB} KB
+📂 *Ukuran HD:* ${hdSizeKB} KB
+⚡ *Waktu Proses:* ${processTime} detik
+📌 *Keterangan:* Gambar telah ditingkatkan kualitasnya hingga *4x*.
+╰──────────────────────╯`;
+
+        await hydro.sendMessage(m.chat, {
+            image: fs.readFileSync(hdPath),
+            caption: caption
+        }, { quoted: m });
+
+        fs.unlinkSync(hdPath);
+        fs.unlinkSync(media);
+    } catch (e) {
+        const status = e.response?.status;
+        const data = e.response?.data?.message || e.response?.data || e.message;
+        console.error(`❌ ERROR ${status || ''}:`, data);
+        replyhydro(`Ups! Gagal saat memproses gambar:\n${status ? `Status: ${status}\n` : ''}Pesan: ${data}`);
+    }
 }
 break;
 //=========================================\\
@@ -17406,6 +17539,99 @@ ${sortedItem.slice(page * 0, page * 5 + 5).map((user, i) => `${i + 1}.*﹙${user
 }
 break
 //=========================================\\
+case 'rating': {
+    let nilai = parseInt(text.trim());
+
+    if (!isNaN(nilai)) {
+        if (nilai < 1 || nilai > 10) return replyhydro(`❌ Rating hanya boleh 1-10`);
+
+        let { error } = await supabase
+            .from('ratings')
+            .insert([{ user_id: m.sender, nilai }]);
+
+        if (error) return replyhydro(`⚠️ Gagal menyimpan rating: ${error.message}`);
+
+        let quickMsg = {
+            text: `✅ Terima kasih! Kamu memberikan rating *${nilai}* ⭐`,
+            footer: '⭐ Rating Bot',
+            buttons: [
+                {
+                    buttonId: `${prefix}cekrating`,
+                    buttonText: { displayText: '📊 Cek total rating' },
+                    type: 1
+                }
+            ],
+            headerType: 1
+        };
+        return hydro.sendMessage(m.chat, quickMsg, { quoted: m });
+    }
+
+    let rows = Array.from({ length: 10 }, (_, i) => ({
+        header: "",
+        title: `${i + 1} ⭐`,
+        description: `Beri rating ${i + 1} bintang`,
+        id: `${prefix}rating ${i + 1}`
+    }));
+
+    let msg = generateWAMessageFromContent(m.chat, {
+        viewOnceMessage: {
+            message: {
+                messageContextInfo: {
+                    deviceListMetadata: {},
+                    deviceListMetadataVersion: 2
+                },
+                interactiveMessage: {
+                    body: {
+                        text: `📌 Silakan pilih rating untuk bot ini:`
+                    },
+                    footer: {
+                        text: '⭐ Rating Bot'
+                    },
+                    header: {
+                        title: "Pilih Rating",
+                        subtitle: "",
+                        hasMediaAttachment: false
+                    },
+                    nativeFlowMessage: {
+                        buttons: [
+                            {
+                                name: "single_select",
+                                buttonParamsJson: JSON.stringify({
+                                    title: "Pilih Rating",
+                                    sections: [
+                                        {
+                                            title: "Rating 1–10",
+                                            rows
+                                        }
+                                    ]
+                                })
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+    }, { quoted: m }, {});
+
+    await hydro.relayMessage(msg.key.remoteJid, msg.message, {
+        messageId: msg.key.id
+    });
+}
+break;
+
+case 'cekrating': {
+    let { data, error } = await supabase
+        .from('ratings')
+        .select('nilai');
+
+    if (error) return replyhydro(`⚠️ Gagal mengambil rating: ${error.message}`);
+    if (!data.length) return replyhydro(`⚠️ Belum ada yang memberikan rating.`);
+
+    let semuaRating = data.map(r => r.nilai);
+    let rata2 = (semuaRating.reduce((a, b) => a + b, 0) / semuaRating.length).toFixed(1);
+    replyhydro(`📊 Rata-rata rating bot ini adalah *${rata2}* ⭐\nDari total ${semuaRating.length} penilai.`);
+}
+break;
 case 'mulung': {
   if (!m.isGroup) return replytolak(mess.only.group)
   function msToTime(duration) {
@@ -30337,67 +30563,110 @@ Copy the link above and type the .ytmp3 link for audio and the .ytmp4 link for v
 hydro.sendMessage(m.chat, { image : eek, caption: ngen }, { quoted: m})
 }
 break
-case 'ytmp3': case 'ytaudio': {
-  if (!text) return m.reply(`Silakan masuk kan link YouTube-nya.\nContoh: ${prefix + command} https://youtube.com/watch?v=Xs0Lxif1u9E`);
+case 'ytmp3':
+case 'ytaudio': {
+  if (!text) {
+    return replyhydro(
+      `🎵 *YouTube MP3 Downloader*\n\n` +
+      `📌 *Cara Penggunaan:*\n` +
+      `   • *${prefix + command}* <link>\n\n` +
+      `💡 *Contoh:*\n` +
+      `   ${prefix + command} https://youtu.be/abc123\n\n` +
+      `📍 *Keterangan:*\n` +
+      `   - Audio akan otomatis diunduh dengan kualitas tertinggi yang tersedia.\n`
+    );
+  }
 
   const url = text.trim();
   const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
-  if (!regex.test(url)) return m.reply('Link yang anda berikan tidak valid. Silakan masukkan link YouTube yang benar.');
+  if (!regex.test(url)) {
+    return replyhydro('⚠️ *Link tidak valid!*\n\nSilakan masukkan link YouTube yang benar.');
+  }
 
-  m.reply('✨ Tunggu sebentar, sedang diproses...');
+  replyhydro('⏳ *Sedang memproses audio...*\nMohon tunggu sebentar.');
 
   try {
     // === API 1: ytdlpyton.nvlgroup.my.id ===
     const api = `https://ytdlpyton.nvlgroup.my.id/download/audio?url=${encodeURIComponent(url)}&mode=url`;
     const { data } = await axios.get(api);
 
-    if (!data.download_url) throw "Gagal ambil URL audio";
+    if (!data.download_url) throw "Gagal ambil URL audio dari API utama.";
 
     const buffer = await getBuffer(data.download_url);
 
     await hydro.sendMessage(m.chat, {
       audio: buffer,
-      mimetype: 'audio/mp4'
+      mimetype: 'audio/mp4',
+      ptt: false
     }, { quoted: m });
 
+    await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
+
   } catch (err) {
-    console.log('❌ Gagal API utama, fallback ke API velyn.mom:', err);
+    console.log('❌ API utama gagal, fallback ke Nekoo:', err);
 
     try {
-      // === API 2 (fallback): velyn.mom ===
-      const api2 = `https://velyn.mom/api/downloader/youtube?url=${encodeURIComponent(url)}&type=audio`;
-      const { data } = await axios.get(api2);
+      // === API 2 (fallback): Nekoo ===
+      const qualities = ["320", "256", "192", "128", "96", "64"];
+      let bestQuality = "320"; // default
 
-      if (!data || data.status !== 200 || !data.data?.downloadUrl) throw 'Fallback API tidak memberikan link download.';
+      // Cari kualitas tertinggi yang tersedia
+      for (let q of qualities) {
+        const testUrl = `https://api.nekoo.qzz.io/downloader/youtube?url=${encodeURIComponent(url)}&format=${q}&type=audio`;
+        const testRes = await axios.get(testUrl);
+        if (testRes.data?.status && testRes.data?.result?.downloadUrl) {
+          bestQuality = q;
+          break;
+        }
+      }
+
+      const nekooApi = `https://api.nekoo.qzz.io/downloader/youtube?url=${encodeURIComponent(url)}&format=${bestQuality}&type=audio`;
+      const { data } = await axios.get(nekooApi);
+
+      if (!data || !data.result?.downloadUrl) throw new Error('Fallback API tidak memberikan link download.');
+
+      const buffer = await getBuffer(data.result.downloadUrl);
 
       await hydro.sendMessage(m.chat, {
-        audio: { url: data.data.downloadUrl },
-        mimetype: 'audio/mp4'
+        audio: buffer,
+        mimetype: 'audio/mp4',
+        ptt: false,
+        caption: `✅ *Berhasil Mengunduh*\n🎵 ${data.result.title}\n📌 Kualitas: ${data.result.format}kbps`
       }, { quoted: m });
 
+      await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
+
     } catch (err2) {
-      console.log('❌ Fallback juga gagal:', err2);
-      return m.reply("Maaf, terjadi kesalahan saat memproses audio.");
+      console.log('❌ Fallback Nekoo juga gagal:', err2);
+      await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
+      return replyhydro("⚠️ Maaf, audio gagal diunduh. Silakan coba lagi.");
     }
   }
 }
 break;
-case "get": case ".g": {
-if (!text) return reply("https://example.com")
-let data = await fetchJson(text)
-m.reply(JSON.stringify(data, null, 2))
-}
-break
 case 'ytmp4':
 case 'ytvideo': {
-  if (!text) return replyhydro(`🎥 *YouTube MP4 Downloader*\n\nSilakan kirim link YouTube dengan perintah:\n\n📌 *Contoh:*\n${prefix + command} https://youtu.be/abc123\n${prefix + command} https://youtu.be/abc123 720`);
+  if (!text) {
+    return replyhydro(
+      `🎬 *YouTube MP4 Downloader*\n\n` +
+      `📌 *Cara Penggunaan:*\n` +
+      `   • *${prefix + command}* <link> <resolusi>\n` +
+      `   • *${prefix + command}* <link>\n\n` +
+      `💡 *Contoh:*\n` +
+      `   ${prefix + command} https://youtu.be/abc123 720\n` +
+      `   ${prefix + command} https://youtu.be/abc123\n\n` +
+      `📍 *Keterangan:*\n` +
+      `   - Jika resolusi tidak diisi, akan muncul pilihan.\n` +
+      `   - Resolusi *1080p* ke atas hanya untuk Premium/Owner.\n`
+    );
+  }
 
   const args = text.split(' ');
   const link = args[0];
   const resolution = args[1];
 
   if (!isUrl(link) || !link.includes("youtu")) {
-    return replyhydro("🔗 *Link tidak valid!*\n\nSilakan masukkan link YouTube yang benar.");
+    return replyhydro("⚠️ *Link tidak valid!*\n\nSilakan masukkan link YouTube yang benar.");
   }
 
   if (!resolution) {
@@ -30406,7 +30675,7 @@ case 'ytvideo': {
       const rows = reso.map(r => ({
         header: "",
         title: r >= 1080 ? `${r}p 🔒 Premium` : `${r}p`,
-        description: r >= 1080 ? `🔐 Khusus pengguna premium` : `⬇ Unduh resolusi ${r}p`,
+        description: r >= 1080 ? `🔐 Khusus pengguna Premium/Owner` : `⬇ Unduh resolusi ${r}p`,
         id: `.ytmp4 ${link} ${r}`
       }));
 
@@ -30415,18 +30684,18 @@ case 'ytvideo': {
           message: {
             messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
             interactiveMessage: {
-              body: { text: `📥 Silakan pilih resolusi yang tersedia:` },
-              footer: { text: 'Asisten Hydro Bot' },
+              body: { text: `📥 *Pilih resolusi video yang tersedia:*` },
+              footer: { text: '💡 Asisten Hydro Bot — Downloader Cepat' },
               header: {
-                title: "📺 YouTube Downloader",
-                subtitle: "Format MP4",
+                title: "📺 YouTube Video Downloader",
+                subtitle: "Format: MP4",
                 hasMediaAttachment: false,
               },
               nativeFlowMessage: {
                 buttons: [{
                   name: "single_select",
                   buttonParamsJson: JSON.stringify({
-                    title: "Pilih Resolusi",
+                    title: "🎯 Pilih Resolusi",
                     sections: [{ title: "Resolusi Video", rows }]
                   })
                 }]
@@ -30441,11 +30710,17 @@ case 'ytvideo': {
     }
 
   } else {
-    const allowedFree = ['144', '240', '360', '480', '720'];
-    const isFree = allowedFree.includes(resolution);
+    const isFreeResolution = ['144', '240', '360', '480', '720'].includes(resolution);
 
-    if (!isPrem && !Ahmad && !isFree) {
-      return replyhydro(`⛔ *Akses Ditolak*\n\nResolusi *${resolution}p* hanya tersedia untuk:\n- 🟢 Pengguna Premium\n- 👑 Pemilik Bot\n\nUpgrade ke premium untuk akses penuh resolusi tinggi.`);
+    // Batasi resolusi tinggi
+    if (!isPrem && !Ahmad && !isFreeResolution) {
+      return replyhydro(
+        `⛔ *Akses Ditolak!*\n\n` +
+        `Resolusi *${resolution}p* hanya tersedia untuk:\n` +
+        `   • 🟢 *Pengguna Premium*\n` +
+        `   • 👑 *Pemilik Bot*\n\n` +
+        `💡 *Tips:* Upgrade ke Premium untuk akses penuh resolusi tinggi.`
+      );
     }
 
     try {
@@ -30459,84 +30734,40 @@ case 'ytvideo': {
       const buffer = await getBuffer(data.download_url);
       const fileSizeMB = buffer.length / (1024 * 1024);
 
-      if (fileSizeMB > 80) {
-        await hydro.sendMessage(m.chat, {
-          document: buffer,
-          fileName: `${data.title}.mp4`,
-          mimetype: 'video/mp4'
-        }, { quoted: m });
-      } else {
-        await hydro.sendMessage(m.chat, {
-          video: buffer,
-          fileName: `${data.title}.mp4`,
-          mimetype: 'video/mp4',
-          caption: data.title
-        }, { quoted: m });
-      }
+      const fileMsg = fileSizeMB > 80
+        ? { document: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4' }
+        : { video: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4', caption: `✅ *Berhasil Mengunduh*\n🎥 ${data.title}\n📌 Resolusi: ${resolution}p` };
 
+      await hydro.sendMessage(m.chat, fileMsg, { quoted: m });
       await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
     } catch (err) {
-      console.log("❌ API utama gagal, mencoba fallback...");
+      console.log("❌ API utama gagal, mencoba fallback Nekoo...");
 
       try {
         await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
 
-        const headers = {
-          "accept": "*/*",
-          "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
-          "sec-ch-ua": "\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\"",
-          "sec-ch-ua-mobile": "?1",
-          "sec-ch-ua-platform": "\"Android\"",
-          "sec-fetch-dest": "empty",
-          "sec-fetch-mode": "cors",
-          "sec-fetch-site": "cross-site",
-          "Referer": "https://id.ytmp3.mobi/",
-          "Referrer-Policy": "strict-origin-when-cross-origin"
-        };
+        // Resolusi yang tersedia di API Nekoo
+        const availableRes = ["360", "480", "720", "1080"];
+        const finalRes = availableRes.includes(resolution) ? resolution : "360";
 
-        const initRes = await fetch(`https://d.ymcdn.org/api/v1/init?p=y&23=1llum1n471&_=${Math.random()}`, { headers });
-        const init = await initRes.json();
+        const nekooApi = `https://api.nekoo.qzz.io/downloader/youtube?url=${encodeURIComponent(link)}&format=${finalRes}&type=video`;
+        const { data } = await axios.get(nekooApi);
 
-        const id = link.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|.*\/|.*embed\/))([^&?/]+)/)?.[1];
-        const convertURL = `${init.convertURL}&v=${id}&f=mp4&_=${Math.random()}`;
-        const convertRes = await fetch(convertURL, { headers });
-        const convert = await convertRes.json();
+        if (!data || !data.result?.downloadUrl) throw new Error("Gagal mendapatkan URL download dari API Nekoo.");
 
-        let info = {};
-        for (let i = 0; i < 3; i++) {
-          const j = await fetch(convert.progressURL, { headers });
-          info = await j.json();
-          if (info.progress == 3) break;
-        }
-
-        const fallback = {
-          url: convert.downloadURL,
-          title: info.title || "yt-video"
-        };
-
-        const fallbackBuffer = await getBuffer(fallback.url);
+        const fallbackBuffer = await getBuffer(data.result.downloadUrl);
         const fallbackSizeMB = fallbackBuffer.length / (1024 * 1024);
 
-        if (fallbackSizeMB > 80) {
-          await hydro.sendMessage(m.chat, {
-            document: fallbackBuffer,
-            mimetype: 'video/mp4',
-            fileName: `${fallback.title}.mp4`
-          }, { quoted: m });
-        } else {
-          await hydro.sendMessage(m.chat, {
-            video: fallbackBuffer,
-            mimetype: 'video/mp4',
-            fileName: `${fallback.title}.mp4`,
-            caption: fallback.title
-          }, { quoted: m });
-        }
+        const fileMsg = fallbackSizeMB > 80
+          ? { document: fallbackBuffer, mimetype: 'video/mp4', fileName: `${data.result.title || "yt-video"}.mp4` }
+          : { video: fallbackBuffer, mimetype: 'video/mp4', fileName: `${data.result.title || "yt-video"}.mp4`, caption: `✅ *Berhasil Mengunduh*\n🎥 ${data.result.title || "YouTube Video"}\n📌 Resolusi: ${finalRes}p` };
 
+        await hydro.sendMessage(m.chat, fileMsg, { quoted: m });
         await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
       } catch (err2) {
-        console.log("❌ Fallback juga gagal:", err2);
+        console.log("❌ Fallback Nekoo juga gagal:", err2);
         await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
         return replyhydro("⚠️ Maaf, video gagal diunduh. Silakan coba lagi dengan resolusi atau link berbeda.");
       }
@@ -30544,6 +30775,12 @@ case 'ytvideo': {
   }
 }
 break;
+case "get": case ".g": {
+if (!text) return reply("https://example.com")
+let data = await fetchJson(text)
+m.reply(JSON.stringify(data, null, 2))
+}
+break
 case 'songs':
 case 'play': {
   if (!text) {
@@ -31535,53 +31772,61 @@ case 'quotechat':
     case 'xquote':
     case 'quotly':
 case 'qc': {
-  if (!text) return reply('Teksnya mana?')
-  if (text.length > 10000) return reply("Maximal 10000 karakter!")
+    if (!text) return reply('Teksnya mana?');
+    if (text.length > 10000) return reply("Maximal 10000 karakter!");
 
-  await reply('⏳ Sedang membuat quote, mohon tunggu...')
+    await reply('⏳ Sedang membuat quote, mohon tunggu...');
 
-  try {
-    // Ambil foto profil pengguna
-    let profilePic = await hydro.profilePictureUrl(m.sender, "image").catch(() => "https://i.ibb.co/3Fh9V6p/avatar-contact.png")
-    const profileBuffer = await getBuffer(profilePic)
+    const FormData = require("form-data");
+    const { fromBuffer } = require("file-type");
 
-    // Buat folder ./temp jika belum ada
-    const tempDir = './temp'
-    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir)
+    // Fungsi hapus emoji dari teks
+    function removeEmojis(str) {
+        return str.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|[\uD83C-\uDBFF\uDC00-\uDFFF]|\uD83D[\uDC00-\uDE4F]|\uD83D[\uDE80-\uDEFF])/g, '');
+    }
 
-    // Simpan foto profil sementara
-    const filename = `${tempDir}/${Date.now()}.jpg`
-    fs.writeFileSync(filename, profileBuffer)
+    // Upload ke catbox.moe
+    async function uploadCatbox(buffer) {
+        try {
+            const form = new FormData();
+            const { ext } = await fromBuffer(buffer);
+            form.append("fileToUpload", buffer, "file." + ext);
+            form.append("reqtype", "fileupload");
+            const res = await axios.post("https://catbox.moe/user/api.php", form, {
+                headers: form.getHeaders(),
+            });
+            return res.data;
+        } catch {
+            return null;
+        }
+    }
 
-    // Upload ke tourl
-    const uploadedUrl = await uploadwidipe(filename)
-    fs.unlinkSync(filename)
-    if (!uploadedUrl) return reply("❌ Gagal upload foto profil.")
+    try {
+        // Ambil foto profil user
+        let profilePic = await hydro.profilePictureUrl(m.sender, "image").catch(() => "https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/kontak.jpg");
+        const profileBuffer = await getBuffer(profilePic);
+        const uploadedUrl = await uploadCatbox(profileBuffer);
+        const finalUrl = uploadedUrl || "https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/kontak.jpg";
 
-    // Susun URL GET dengan parameter
-    const apiUrl = `https://api.nekorinn.my.id/maker/quotechat?text=${encodeURIComponent(text)}&name=${encodeURIComponent(pushname)}&profile=${encodeURIComponent(uploadedUrl)}`
-    
-    // Kirim GET request
-    const response = await axios.get(apiUrl, { responseType: 'arraybuffer' })
+        // Bersihkan nama user dari emoji
+        let cleanName = removeEmojis(pushname || "").trim();
 
-    // Simpan gambar hasil quote
-    const resultFile = `${tempDir}/quote-${Date.now()}.png`
-    fs.writeFileSync(resultFile, response.data)
+        // Ambil gambar dari API
+        const apiUrl = `https://api.nekoo.qzz.io/maker/quotechat?text=${encodeURIComponent(text)}&name=${encodeURIComponent(cleanName)}&profile=${encodeURIComponent(finalUrl)}`;
+        const res = await axios.get(apiUrl, { responseType: 'arraybuffer' });
 
-    // Kirim sebagai stiker
-    hydro.sendImageAsSticker(from, fs.readFileSync(resultFile), m, {
-      packname: global.botname,
-      author: global.botname
-    })
+        // Kirim langsung sebagai stiker
+        hydro.sendImageAsSticker(from, res.data, m, {
+            packname: global.botname,
+            author: global.botname
+        });
 
-    // Bersihkan file
-    fs.unlinkSync(resultFile)
-  } catch (err) {
-    console.error('Error QC:', err)
-    reply("❌ Gagal membuat quote. Pastikan API aktif atau coba lagi.")
-  }
+    } catch (err) {
+        console.error(err);
+        reply("❌ Gagal membuat quote.");
+    }
 }
-break
+break;
 case 's':
 case 'stiker':
 case 'sticker': {
