@@ -17542,15 +17542,33 @@ break
 case 'rating': {
     let nilai = parseInt(text.trim());
 
+    // Kalau user ketik angka langsung
     if (!isNaN(nilai)) {
         if (nilai < 1 || nilai > 10) return replyhydro(`❌ Rating hanya boleh 1-10`);
 
+        // Cek apakah user sudah pernah memberi rating
+        let { data: existing, error: checkError } = await supabase
+            .from('ratings')
+            .select('id')
+            .eq('user_id', m.sender)
+            .single();
+
+        if (checkError && checkError.code !== 'PGRST116') {
+            return replytolak(`⚠️ Terjadi kesalahan: ${checkError.message}`);
+        }
+
+        if (existing) {
+            return replytolak(`❌ Kamu sudah memberikan rating sebelumnya. Terima kasih!`);
+        }
+
+        // Simpan ke Supabase
         let { error } = await supabase
             .from('ratings')
             .insert([{ user_id: m.sender, nilai }]);
 
-        if (error) return replyhydro(`⚠️ Gagal menyimpan rating: ${error.message}`);
+        if (error) return replytolak(`⚠️ Gagal menyimpan rating: ${error.message}`);
 
+        // Kirim pesan terima kasih + quick reply cekrating
         let quickMsg = {
             text: `✅ Terima kasih! Kamu memberikan rating *${nilai}* ⭐`,
             footer: '⭐ Rating Bot',
@@ -17566,6 +17584,7 @@ case 'rating': {
         return hydro.sendMessage(m.chat, quickMsg, { quoted: m });
     }
 
+    // Kalau user tidak mengetik angka → tampilkan pilihan scrollable
     let rows = Array.from({ length: 10 }, (_, i) => ({
         header: "",
         title: `${i + 1} ⭐`,
@@ -30583,7 +30602,6 @@ case 'ytaudio': {
     return replyhydro('⚠️ *Link tidak valid!*\n\nSilakan masukkan link YouTube yang benar.');
   }
 
-  replyhydro('⏳ *Sedang memproses audio...*\nMohon tunggu sebentar.');
 
   try {
     // === API 1: ytdlpyton.nvlgroup.my.id ===
