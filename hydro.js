@@ -17558,7 +17558,7 @@ case 'rating': {
         }
 
         if (existing) {
-            return replytolak(`❌ Kamu sudah memberikan rating sebelumnya. Terima kasih!`);
+            return replytolak('❌ Kamu sudah memberikan rating sebelumnya.\n`Terima kasih!`');
         }
 
         // Simpan ke Supabase
