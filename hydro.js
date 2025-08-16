@@ -1677,53 +1677,28 @@ async function getAccessToken() {
 async function spotifydl(url) {
   return new Promise(async (resolve, reject) => {
     try {
-      const kemii = await axios.get(
-        `https://api.fabdl.com/spotify/get?url=${encodeURIComponent(url)}`,
-        {
-          headers: {
-            accept: "application/json, text/plain, */*",
-            "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
-            "sec-ch-ua": "\"Not)A;Brand\";v=\"24\", \"Chromium\";v=\"116\"",
-            "sec-ch-ua-mobile": "?1",
-            "sec-ch-ua-platform": "\"Android\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "cross-site",
-            Referer: "https://spotifydownload.org/",
-            "Referrer-Policy": "strict-origin-when-cross-origin",
-          },
-        }
-      );
-      const kemi = await axios.get(
-        `https://api.fabdl.com/spotify/mp3-convert-task/${kemii.data.result.gid}/${kemii.data.result.id}`,
-        {
-          headers: {
-            accept: "application/json, text/plain, */*",
-            "accept-language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
-            "sec-ch-ua": "\"Not)A;Brand\";v=\"24\", \"Chromium\";v=\"116\"",
-            "sec-ch-ua-mobile": "?1",
-            "sec-ch-ua-platform": "\"Android\"",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "cross-site",
-            Referer: "https://spotifydownload.org/",
-            "Referrer-Policy": "strict-origin-when-cross-origin",
-          },
-        }
-      );
-      const result = {};
-      result.title = kemii.data.result.name;
-      result.type = kemii.data.result.type;
-      result.artis = kemii.data.result.artists;
-      result.durasi = kemii.data.result.duration_ms;
-      result.image = kemii.data.result.image;
-      result.download = "https://api.fabdl.com" + kemi.data.result.download_url;
+      const { data } = await axios.get(`https://api.siputzx.my.id/api/d/spotifyv2?url=${encodeURIComponent(url)}`);
+
+      if (!data.status || !data.data) {
+        return reject(new Error("Gagal mengambil data dari API"));
+      }
+
+      const result = {
+        title: data.data.title,
+        description: data.data.description,
+        songTitle: data.data.songTitle,
+        artist: data.data.artist,
+        coverImage: data.data.coverImage,
+        mp3DownloadLink: data.data.mp3DownloadLink,
+        coverDownloadLink: data.data.coverDownloadLink
+      };
+
       resolve(result);
     } catch (error) {
       reject(error);
     }
   });
-};
+}
 async function searchSpotify(query) {
     try {
         const access_token = await getAccessToken();
@@ -12912,7 +12887,7 @@ renderLargerThumbnail: true
         break;
 //=================={{=[===================]]\\
 case 'tourl': {
-    if (!quoted) return replyhydro('Reply media (foto/video) yang ingin diupload.');
+    if (!quoted) return replyhydro('Reply media (foto/video/file) yang ingin diupload.');
 
     const FormData = require("form-data");
     const mime = require("mime-types");
@@ -12920,6 +12895,31 @@ case 'tourl': {
     const path = require("path");
     const { fromBuffer } = require("file-type");
     const axios = require("axios");
+
+    // === CONFIG UNTUK TERMAI API ===
+    const termaiKey = "AIzaBj7z2z3xBjsk"; // jangan diganti
+    const termaiDomain = 'https://c.termai.cc';
+
+    async function uploadTermai(fileBuffer) {
+        try {
+            const { ext } = await fromBuffer(fileBuffer);
+            const formData = new FormData();
+            formData.append('file', fileBuffer, { filename: 'file.' + ext });
+
+            const res = await axios.post(`${termaiDomain}/api/upload?key=${termaiKey}`, formData, {
+                headers: formData.getHeaders(),
+                timeout: 120000
+            });
+
+            if (res.data && res.data.status && res.data.path) {
+                return res.data.path;
+            }
+            throw new Error("Upload ke Termai gagal");
+        } catch (err) {
+            console.error("Termai Error:", err.message);
+            return null;
+        }
+    }
 
     // Upload ke qu.ax
     async function pomf2(filePath) {
@@ -12960,36 +12960,112 @@ case 'tourl': {
         }
     }
 
+    // Upload ke cdn.ypnk.biz.id
+    async function uploadYpnk(buffer, filename) {
+        try {
+            const form = new FormData();
+            form.append("files", buffer, { filename });
+            const response = await axios.post("https://cdn.ypnk.biz.id/upload", form, {
+                headers: {
+                    ...form.getHeaders(),
+                    'User-Agent': 'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36'
+                },
+                timeout: 120000
+            });
+            if (response.data.success && response.data.files?.[0]) {
+                return `https://cdn.ypnk.biz.id${response.data.files[0].url}`;
+            }
+            throw new Error("Upload ke cdn.ypnk.biz.id gagal");
+        } catch (err) {
+            console.error("Ypnk Error:", err.message);
+            return null;
+        }
+    }
+
+    // Upload ke tmpfiles.org
+    async function uploadTmpFiles(filePath) {
+        try {
+            if (!fs.existsSync(filePath)) throw new Error("File tidak ditemukan");
+            const form = new FormData();
+            form.append("file", fs.createReadStream(filePath));
+            const res = await axios.post("https://tmpfiles.org/api/v1/upload", form, {
+                headers: form.getHeaders(),
+                timeout: 120000
+            });
+            if (res.data && res.data.data && res.data.data.url) {
+                const idMatch = res.data.data.url.match(/\/(\d+)(?:\/|$)/);
+                const fileName = path.basename(filePath);
+                if (idMatch) {
+                    return `https://tmpfiles.org/dl/${idMatch[1]}/${fileName}`;
+                }
+            }
+            throw new Error("Upload ke tmpfiles.org gagal");
+        } catch (err) {
+            console.error("TmpFiles Error:", err.message);
+            return null;
+        }
+    }
+
+    // Upload ke put.icu
+    async function uploadPutIcu(filePath) {
+        try {
+            if (!fs.existsSync(filePath)) throw new Error("File tidak ditemukan");
+            const contentType = mime.lookup(filePath) || "application/octet-stream";
+            const res = await axios.put(`https://put.icu/upload/`, fs.createReadStream(filePath), {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': contentType
+                },
+                maxBodyLength: Infinity,
+                maxContentLength: Infinity,
+                timeout: 120000
+            });
+            if (res.data && res.data.direct_url) {
+                return res.data.direct_url;
+            }
+            if (res.data && res.data.url) {
+                return res.data.url;
+            }
+            throw new Error("Upload ke put.icu gagal");
+        } catch (err) {
+            console.error("PutIcu Error:", err.message);
+            return null;
+        }
+    }
+
     try {
         const media = await hydro.downloadAndSaveMediaMessage(quoted);
         const buffer = fs.readFileSync(media);
+        const { ext } = await fromBuffer(buffer) || {};
+        const filename = `file_${Date.now()}.${ext || 'bin'}`;
 
-        let [quaxLink, catboxLink] = await Promise.all([
+        let [quaxLink, catboxLink, ypnkLink, tmpFilesLink, putIcuLink, termaiLink] = await Promise.all([
             pomf2(media),
-            uploadCatbox(buffer)
+            uploadCatbox(buffer),
+            uploadYpnk(buffer, filename),
+            uploadTmpFiles(media),
+            uploadPutIcu(media),
+            uploadTermai(buffer) // === TERMAI API ===
         ]);
 
-        if (!quaxLink && !catboxLink) throw new Error("Keduanya gagal diupload");
+        if (!quaxLink && !catboxLink && !ypnkLink && !tmpFilesLink && !putIcuLink && !termaiLink) throw new Error("Semua uploader gagal");
 
         const formatLink = (link) => link ? link : 'Down / Bermasalah';
 
         let caption = `╭─ 「 UPLOAD SUCCESS 」
-📂 Size: ${buffer.length} Byte
+📂 Size: ${(buffer.length / 1024).toFixed(2)} KB
 🌍 Qu.ax: ${formatLink(quaxLink)}
 🌍 CatBox: ${formatLink(catboxLink)}
-📌 Expired: permanent
+🌍 YPNK: ${formatLink(ypnkLink)}
+🌍 TmpFiles: ${formatLink(tmpFilesLink)} ( *60* Minutes )
+🌍 Put.icu: ${formatLink(putIcuLink)} ( *1* Days )
+🌍 Termai: ${formatLink(termaiLink)}
 ╰───────────────`;
-
-        let thumbnail = await prepareWAMessageMedia(
-            { image: { url: quaxLink || catboxLink } },
-            { upload: hydro.waUploadToServer }
-        );
 
         let msg = {
             interactiveMessage: proto.Message.InteractiveMessage.create({
                 header: proto.Message.InteractiveMessage.Header.create({
-                    hasMediaAttachment: true,
-                    ...thumbnail
+                    hasMediaAttachment: false
                 }),
                 body: proto.Message.InteractiveMessage.Body.create({ text: caption }),
                 footer: proto.Message.InteractiveMessage.Footer.create({
@@ -12997,27 +13073,18 @@ case 'tourl': {
                 }),
                 nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.create({
                     buttons: [
-                        ...(quaxLink ? [{
-                            name: "cta_copy",
-                            buttonParamsJson: JSON.stringify({
-                                display_text: "Copy Link qu.ax",
-                                copy_code: quaxLink
-                            })
-                        }] : []),
-                        ...(catboxLink ? [{
-                            name: "cta_copy",
-                            buttonParamsJson: JSON.stringify({
-                                display_text: "Copy Link catbox",
-                                copy_code: catboxLink
-                            })
-                        }] : [])
+                        ...(quaxLink ? [{ name: "cta_copy", buttonParamsJson: JSON.stringify({ display_text: "Copy Link qu.ax", copy_code: quaxLink }) }] : []),
+                        ...(catboxLink ? [{ name: "cta_copy", buttonParamsJson: JSON.stringify({ display_text: "Copy Link catbox", copy_code: catboxLink }) }] : []),
+                        ...(ypnkLink ? [{ name: "cta_copy", buttonParamsJson: JSON.stringify({ display_text: "Copy Link YPNK", copy_code: ypnkLink }) }] : []),
+                        ...(tmpFilesLink ? [{ name: "cta_copy", buttonParamsJson: JSON.stringify({ display_text: "Copy Link TmpFiles", copy_code: tmpFilesLink }) }] : []),
+                        ...(putIcuLink ? [{ name: "cta_copy", buttonParamsJson: JSON.stringify({ display_text: "Copy Link Put.icu", copy_code: putIcuLink }) }] : []),
+                        ...(termaiLink ? [{ name: "cta_copy", buttonParamsJson: JSON.stringify({ display_text: "Copy Link Termai", copy_code: termaiLink }) }] : []),
                     ]
                 })
             })
         };
 
         await hydro.relayMessage(m.chat, msg, { messageId: m.key.id });
-
         fs.unlinkSync(media);
     } catch (err) {
         replyhydro(`❌ Gagal: ${err.message}`);
@@ -13311,53 +13378,85 @@ break;
 //============ CASE BUG BY AHMAD AKBAR =====================
 case '🐦':
 case 'readvo':
+case '🐦':
+case 'readvo':
 case 'rvo':
 case 'readviewonce': {
-  if (!quoted) return replyhydro('Reply pesan sekali lihat.');
-  if (!mime) return replyhydro(`Kirim foto/video/audio dengan caption *${prefix + command}*`);
+    if (!quoted) return replyhydro('Reply pesan sekali lihat.');
+    if (!mime) return replyhydro(`Kirim foto/video/audio dengan caption *${prefix + command}*`);
 
-  await hydro.sendMessage(m.chat, {
-    react: {
-      text: "⏱️",
-      key: m.key,
-    }
-  });
+    await hydro.sendMessage(m.chat, {
+        react: { text: "⏱️", key: m.key }
+    });
 
-  try {
-    if (/image/.test(mime)) {
-      const media = await hydro.downloadAndSaveMediaMessage(quoted);
-      const url = await uploadwidipe(media); // Ganti Catbox dengan uploadwidipe (sudah kamu pakai di hydro)
-      await hydro.sendMessage(m.chat, {
-        image: { url },
-        caption: '`SUKSES RVO`'
-      }, { quoted: m });
-      fs.unlinkSync(media);
+    const FormData = require("form-data");
+    const fs = require("fs");
+    const path = require("path");
+    const axios = require("axios");
 
-    } else if (/video/.test(mime)) {
-      const media = await hydro.downloadAndSaveMediaMessage(quoted);
-      const url = await uploadwidipe(media);
-      await hydro.sendMessage(m.chat, {
-        video: { url },
-        caption: '`SUKSES RVO`'
-      }, { quoted: m });
-      fs.unlinkSync(media);
-
-    } else if (/audio/.test(mime)) {
-      const media = await hydro.downloadAndSaveMediaMessage(quoted);
-      const url = await uploadwidipe(media);
-      await hydro.sendMessage(m.chat, {
-        audio: { url }
-      }, { quoted: m });
-      fs.unlinkSync(media);
-
-    } else {
-      replyhydro('Jenis media tidak support.');
+    // Fungsi upload ke tmpfiles.org
+    async function uploadTmpFiles(filePath) {
+        try {
+            if (!fs.existsSync(filePath)) throw new Error("File tidak ditemukan");
+            const form = new FormData();
+            form.append("file", fs.createReadStream(filePath));
+            const res = await axios.post("https://tmpfiles.org/api/v1/upload", form, {
+                headers: form.getHeaders(),
+                timeout: 120000
+            });
+            if (res.data && res.data.data && res.data.data.url) {
+                const idMatch = res.data.data.url.match(/\/(\d+)(?:\/|$)/);
+                const fileName = path.basename(filePath);
+                if (idMatch) {
+                    return `https://tmpfiles.org/dl/${idMatch[1]}/${fileName}`;
+                }
+            }
+            throw new Error("Upload ke tmpfiles.org gagal");
+        } catch (err) {
+            console.error("TmpFiles Error:", err.message);
+            return null;
+        }
     }
 
-  } catch (err) {
-    console.error('RVO ERROR:', err);
-    replyhydro('Error bre. Hubungi admin.');
-  }
+    try {
+        // Ambil caption asli
+        let originalCaption = '';
+        if (quoted.msg?.caption) {
+            originalCaption = quoted.msg.caption;
+        } else if (quoted.text) {
+            originalCaption = quoted.text;
+        }
+
+        const mediaPath = await hydro.downloadAndSaveMediaMessage(quoted);
+        const url = await uploadTmpFiles(mediaPath);
+        if (!url) throw new Error("Eror Uploading");
+
+        if (/image/.test(mime)) {
+            await hydro.sendMessage(m.chat, {
+                image: { url },
+                caption: originalCaption || ''
+            }, { quoted: m });
+        }
+        else if (/video/.test(mime)) {
+            await hydro.sendMessage(m.chat, {
+                video: { url },
+                caption: originalCaption || ''
+            }, { quoted: m });
+        }
+        else if (/audio/.test(mime)) {
+            await hydro.sendMessage(m.chat, {
+                audio: { url }
+            }, { quoted: m });
+        }
+        else {
+            replyhydro('Jenis media tidak support.');
+        }
+
+        fs.unlinkSync(mediaPath);
+    } catch (err) {
+        console.error('RVO ERROR:', err);
+        replyhydro(`Error: ${err.message}`);
+    }
 }
 break;
 case 'join': {
@@ -15062,54 +15161,59 @@ break
 //=========================================\\
 case 'hd':
 case 'remini': {
-    if (!quoted || !/image/.test(mime)) return replyhydro(`📸 Kirim atau reply gambar dengan caption *${command}* untuk meningkatkan kualitas.`);
+    if (!quoted || !/image/.test(mime)) 
+        return replyhydro(`📸 Kirim atau reply gambar dengan caption *${command}* untuk meningkatkan kualitas.`);
+
     hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key } });
 
-    const FormData = require("form-data");
+    const axios = require("axios");
     const { fromBuffer } = require("file-type");
+    const fs = require("fs");
+    const path = require("path");
 
-    // Upload ke catbox.moe
-    async function uploadCatbox(buffer) {
+    // Upload ke put.icu
+    async function uploadPutIcu(buffer) {
         try {
-            const form = new FormData();
-            const { ext } = await fromBuffer(buffer);
-            form.append("fileToUpload", buffer, "file." + ext);
-            form.append("reqtype", "fileupload");
-            const res = await axios.post("https://catbox.moe/user/api.php", form, {
-                headers: form.getHeaders(),
+            const { ext, mime } = await fromBuffer(buffer);
+            const tempFile = path.join(__dirname, `tmp_${Date.now()}.${ext || 'bin'}`);
+            fs.writeFileSync(tempFile, buffer);
+
+            const res = await axios.put(`https://put.icu/upload/`, fs.createReadStream(tempFile), {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': mime || "application/octet-stream"
+                },
+                maxBodyLength: Infinity,
+                maxContentLength: Infinity,
+                timeout: 120000
             });
-            return res.data;
+
+            fs.unlinkSync(tempFile);
+
+            if (res.data && res.data.direct_url) return res.data.direct_url;
+            if (res.data && res.data.url) return res.data.url;
+            throw new Error("Upload ke put.icu gagal");
         } catch (err) {
-            console.error("Catbox Error:", err.message);
+            console.error("PutIcu Error:", err.message);
             return null;
         }
     }
 
     try {
         const start = Date.now();
-        const media = await hydro.downloadAndSaveMediaMessage(quoted);
-        console.log('✔ Gambar berhasil didownload:', media);
+        const buffer = await quoted.download();
+        if (!buffer) return replyhydro("❌ Gagal mengambil gambar.");
 
-        const buffer = fs.readFileSync(media);
         const sizeKB = (buffer.length / 1024).toFixed(2);
-        const link = await uploadCatbox(buffer);
-        if (!link) {
-            console.error('❌ Upload ke Catbox gagal.');
-            return replyhydro('Gagal upload gambar ke URL.');
-        }
-        console.log('✔ URL hasil upload:', link);
+        const putIcuLink = await uploadPutIcu(buffer);
+        if (!putIcuLink) return replyhydro("❌ Gagal upload gambar ke put.icu.");
 
-        const upscaleUrl = `https://api.siputzx.my.id/api/iloveimg/upscale?image=${link}&scale=4`;
-        console.log('🔗 Mengakses API:', upscaleUrl);
+        const upscaleUrl = `https://api.siputzx.my.id/api/iloveimg/upscale?image=${encodeURIComponent(putIcuLink)}&scale=4`;
+        const response = await axios.get(upscaleUrl, { responseType: "arraybuffer" });
+        const hdBuffer = response.data;
 
-        const response = await axios.get(upscaleUrl, { responseType: 'arraybuffer' });
-
-        const hdPath = './hd.jpg';
-        fs.writeFileSync(hdPath, response.data);
-        console.log('✔ File hasil upscale disimpan:', hdPath);
-
+        const hdSizeKB = (hdBuffer.length / 1024).toFixed(2);
         const processTime = ((Date.now() - start) / 1000).toFixed(2);
-        const hdSizeKB = (fs.statSync(hdPath).size / 1024).toFixed(2);
 
         let caption = `╭───『 *IMAGE UPSCALE* 』───╮
 📂 *Ukuran Asli:* ${sizeKB} KB
@@ -15119,21 +15223,258 @@ case 'remini': {
 ╰──────────────────────╯`;
 
         await hydro.sendMessage(m.chat, {
-            image: fs.readFileSync(hdPath),
+            image: hdBuffer,
             caption: caption
         }, { quoted: m });
 
-        fs.unlinkSync(hdPath);
-        fs.unlinkSync(media);
     } catch (e) {
         const status = e.response?.status;
         const data = e.response?.data?.message || e.response?.data || e.message;
-        console.error(`❌ ERROR ${status || ''}:`, data);
-        replyhydro(`Ups! Gagal saat memproses gambar:\n${status ? `Status: ${status}\n` : ''}Pesan: ${data}`);
+        replyhydro(`Ups! Gagal saat memproses gambar:\n${status ? `Status: ${status}\n` : ""}Pesan: ${data}`);
     }
 }
 break;
 //=========================================\\
+case 'fakeml': case 'fakelobby': case 'fakelobbyml': {
+    const { createCanvas, loadImage, registerFont } = require('canvas');
+    const fs = modul.fs;
+    const path = require('path');
+    const axios = modul.axios;
+
+    const q = m.quoted ? m.quoted : m;
+    const mime = (q.msg || q).mimetype || '';
+    const nickname = args.length > 0 ? args.join(" ").trim() : 'Hydro';
+
+    if (!mime.startsWith('image/')) {
+        return replyhydro(
+`✨━━━〔 🎮 *Fake Lobby ML* 〕━━━✨
+
+📌 *Cara Pakai*:
+1. Reply gambar/foto yang ingin dipakai.
+2. Ketik:  \`fakeml <nick>\`
+
+💡 *Contoh*:
+> Reply gambar lalu kirim:
+\`fakeml hydro\``
+        );
+    }
+
+    replyhydro(`⏳ *Sedang membuat Fake Lobby ML dengan nama* ➜ *${nickname}*  
+🎨 Mohon tunggu sebentar...`);
+
+    const tmpDir = process.cwd();
+    const fontUrl = 'https://cloudkuimages.com/uploads/files/CL8QHRYN.ttf';
+    const fontPath = path.join(tmpDir, 'CL8QHRYN.ttf');
+
+    try {
+        if (!fs.existsSync(fontPath)) {
+            const res = await axios.get(fontUrl, { responseType: 'arraybuffer' });
+            fs.writeFileSync(fontPath, Buffer.from(res.data));
+        }
+
+        registerFont(fontPath, { family: 'CustomFont' });
+
+        const mediaBuffer = await q.download();
+        const userImage = await loadImage(mediaBuffer);
+        const bg = await loadImage('https://files.catbox.moe/liplnf.jpg');
+        const frameOverlay = await loadImage('https://files.catbox.moe/2vm2lt.png');
+
+        const canvas = createCanvas(bg.width, bg.height);
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+
+        const avatarSize = 205;
+        const frameSize = 293;
+        const centerX = (canvas.width - frameSize) / 2;
+        const centerY = (canvas.height - frameSize) / 2 - 282;
+        const avatarX = centerX + (frameSize - avatarSize) / 2;
+        const avatarY = centerY + (frameSize - avatarSize) / 2 - 3;
+
+        const { width, height } = userImage;
+        const minSide = Math.min(width, height);
+        const cropX = (width - minSide) / 2;
+        const cropY = (height - minSide) / 2;
+
+        ctx.drawImage(userImage, cropX, cropY, minSide, minSide, avatarX, avatarY, avatarSize, avatarSize);
+        ctx.drawImage(frameOverlay, centerX, centerY, frameSize, frameSize);
+
+        const maxFontSize = 36;
+        const minFontSize = 24;
+        const maxChar = 11;
+        let fontSize = maxFontSize;
+        if (nickname.length > maxChar) {
+            const excess = nickname.length - maxChar;
+            fontSize -= excess * 2;
+            if (fontSize < minFontSize) fontSize = minFontSize;
+        }
+
+        ctx.font = `${fontSize}px CustomFont`;
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.fillText(nickname, canvas.width / 2 + 13, centerY + frameSize + 15);
+
+        const buffer = canvas.toBuffer('image/png');
+        await hydro.sendMessage(m.chat, { 
+            image: buffer, 
+            caption: `✨━━━〔 ✅ *Fake Lobby ML* 〕━━━✨
+
+🖼 *Nama*: ${nickname}
+🛠 *Status*: Sukses dibuat
+
+⚡ Dibuat oleh HydroBot`
+        }, { quoted: m });
+
+    } catch (e) {
+        replyhydro(`❌ *Terjadi kesalahan*: ${e.message}`);
+    }
+}
+break;
+case 'fstik':
+case 'stickersearch':
+case 'stickerinfo': {
+    try {
+        if (!text) {
+            return replyhydro(
+`✨━━━〔 🔍 *Cari Stiker Telegram* 〕━━━✨
+
+📌 *Cara Pakai*:
+• Ketik nama stiker → \`.fstik kucing lucu 10\`
+• Atau masukkan link paket → \`.fstik https://t.me/addstickers/nama_paket 10\`
+
+💡 Maksimal 30 stiker`
+            );
+        }
+
+        const parts = text.split(' ');
+        let stickerCount = 5;
+        let query = text;
+
+        if (!isNaN(parts[parts.length - 1])) {
+            stickerCount = parseInt(parts.pop());
+            query = parts.join(' ').trim();
+            if (stickerCount > 30) stickerCount = 30;
+        }
+
+        replyhydro(`⏳ *Mencari paket stiker* untuk: _${query}_\n📦 Jumlah diminta: *${stickerCount}*`);
+
+        const fstik = {
+            api: {
+                base: 'https://api.fstik.app',
+                endpoints: {
+                    direct: '/getStickerSetByName',
+                    search: '/searchStickerSet'
+                }
+            },
+            headers: {
+                'accept': 'application/json, text/plain, */*',
+                'content-type': 'application/json',
+                'origin': 'https://webapp.fstik.app',
+                'referer': 'https://webapp.fstik.app/',
+                'user-agent': 'NB Android/1.0.0'
+            },
+            search: async (query, limit = 1) => {
+                const isLink = query.startsWith('https://t.me/addstickers/');
+                if (isLink) {
+                    const name = query.split('/addstickers/')[1]?.trim();
+                    if (!name) throw new Error('Link paket tidak valid');
+
+                    const res = await axios.post(
+                        fstik.api.base + fstik.api.endpoints.direct,
+                        { name, user_token: null },
+                        { headers: fstik.headers, timeout: 10000 }
+                    );
+
+                    const result = res.data?.result;
+                    if (!result) throw new Error('Paket stiker tidak ditemukan');
+
+                    return {
+                        success: true,
+                        result: {
+                            title: result.title,
+                            name: result.name,
+                            description: result.description,
+                            tags: result.tags,
+                            stickerCount: result.stickers?.length || 0,
+                            stickers: result.stickers?.map((s) => ({
+                                image_url: s.thumb?.file_id ? `${fstik.api.base}/file/${s.thumb.file_id}/sticker.webp` : null,
+                                video_url: s.video?.file_id ? `${fstik.api.base}/file/${s.video.file_id}/sticker.webm` : null,
+                                is_video: !!s.video?.file_id
+                            }))
+                        }
+                    };
+                } else {
+                    const res = await axios.post(
+                        fstik.api.base + fstik.api.endpoints.search,
+                        { query, skip: 0, limit: limit, type: '', kind: 'regular', user_token: null },
+                        { headers: fstik.headers, timeout: 10000 }
+                    );
+
+                    const sets = res.data?.result?.stickerSets;
+                    if (!sets || sets.length === 0) throw new Error('Paket stiker tidak ditemukan');
+
+                    const allStickers = [];
+                    for (const set of sets) {
+                        const stickers = set.stickers?.map((s) => ({
+                            setTitle: set.title,
+                            setName: set.name,
+                            image_url: s.thumb?.file_id ? `${fstik.api.base}/file/${s.thumb.file_id}/sticker.webp` : null,
+                            video_url: s.video?.file_id ? `${fstik.api.base}/file/${s.video.file_id}/sticker.webm` : null,
+                            is_video: !!s.video?.file_id
+                        }));
+                        if (stickers) allStickers.push(...stickers);
+                    }
+
+                    return {
+                        success: true,
+                        result: {
+                            title: sets[0].title,
+                            name: sets[0].name,
+                            description: sets[0].description,
+                            tags: sets[0].tags,
+                            stickerCount: allStickers.length,
+                            stickers: allStickers.slice(0, stickerCount)
+                        }
+                    };
+                }
+            }
+        };
+
+        const { success, result } = await fstik.search(query, stickerCount);
+        if (!success || !result || result.stickerCount === 0) {
+            return replyhydro('❌ Paket stiker tidak ditemukan');
+        }
+
+        const info = `✨━━━〔 📦 *Info Paket Stiker* 〕━━━✨
+🖼 *Judul*: ${result.title}
+📛 *Nama Paket*: ${result.name}
+📝 *Deskripsi*: ${result.description || '-'}
+🏷 *Tags*: ${result.tags?.join(', ') || '-'}
+📦 *Total*: ${result.stickerCount} stiker
+🔗 *Link*: https://t.me/addstickers/${result.name}
+
+📤 Mengirim *${Math.min(result.stickers.length, stickerCount)}* stiker...`;
+
+        await hydro.sendMessage(m.chat, {
+            image: { url: result.stickers[0]?.image_url || 'https://via.placeholder.com/512' },
+            caption: info
+        }, { quoted: m });
+
+        // Kirim satu per satu dengan delay 5 detik
+        for (const stiker of result.stickers) {
+            if (stiker.is_video && stiker.video_url) {
+                await hydro.sendMessage(m.chat, { video: { url: stiker.video_url }, gifPlayback: true }, { quoted: m });
+            } else if (stiker.image_url) {
+                await hydro.sendMessage(m.chat, { sticker: { url: stiker.image_url } }, { quoted: m });
+            }
+            await new Promise(res => setTimeout(res, 5000)); // jeda 5 detik
+        }
+
+    } catch (e) {
+        replyhydro(`❌ Terjadi kesalahan: ${e.message}`);
+    }
+    break;
+}
 case 'ssweb':
   case 'ss': {
 async function Screenshot(url) {
@@ -17539,6 +17880,23 @@ ${sortedItem.slice(page * 0, page * 5 + 5).map((user, i) => `${i + 1}.*﹙${user
 }
 break
 //=========================================\\
+case 'speedtest': case 'speed': {
+				replyhydro('Testing Speed...')
+				let cp = require('child_process')
+				let { promisify } = require('util')
+				let exec = promisify(cp.exec).bind(cp)
+				let o
+				try {
+					o = await exec('python3 speed.py --share')
+				} catch (e) {
+					o = e
+				} finally {
+					let { stdout, stderr } = o
+					if (stdout.trim()) m.reply(stdout)
+					if (stderr.trim()) m.reply(stderr)
+				}
+			}
+			break
 case 'rating': {
     let nilai = parseInt(text.trim());
 
@@ -30599,9 +30957,8 @@ case 'ytaudio': {
   const url = text.trim();
   const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
   if (!regex.test(url)) {
-    return replyhydro('⚠️ *Link tidak valid!*\n\nSilakan masukkan link YouTube yang benar.');
+    return replyhydro('⚠️ *Link tidak valid!*\\n\\nSilakan masukkan link YouTube yang benar.');
   }
-
 
   try {
     // === API 1: ytdlpyton.nvlgroup.my.id ===
@@ -30621,41 +30978,27 @@ case 'ytaudio': {
     await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (err) {
-    console.log('❌ API utama gagal, fallback ke Nekoo:', err);
+    console.log('❌ API utama gagal, fallback ke Vreden:', err);
 
     try {
-      // === API 2 (fallback): Nekoo ===
-      const qualities = ["320", "256", "192", "128", "96", "64"];
-      let bestQuality = "320"; // default
+      // === API 2 (fallback): api.vreden.my.id ===
+      const vredenApi = `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(url)}`;
+      const { data } = await axios.get(vredenApi);
 
-      // Cari kualitas tertinggi yang tersedia
-      for (let q of qualities) {
-        const testUrl = `https://api.nekoo.qzz.io/downloader/youtube?url=${encodeURIComponent(url)}&format=${q}&type=audio`;
-        const testRes = await axios.get(testUrl);
-        if (testRes.data?.status && testRes.data?.result?.downloadUrl) {
-          bestQuality = q;
-          break;
-        }
-      }
+      if (!data || !data.result?.download?.url) throw new Error('Fallback API tidak memberikan link download.');
 
-      const nekooApi = `https://api.nekoo.qzz.io/downloader/youtube?url=${encodeURIComponent(url)}&format=${bestQuality}&type=audio`;
-      const { data } = await axios.get(nekooApi);
-
-      if (!data || !data.result?.downloadUrl) throw new Error('Fallback API tidak memberikan link download.');
-
-      const buffer = await getBuffer(data.result.downloadUrl);
+      const buffer = await getBuffer(data.result.download.url);
 
       await hydro.sendMessage(m.chat, {
         audio: buffer,
         mimetype: 'audio/mp4',
-        ptt: false,
-        caption: `✅ *Berhasil Mengunduh*\n🎵 ${data.result.title}\n📌 Kualitas: ${data.result.format}kbps`
+        ptt: false
       }, { quoted: m });
 
       await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
     } catch (err2) {
-      console.log('❌ Fallback Nekoo juga gagal:', err2);
+      console.log('❌ Fallback Vreden juga gagal:', err2);
       await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
       return replyhydro("⚠️ Maaf, audio gagal diunduh. Silakan coba lagi.");
     }
@@ -33502,24 +33845,38 @@ const result = resul.result
         });
 }
 break
-case 'spdl': case 'spotifydl': {
-if (!text) return reply('Masukan Link')
-let result = await spotifydl(text)
-let captionvid = `∘ Title: ${result.title}\n∘ Artist: ${result.artis}\n∘ Type: ${result.type}\n\nAsisten Hydro 🌊`
- const p = await new canvafy.Spotify()
+case 'spdl':
+case 'spotifydl': {
+    if (!text) return reply('Masukan Link Spotify!');
+
+    try {
+        let result = await spotifydl(text); 
+        let captionvid = `∘ Title: ${result.title}\n∘ Artist: ${result.artist}\n\nAsisten Hydro 🌊`;
+
+        const p = await new canvafy.Spotify()
             .setTitle(result.title)
             .setAuthor("Spotify - Downloader")
             .setTimestamp(40, 100)
             .setOverlayOpacity(0.8)
             .setBorder("#fff", 0.8)
-            .setImage(result.image)
+            .setImage(result.coverImage)
             .setBlur(3)
-            .build(); 
+            .build();
 
-       await hydro.sendMessage(from, { image: p, caption: captionvid }, { quoted: m })
-    hydro.sendMessage(m.chat, { audio: { url: result.download}, mimetype: 'audio/mpeg', filename: 'MP3 BY ' + 'Selly' }, { quoted: m });
+        await hydro.sendMessage(from, { image: p, caption: captionvid }, { quoted: m });
+
+        await hydro.sendMessage(m.chat, {
+            audio: { url: result.mp3DownloadLink },
+            mimetype: 'audio/mpeg',
+            filename: `MP3 BY HYDRO`
+        }, { quoted: m });
+
+    } catch (err) {
+        console.error(err);
+        reply('Gagal mengambil data lagu dari Spotify.');
+    }
 }
-break
+break;
 case 'bass': case 'blown': case 'deep': case 'earrape': case 'fast': case 'fat': case 'nightcore': case 'reverse': case 'robot': case 'slow': case 'smooth': case 'squirrel':
     try {
         let set;
