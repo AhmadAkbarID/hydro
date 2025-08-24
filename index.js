@@ -30,6 +30,16 @@ const { color, bgcolor } = require('./lib/color')
 const { TelegraPh } = require('./lib/uploader')
 const NodeCache = require("node-cache")
 const canvafy = require("canvafy")
+const { 
+  addSewaGroup, 
+  checkSewaGroup, 
+  getSewaPosition, 
+  msToDate, 
+  expiredCheck, 
+  remindSewa, 
+  getGcName 
+} = require('./lib/sewa')
+global.sewa = JSON.parse(fs.readFileSync('./database/sewa.json'))
 const { parsePhoneNumber } = require("libphonenumber-js")
 let _welcome = JSON.parse(fs.readFileSync('./database/welcome.json'))
 let _left = JSON.parse(fs.readFileSync('./database/left.json'))
@@ -196,6 +206,8 @@ hydro.newsletterFollow('120363402564073751@newsletter')
 await delay(5555) 
 start('2',colors.bold.white('\n\nMenunggu Pesan Baru..'))
 
+global.hydro = hydro
+
 hydro.ev.on('creds.update', await saveCreds)
 
     // Anti Call
@@ -254,6 +266,31 @@ console.log(err)}})
 			}
 		}
     })
+// === Interval Cek Sewa ===
+setInterval(async () => {
+    try {
+        // hapus expired
+        sewa = expiredCheck(sewa)
+
+        // kirim reminder
+        await remindSewa(hydro, sewa)
+
+        // auto keluar grup kalau expired
+        for (let x of sewa) {
+            if (!x.id) continue // fix bug undefined
+            if (x.expired !== "PERMANENT" && x.expired <= Date.now()) {
+                try {
+                    await hydro.sendMessage(x.id, { text: "⏳ Masa sewa habis, bot akan keluar. Terima kasih telah menyewa 🙏" })
+                    await hydro.groupLeave(x.id)
+                } catch (e) {
+                    console.log("Gagal keluar grup:", e)
+                }
+            }
+        }
+    } catch (e) {
+        console.error("Interval sewa error:", e)
+    }
+}, 60 * 60 * 1000) // cek tiap 1 jam
 
 hydro.sendTextWithMentions = async (jid, text, quoted, options = {}) => hydro.sendMessage(jid, { text: text, contextInfo: { mentionedJid: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net') }, ...options }, { quoted })
 
@@ -271,6 +308,31 @@ let id = hydro.decodeJid(contact.id)
 if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
 }
 })
+
+hydro.ev.on('groups.update', async (update) => {
+    try {
+        for (let x of update) {
+            if (x.id) {
+                // kalau approval dimatikan (join langsung)
+                if (x.joinApprovalMode === false) {
+                    let idx = sewa.findIndex(s => s.id === x.id && s.status === 'pending');
+                    if (idx !== -1) {
+                        sewa[idx].status = 'active';
+                        fs.writeFileSync('./database/sewa.json', JSON.stringify(sewa, null, 2));
+                        await hydro.sendMessage(x.id, { text: 
+                            `✅ Sewa telah aktif!\n\n` +
+                            `🏷️ Nama : *${await getGcName(x.id)}*\n` +
+                            `🆔 ID   : *${x.id}*\n` +
+                            `⏳ Durasi : *${msToDate(sewa[idx].expired - Date.now())}*`
+                        });
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        console.error("groups.update error:", e);
+    }
+});
 
 hydro.getName = (jid, withoutContact  = false) => {
 id = hydro.decodeJid(jid)
