@@ -9,11 +9,12 @@ global.autokickmorroco = false //auto kick 212 (true to on, false to off)
 global.antispam = true//auto kick spammer (true to on, false to off)
 
 //===============SETTING MENU==================\\
-global.channel = 'isi id chanel wa yang mau di up audio'
+global.channel = '120363416755002041@newsletter' // GANTI DENGAN ID CHMU KALO ADA
+global.channeln = 'HYDRO COMMUNITY 📢📦' // GANTI DENGAN NAMA CH MU
 //===============SETTING MENU==================\\
 global.thumbnail = 'https://qu.ax/JlBJE.jpg'
 global.ig = '@focabar'
-global.tele = 'focashop'
+global.tele = 'miminhydro'
 global.ttowner = '@focabar'
 global.ownername = 'FocaBars'
 global.owner = ['6285187063723'] // SETTING JUGA DI FOLDER DATABASE 
@@ -34,8 +35,8 @@ global.ownernumber = '6285187063723'
 global.botnumber = '6288276554694'
 global.ownername = 'FocaBars'
 global.ownerNumber = ["6285187063723@s.whatsapp.net"]
-global.ownerweb = ""
-global.websitex = ""
+global.ownerweb = "https://store.hydrohost.web.id"
+global.websitex = "https://store.hydrohost.web.id"
 global.wagc = "https://chat.whatsapp.com/LqCKICVcCgiJcrxttSRci3"
 global.saluran = "https://whatsapp.com/channel/0029VbAYRBf4o7qSa74h2m0t"
 global.themeemoji = '🏞️'
