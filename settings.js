@@ -3,10 +3,10 @@ const fs = require("fs")
 //aumto presence update
 global.autoTyping = true //auto tying in gc (true to on, false to off)
 global.autoRecord = false //auto recording (true to on, false to off)
-global.autoblockmorroco = true //auto block 212 (true to on, false to off)
-global.wlcm = true
+global.autoblockmorroco = false //auto block 212 (true to on, false to off)
+global.wlcm = false
 global.autokickmorroco = false //auto kick 212 (true to on, false to off) 
-global.antispam = true//auto kick spammer (true to on, false to off)
+global.antispam = false//auto kick spammer (true to on, false to off)
 
 //===============SETTING MENU==================\\
 global.channel = '120363416755002041@newsletter' // GANTI DENGAN ID CHMU KALO ADA
@@ -32,22 +32,22 @@ global.anovo = false // KOSONG KAN JIKA TIDAK ADA
 //==================setting bot===========================\\
 global.botname = "Asisten Hydro 🌊"
 global.ownernumber = '6285187063723'
-global.botnumber = '6288276554694'
+global.botnumber = '6283867608750'
 global.ownername = 'FocaBars'
 global.ownerNumber = ["6285187063723@s.whatsapp.net"]
-global.ownerweb = "https://store.hydrohost.web.id"
-global.websitex = "https://store.hydrohost.web.id"
+global.ownerweb = ""
+global.websitex = ""
 global.wagc = "https://chat.whatsapp.com/LqCKICVcCgiJcrxttSRci3"
 global.saluran = "https://whatsapp.com/channel/0029VbAYRBf4o7qSa74h2m0t"
 global.themeemoji = '🏞️'
 global.wm = "Asisten Hydro ||| WhatsApps Bots"
 global.botscript = 'Dah gede nyari sc 🗿🖕' //script link
 global.packname = "HYDRO"
-global.author = "\n\n\n\n\nDibuat Oleh Asisten Hydro\nNo hape/wa : 6288276554694"
+global.author = "\n\n\n\n\nDibuat Oleh Asisten Hydro\nNo hape/wa : 6283867608750"
 global.creator = "6285187063723@s.whatsapp.net"
 //======================== CPANEL FITUR ===========================\\
-global.domain = 'https://hydrohost.web.id' // Isi Domain Lu jangan kasih tanda / di akhir link
-global.apikey = 'ptla_XhQ3zDxl0zCcI2DByTYOkrYjydYmBeUrszxDW9ftwpM' // Isi Apikey Plta Lu
+global.domain = 'https://danznano.biz.id' // Isi Domain Lu jangan kasih tanda / di akhir link
+global.apikey = 'ptla_XzQKlP026s4Tfbb85TStK30DGPJlNN2mfDXh77HFchb' // Isi Apikey Plta Lu
 global.capikey = 'ptlc_dHqgrA1oZZ0n6AA4hiT2uCKGKHpKxU5xjL1bxAJPKDx' // Isi Apikey Pltc Lu
 //=========================================================//
 global.apiDigitalOcean = "-"
@@ -61,7 +61,7 @@ global.docker2 = "ghcr.io/cekilpedia/vip:sanzubycekil" //jangan di ubah
 global.eggsnya2 = '15' // id eggs yang dipakai
 global.location2 = '1' // id location
 //===========================//
-global.virtuSimApiKey = 'APIKEYMU'
+global.virtuSimApiKey = 'k6R8Zfw1xGVBdgPvODLWtcie5hNyuS'
 global.domainotp = "https://claudeotp.com/api"
 global.apikeyotp = "a395f97fe99f4fad0e790d10af518b9a"
 global.eggsnya = '15' // id eggs yang dipakai
@@ -72,24 +72,24 @@ global.tekspushkonv3 = ""
 global.tekspushkonv4 = ""
 //===========================//
 global.mess = {
-   wait: "*_Tunggu Sebentar.. Bot lagi berenang... 🏊_*",
+   wait: "*Permintaanmu sedang diproses 💝*",
    success: "Yay! Bot berhasil 🎉",
-   on: "Yay! Nyala nih! 😝",
-   off: "Ahh! Mati deh.. 😴",
+   on: "*Yay! Nyala nih! 😝*",
+   off: "*Ahh! Mati deh.. 😴*",
    query: {
-       text: "Teksnya mana? Aku kan gabisa baca pikiran kaka 😉",
-       link: "Linknya dongg.. Aku gabisa tanpa link 😖",
+       text: "*Teksnya mana? Aku kan gabisa baca pikiran kaka 😉*",
+       link: "*Linknya dongg.. Aku gabisa tanpa link 😖*",
    },
    error: {
-       fitur: "Whoops! Eror nih.. laporkan ke owner agar diperbaiki 6285187063723 🙏",
+       fitur: "*Whoops!*\n> Eror nih.. laporkan ke owner agar diperbaiki 6285187063723 🙏",
    },
    only: {
-       group: "Eh, Kak! Fitur ini bisanya buat grup nihh 🫂",
-       private: "Eh, Kak! Fitur ini cuman bisa dipake chat pribadi! 🌚",
+       group: "*Eh, Kak! Fitur ini bisanya buat grup nihh 🫂*",
+       private: "*Eh, Kak! Fitur ini cuman bisa dipake chat pribadi! 🌚*",
        owner: "Hanya untuk sang *Raja* 👑",
-       admin: "Fitur ini cuman bisa dipake admin grup yah! 🥳",
-       badmin: "Waduh! Aku butuh jadi admin agar bisa menggunakan fitur ini 🤯",
-       premium: "Kak, ini fitur premium loh! Biar bisa jadi premium beli di 6285187063723 agar bisa menggunakan fitur ini 🤫",
+       admin: "Fitur ini cuman bisa dipake *admin grup* yah! 🥳",
+       badmin: "Waduh! Aku butuh jadi *admin* agar bisa menggunakan fitur ini 🤯",
+       premium: "Kak, ini fitur *premium* loh!\n> Biar bisa jadi premium beli di 6285187063723 agar bisa menggunakan fitur ini 🤫",
    }
 }
 //========================================\\

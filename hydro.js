@@ -60,6 +60,8 @@ const { EmojiAPI } = require("emoji-api")
 const emoji = new EmojiAPI()
 const owner = JSON.parse(fs.readFileSync('./database/owner.json'))
 const prem = JSON.parse(fs.readFileSync('./database/premium.json'))
+const badPath = './database/bad.json';
+const antiToxicPath = './database/antitoxic.json'
 const resellerp = JSON.parse(fs.readFileSync('./database/resellerpanel.json'))
 const adminp = JSON.parse(fs.readFileSync('./database/adminpanel.json'))
 const ptp = JSON.parse(fs.readFileSync('./database/ptpanel.json'))
@@ -69,7 +71,6 @@ const HydroVoiceNote = JSON.parse(fs.readFileSync('./data/HydroMedia/database/xe
 const HydroSticker = JSON.parse(fs.readFileSync('./data/HydroMedia/database/xeonsticker.json'))
 const ImageHydro = JSON.parse(fs.readFileSync('./data/HydroMedia/database/xeonimage.json'))
 const VideoHydro = JSON.parse(fs.readFileSync('./data/HydroMedia/database/xeonvideo.json'))
-const BadHydro = JSON.parse(fs.readFileSync('./database/bad.json'))
 const pler = JSON.parse(fs.readFileSync('./database/idgrup.json').toString())
 const siminya = JSON.parse(fs.readFileSync('./database/simi.json'))
 const ChatHydro = JSON.parse(fs.readFileSync('./database/ChatHydro.json'))
@@ -84,12 +85,40 @@ let ntnsfw = JSON.parse(fs.readFileSync('./database/nsfw.json'))
 let ntvirtex = JSON.parse(fs.readFileSync('./database/antivirus.json'))
 let _cmd = JSON.parse(fs.readFileSync('./database/command.json'));
 let _cmdUser = JSON.parse(fs.readFileSync('./database/commandUser.json'));
-let nttoxic = JSON.parse(fs.readFileSync('./database/antitoxic.json'))
-let badhydro = JSON.parse(fs.readFileSync('./database/bad.json'))
 let ntwame = JSON.parse(fs.readFileSync('./database/antiwame.json'))
 let ntlinkgc =JSON.parse(fs.readFileSync('./database/antilinkgc.json'))
 let ntlinkch =JSON.parse(fs.readFileSync('./database/antilinkch.json'))
 let warnlinkch = JSON.parse(fs.readFileSync('./database/antilinkch-warning.json'));
+let userWarnings = {};
+let badwords = [];
+let nttoxic = []
+if (fs.existsSync(antiToxicPath)) {
+    nttoxic = JSON.parse(fs.readFileSync(antiToxicPath))
+} else {
+    fs.writeFileSync(antiToxicPath, JSON.stringify([]))
+    nttoxic = []
+}
+if (fs.existsSync(badPath)) {
+    badwords = JSON.parse(fs.readFileSync(badPath));
+} else {
+    fs.writeFileSync(badPath, JSON.stringify([], null, 2));
+    badwords = [];
+}
+let antiToxic = {};
+if (fs.existsSync(antiToxicPath)) {
+    antiToxic = JSON.parse(fs.readFileSync(antiToxicPath));
+} else {
+    fs.writeFileSync(antiToxicPath, JSON.stringify({}, null, 2));
+}
+function saveBadwords() {
+    fs.writeFileSync(badPath, JSON.stringify(badwords, null, 2));
+}
+function saveAntiToxic() {
+    fs.writeFileSync(antiToxicPath, JSON.stringify(antiToxic, null, 2));
+}
+function saveAntiToxic() {
+    fs.writeFileSync(antiToxicPath, JSON.stringify(nttoxic, null, 2))
+}
 function gayaHalah(text) {
     if (/cangratalataans|laval|rala|raward|samakan|sarang|barantaraksa|nashakaga chasata/i.test(text)) {
         return null;
@@ -327,8 +356,6 @@ hydro.ev.emit('messages.upsert', msg)
         const AntiLinkTwitter = m.isGroup ? ntilinktwt.includes(from) : false
         const AntiLinkAll = m.isGroup ? ntilinkall.includes(from) : false
         const antiWame = m.isGroup ? ntwame.includes(from) : false
-        const antiToxic = m.isGroup ? nttoxic.includes(from) : false
-        const BadHydro = m.isGroup ? badhydro.includes(from) : false
 const isWelcome = _welcome.includes(m.chat) ? true : false
 const isLeft = _left.includes(m.chat) ? true : false
 const isSimi = siminya.includes(m.chat) ? true : false 
@@ -1689,8 +1716,8 @@ hydro.sendMessage(from, { audio: teks, mimetype: 'audio/mp4', ptt: true }, { quo
 }
 async function getAccessToken() {
     try {
-        const client_id = 'acc6302297e040aeb6e4ac1fbdfd62c3';
-        const client_secret = '0e8439a1280a43aba9a5bc0a16f3f009';
+        const client_id = 'eafbc7b558274975be58df0026f22260';
+        const client_secret = '79f20d1353954c968fda33a00aba5235';
         const basic = Buffer.from(`${client_id}:${client_secret}`).toString("base64");
         const response = await axios.post('https://accounts.spotify.com/api/token', 'grant_type=client_credentials', {
             headers: {
@@ -2168,7 +2195,7 @@ for (let [sholat, waktu] of Object.entries(jadwalSholat)) {
                                 title: `Selamat menunaikan Ibadah Sholat ${sholat}`,
                                 body: `🕑 ${waktu}`,
                                 sourceUrl: '',
-                                thumbnail: await fs.readFileSync('./data/image/jdw.jpg'),
+                                thumbnail: await fs.readFileSync('./data/image/jdw.png'),
                                 renderLargerThumbnail: true
                             }
                         }
@@ -2432,7 +2459,7 @@ if (
   hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key } });
 
   try {
-    const res = await fetchJson(`https://api.vreden.my.id/api/tiktok?url=${encodeURIComponent(budy)}`);
+    const res = await fetchJson(`https://api.vreden.my.id/api/v1/download/tiktok?url=${encodeURIComponent(budy)}`);
     if (!res || !res.result) return replyhydro('❌ Gagal mengambil data.');
 
     const result = res.result;
@@ -2829,6 +2856,36 @@ kice = m.sender
 hydro.sendMessage(from, {text:`\`\`\`「 Tautan Terdeteksi 」\`\`\`\n\n@${m.sender.split("@")[0]} telah mengirimkan tautan dan berhasil dihapus`, contextInfo:{mentionedJid:[m.sender]}}, {quoted:m})
 } else {
 }
+if (m.isGroup && nttoxic.includes(m.chat) && badwords.some(bw => body.toLowerCase().includes(bw))) {
+    try {
+        if (isAdmins) return
+        if (Ahmad) return  
+
+        await hydro.sendMessage(m.chat, { delete: m.key })
+
+        if (!userWarnings[m.sender]) userWarnings[m.sender] = 0
+        userWarnings[m.sender] += 1
+
+        let warningCount = userWarnings[m.sender]
+        let tagUser = `@${m.sender.split('@')[0]}`
+
+        if (warningCount >= 5) {
+            await hydro.groupParticipantsUpdate(m.chat, [m.sender], "remove")
+            await hydro.sendMessage(m.chat, {
+                text: `🚫 ${tagUser} sudah 5x toxic dan telah di-kick dari grup!`,
+                mentions: [m.sender]
+            })
+            userWarnings[m.sender] = 0
+        } else {
+            await hydro.sendMessage(m.chat, {
+                text: `⚠️ ${tagUser}, jangan toxic!\nWarning: ${warningCount}/5`,
+                mentions: [m.sender]
+            })
+        }
+    } catch (e) {
+        console.log('Error AntiToxic:', e)
+    }
+}
 //antivirtex by xeon
   if (antiVirtex) {
   if (budy.length > 3500) {
@@ -2847,30 +2904,6 @@ hydro.sendMessage(from, {text:`\`\`\`「 Tautan Terdeteksi 」\`\`\`\n\n@${m.sen
 			
   }
   }
-//anti bad words by xeon
-if (antiToxic) {
-  const toxicRegex = /\b(kontol|kntl|goblok|babi|asu|bego|tolol|memek|tai|jancok|gila|jembut|jembud|fuck|shit|pantek|tetek|ngentot|ngentod|colmek|dongo|bacot|anj|clmk|ngocok|ngewe|pea|idiot|bangsat)\b/i;
-  if (toxicRegex.test(budy)) {
-    if (m.text) {
-      bvl = `*HEH!* Jaga kata-kata!`
-      if (isAdmins) return reply(bvl)
-      if (!m.key.fromMe) return reply(bvl)
-      if (Ahmad) return reply(bvl)
-      await hydro.sendMessage(m.chat, {
-        delete: {
-          remoteJid: m.chat,
-          fromMe: false,
-          id: m.key.id,
-          participant: m.key.participant
-        }
-      })
-      await hydro.sendMessage(from, {
-        text: `*HEH!* Jaga kata-kata!`,
-        contextInfo: { mentionedJid: [m.sender] }
-      }, { quoted: m })
-    }
-  }
-}
 //antilink youtube video by xeon
 if (AntiLinkYoutubeVid)
 if (budy.includes("https://youtu.be/")){
@@ -3956,7 +3989,7 @@ const bet = {
   ]
 }
 await listbut2(m.chat, teks, bet, m)
-await hydro.sendMessage(from, { audio: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.mp3'} , mimetype: 'audio/mp4', ptt: true }, { quoted: m })
+await hydro.sendMessage(from, { audio: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/main/menu.mp3'} , mimetype: 'audio/mp4', ptt: false }, { quoted: m })
 }
 break
 
@@ -12777,7 +12810,7 @@ case 'tt': {
   hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key } });
 
   try {
-    const res = await fetchJson(`https://api.vreden.my.id/api/tiktok?url=${encodeURIComponent(text)}`);
+    const res = await fetchJson(`https://api.vreden.my.id/api/v1/download/tiktok?url=${encodeURIComponent(text)}`);
     if (!res || !res.result) return replyhydro('❌ Gagal mengambil data.');
 
     const result = res.result;
@@ -12913,7 +12946,7 @@ case 'tiktokmp3': {
   hydro.sendMessage(m.chat, { react: { text: '🎵', key: m.key } });
 
   try {
-    const res = await fetchJson(`https://api.vreden.my.id/api/tiktok?url=${encodeURIComponent(text)}`);
+    const res = await fetchJson(`https://api.vreden.my.id/api/v1/download/tiktok?url=${encodeURIComponent(text)}`);
     if (!res || !res.result || !res.result.music_info || !res.result.music_info.url) {
       throw new Error('Gagal mengambil audio dari video TikTok.');
     }
@@ -13277,7 +13310,7 @@ case 'jadizombie': {
   if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + command}*`);
   const { GoogleGenerativeAI } = require ("@google/generative-ai");
   let mime = m.quoted.mimetype || "";
-  let defaultPrompt = "ubah wajah nya menjadi zombie realistis";
+  let defaultPrompt = "Create a 1/7 scale commercialized figure of the character in the illustration, in a realistic style and environment. Place the figure on a computer desk, using a circular transparent acrylic base without any text. On the computer screen, display the ZBrush modeling process of the figure. Next to the computer screen, place a BANDAI-style toy packaging box printed with the original artwork.";
   if (!/image\/(jpe?g|png)/.test(mime)) return m.reply(`Format ${mime} tidak didukung! Hanya jpeg/jpg/png`);
   let promptText = text || defaultPrompt;
   m.reply(mess.wait);
@@ -13312,7 +13345,7 @@ case 'jadizombie': {
       }
     }
     if (resultImage) {
-      const tempPath = `./data/gemini_${Date.now()}.png`;
+      const tempPath = `./temp/gemini_${Date.now()}.png`;
       fs.writeFileSync(tempPath, resultImage);
       await hydro.sendMessage(m.chat, { 
         image: { url: tempPath },
@@ -13908,7 +13941,29 @@ case 'botstatus': {
   replyhydro(response)
 }
 break
-case 'groupset': {
+case 'listadmin': {
+    if (!m.isGroup) return m.reply('❌ Fitur ini hanya bisa digunakan di dalam grup!');
+    let metadata = await hydro.groupMetadata(m.chat);
+    let admins = metadata.participants.filter(p => p.admin !== null);
+
+    let adminList = admins.map((a, i) => {
+        let jid = a.id.split('@')[0];
+        let role, emoji;
+        if (a.admin === 'superadmin') {
+            role = '*Pemilik*';
+            emoji = '👑';
+        } else {
+            role = '*Admin Biasa*';
+            emoji = '👮';
+        }
+        return `${i + 1}. @${jid} ( ${emoji} ${role} )`;
+    }).join('\n');
+
+    let caption = `👑 *Daftar Admin Grup ${metadata.subject}*\n\n${adminList}`;
+    hydro.sendMessage(m.chat, { text: caption, mentions: admins.map(a => a.id) }, { quoted: m });
+}
+break;
+case 'groupset': case 'antilink': {
     if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di grup!');
     if (!(isGroupAdmins || Ahmad)) return replytolak('❌ Hanya admin yang bisa menggunakan fitur ini!');
 
@@ -13956,7 +14011,7 @@ case 'groupset': {
                 message: {
                     interactiveMessage: {
                         body: { text: `⚙️ Pengaturan Grup *${groupMetadata.subject}*` },
-                        footer: { text: "✨ Asisten Hydro - Proteksi Grup" },
+                        footer: { text: `✨ ${botname} - Proteksi Grup` },
                         header: { title: "🛡️ Group Protection & Features" },
                         nativeFlowMessage: {
                             buttons: [{
@@ -14442,33 +14497,6 @@ replyhydro(`Contoh: ${prefix + command} on/off`)
   }
   }
   break
-case 'antitoxic': case 'antibadword': {
-if (!m.isGroup) return replytolak(mess.only.group)
-if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
-if (!isAdmins && !Ahmad) return reply('Khusus Admin!!')
-if (args[0] === "on") {
-if (antiToxic) return replyhydro('Already activated')
-nttoxic.push(from)
-fs.writeFileSync('./database/antitoxic.json', JSON.stringify(nttoxic))
-replyhydro('Success in turning on antitoxic in this group')
-var groupe = await hydro.groupMetadata(from)
-var members = groupe['participants']
-var mems = []
-members.map(async adm => {
-mems.push(adm.id.replace('c.us', 's.whatsapp.net'))
-})
-hydro.sendMessage(from, {text: `\`\`\`「 ⚠️Warning⚠️ 」\`\`\`\n\nNobody is allowed to use bad words in this group, one who uses will be kicked immediately!`, contextInfo: { mentionedJid : mems }}, {quoted:m})
-} else if (args[0] === "off") {
-if (!antiToxic) return replyhydro('Already deactivated')
-let off = nttoxic.indexOf(from)
-nttoxic.splice(off, 1)
-fs.writeFileSync('./database/antitoxic.json', JSON.stringify(nttoxic))
-replyhydro('Success in turning off antitoxic in this group')
-} else {
-replyhydro(`Contoh: ${prefix + command} on/off`)
-  }
-  }
-  break
 case 'antiwame': {
 if (!m.isGroup) return replytolak(mess.only.group)
 if (!isBotAdmins) return replytolak('_Bot Harus Menjadi Admin Terlebih Dahulu_')
@@ -14487,7 +14515,7 @@ mems.push(adm.id.replace('c.us', 's.whatsapp.net'))
 hydro.sendMessage(from, {text: `\`\`\`「 ⚠️Warning⚠️ 」\`\`\`\n\nNobody is allowed to send wa.me in this group, one who sends will be kicked immediately!`, contextInfo: { mentionedJid : mems }}, {quoted:m})
 } else if (args[0] === "off") {
 if (!antiWame) return replyhydro('Already deactivated')
-let off = nttoxic.indexOf(from)
+let off = ntwame.indexOf(from)
 ntwame.splice(off, 1)
 fs.writeFileSync('./database/antiwame.json', JSON.stringify(ntwame))
 replyhydro('Success in turning off antiwame in this group')
@@ -15037,14 +15065,14 @@ await replyhydro(`*[ Done ]*`)
 break
 case 'setbotname':{
 if (!Ahmad) return replytolak(mess.only.owner)
-if (!text) return replyhydro(`Dimana namanya?\nContoh: ${prefix + command} Asisten Hydro`)
+if (!text) return replyhydro(`Dimana namanya?\nContoh: ${prefix + command} ${botname}`)
     await hydro.updateProfileName(text)
     replyhydro(`Success in changing the name of bot's number`)
     }
     break
 case 'setbotbio':{
 if (!Ahmad) return replytolak(mess.only.owner)
-if (!text) return replyhydro(`Dimana teksnya?\nContoh: ${prefix + command} Asisten Hydro`)
+if (!text) return replyhydro(`Dimana teksnya?\nContoh: ${prefix + command} ${botname}`)
     await hydro.updateProfileStatus(text)
     replyhydro(`Success in changing the bio of bot's number`)
     }
@@ -15335,6 +15363,65 @@ async function pomf2(filePath) {
 }
 break
 //=========================================\\
+case 'tofigure': case 'tofigur': case 'jadifigure': case 'jadifigur': {
+  if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + command}*`);
+  const { GoogleGenerativeAI } = require ("@google/generative-ai");
+  let mime = m.quoted.mimetype || "";
+  let defaultPrompt = `create a 1/7 scale commercialized figurine of the characters in the picture, in a realistic style, in a real environment. The figurine is placed on a computer desk. The figurine has a round transparent acrylic base, with no text on the base. The content on the computer screen is the Zbrush modeling process of this figurine. Next to the computer screen is a BANDAI-style toy packaging box printed with the original artwork. The packaging features two-dimensional flat illustrations. For example, if a person creates a figure of a person, but if the object is a vehicle, create a figure of the vehicle or that object.`;
+  if (!/image\/(jpe?g|png)/.test(mime)) return m.reply(`Format ${mime} tidak didukung! Hanya jpeg/jpg/png`);
+  let promptText = text || defaultPrompt;
+  m.reply(mess.wait);
+  try {
+    let imgData = await m.quoted.download();
+    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    const base64Image = imgData.toString("base64");
+    const contents = [
+      { text: promptText },
+      {
+        inlineData: {
+          mimeType: mime,
+          data: base64Image
+        }
+      }
+    ];
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash-exp-image-generation",
+      generationConfig: {
+        responseModalities: ["Text", "Image"]
+      },
+    });
+    const response = await model.generateContent(contents);
+    let resultImage;
+    let resultText = "";
+    for (const part of response.response.candidates[0].content.parts) {
+      if (part.text) {
+        resultText += part.text;
+      } else if (part.inlineData) {
+        const imageData = part.inlineData.data;
+        resultImage = Buffer.from(imageData, "base64");
+      }
+    }
+    if (resultImage) {
+      const tempPath = `./temp/gemini_${Date.now()}.png`;
+      fs.writeFileSync(tempPath, resultImage);
+      await hydro.sendMessage(m.chat, { 
+        image: { url: tempPath },
+        caption: `*Berhasil Diubah ke figure*`
+      }, { quoted: m });
+      setTimeout(() => {
+        try {
+          fs.unlinkSync(tempPath);
+        } catch {}
+      }, 30000);
+    } else {
+      m.reply("Gagal...");
+    }
+  } catch (error) {
+    console.error(error);
+    m.reply(`Error: ${error.message}`);
+  }
+  }
+  break
 case 'removebg': case 'nobg': case 'hapusbackground': {
 if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + command}*`);
   const { GoogleGenerativeAI } = require ("@google/generative-ai");
@@ -15374,7 +15461,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     }
     if (resultImage) {
-      const tempPath = `./data/gemini_${Date.now()}.png`;
+      const tempPath = `./temp/gemini_${Date.now()}.png`;
       fs.writeFileSync(tempPath, resultImage);
       await hydro.sendMessage(m.chat, { 
         image: { url: tempPath },
@@ -15489,7 +15576,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     }
     if (resultImage) {
-      const tempPath = `./data/gemini_${Date.now()}.png`;
+      const tempPath = `./temp/gemini_${Date.now()}.png`;
       fs.writeFileSync(tempPath, resultImage);
       await hydro.sendMessage(m.chat, { 
         image: { url: tempPath },
@@ -15548,7 +15635,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     }
     if (resultImage) {
-      const tempPath = `./data/gemini_${Date.now()}.png`;
+      const tempPath = `./temp/gemini_${Date.now()}.png`;
       fs.writeFileSync(tempPath, resultImage);
       await hydro.sendMessage(m.chat, { 
         image: { url: tempPath },
@@ -15608,7 +15695,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     }
     if (resultImage) {
-      const tempPath = `./data/gemini_${Date.now()}.png`;
+      const tempPath = `./temp/gemini_${Date.now()}.png`;
       fs.writeFileSync(tempPath, resultImage);
       await hydro.sendMessage(m.chat, { 
         image: { url: tempPath },
@@ -16034,7 +16121,7 @@ case 'anime': {
                     message: {
                         interactiveMessage: {
                             body: { text: `🔎 Hasil Pencarian untuk: *${query}*` },
-                            footer: { text: 'Asisten Hydro' },
+                            footer: { text: `${botname}` },
                             header: { title: "Anime - Search" },
                             nativeFlowMessage: {
                                 buttons: [{
@@ -16098,7 +16185,7 @@ ${info.synopsis || "-"}`;
                         message: {
                             interactiveMessage: {
                                 body: { text: `📺 *Daftar Episode*` },
-                                footer: { text: 'Asisten Hydro' },
+                                footer: { text: `${botname}` },
                                 header: { title: info.title },
                                 nativeFlowMessage: {
                                     buttons: [{
@@ -16156,7 +16243,7 @@ else if (args[0] === "download") {
                 message: {
                     interactiveMessage: {
                         body: { text: `📥 Link Download Anime\n${data.episode}\nSilakan pilih resolusi:` },
-                        footer: { text: 'Asisten Hydro' },
+                        footer: { text: `${botname}` },
                         header: {
                             title: "Anime - Download",
                             subtitle: "",
@@ -16221,7 +16308,7 @@ case 'sfile': {
   m.reply('📥 Sedang mengambil file dari Sfile, mohon tunggu...');
 
   try {
-    const api = `https://ytapi.nauval.site/sfile?url=${encodeURIComponent(url)}&mode=url`;
+    const api = `https://ytdlpyton.nvlgroup.my.id/sfile?url=${encodeURIComponent(url)}&mode=url`;
     const { data } = await axios.get(api);
 
     if (!data.ok || !data.data || !data.data.url) throw 'Gagal mengambil link direct dari API.';
@@ -20922,75 +21009,73 @@ case 'stopabsen': {
 break;
 case 'mediafire':
 case 'mf': {
-  if (!text || !isUrl(text) || !text.includes('mediafire.com'))
-    return replyhydro(`❗ Masukkan link Mediafire yang valid!\nContoh:\n${prefix + command} https://www.mediafire.com/file/abc123/file.apk`);
+  if (!text) return replyhydro(`❗ Dimana linknya?\nContoh:\n${prefix + command} https://www.mediafire.com/file/abc123/file.apk`)
 
-  hydro.mediafire = hydro.mediafire || {}
-  if (m.sender in hydro.mediafire)
-    return replyhydro("❗ Masih ada proses Mediafire yang sedang berlangsung. Silakan tunggu.");
+  async function mediafireDownloader(url) {
+  const response = await fetch('https://r.jina.ai/' + url, {
+    headers: { 'x-return-format': 'html' }
+  })
+  if (!response.ok) throw new Error("Gagal mengambil data dari MediaFire!")
 
-  hydro.mediafire[m.sender] = true;
-  await hydro.sendMessage(m.chat, { react: { text: "⏱️", key: m.key } });
+  const textHtml = await response.text()
+  const $ = cheerio.load(textHtml)
 
-  try {
-    const result = await require('./scrape/mediafire')(text); // pastikan path benar
+  const TimeMatch = $('div.DLExtraInfo-uploadLocation div.DLExtraInfo-sectionDetails')
+    .text()
+    .match(/This file was uploaded from (.*?) on (.*?) at (.*?)\n/)
 
-    if (!result.download) throw new Error("Gagal mendapatkan link unduhan.");
+  const fileSize = $('a#downloadButton').text().trim().split('\n')[0].trim()
 
-    const caption = `✅ *Berhasil mengambil file MediaFire!*\n\n`
-      + `📂 *Nama File:* ${result.filename}\n`
-      + `📦 *Ukuran:* ${result.size}\n`
-      + `🔗 *Link:* ${result.download}`;
-
-    const ext = result.type.toLowerCase();
-    let mime = 'application/octet-stream';
-
-    if (ext === '.mp4') mime = 'video/mp4';
-    else if (ext === '.mp3') mime = 'audio/mpeg';
-    else if (ext === '.zip') mime = 'application/zip';
-    else if (ext === '.rar') mime = 'application/vnd.rar';
-    else if (ext === '.7z') mime = 'application/x-7z-compressed';
-    else if (ext === '.tar') mime = 'application/x-tar';
-    else if (ext === '.gz') mime = 'application/gzip';
-    else if (ext === '.apk') mime = 'application/vnd.android.package-archive';
-    else if (ext === '.pdf') mime = 'application/pdf';
-    else if (ext === '.doc') mime = 'application/msword';
-    else if (ext === '.docx') mime = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-    else if (ext === '.xls') mime = 'application/vnd.ms-excel';
-    else if (ext === '.xlsx') mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    else if (ext === '.ppt') mime = 'application/vnd.ms-powerpoint';
-    else if (ext === '.pptx') mime = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
-    else if (ext === '.json') mime = 'application/json';
-    else if (ext === '.csv') mime = 'text/csv';
-    else if (ext === '.txt') mime = 'text/plain';
-    else if (ext === '.xml') mime = 'application/xml';
-    else if (ext === '.html') mime = 'text/html';
-
-    await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
-
-    await hydro.sendMessage(m.chat, {
-      document: { url: result.download },
-      mimetype: mime,
-      fileName: result.filename,
-      caption: caption,
-      buttons: [
-        {
-          buttonId: '.terimakasih',
-          buttonText: { displayText: '🙏 Terima Kasih' },
-          type: 1
-        }
-      ],
-      footer: botname,
-      headerType: 1
-    }, { quoted: m });
-
-  } catch (err) {
-    await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
-    replyhydro(`❌ *Gagal mengambil file:* ${err.message}`);
+  // ambil link download asli
+  let link = $('a#downloadButton').attr('href')
+  if (!link || link.startsWith("javascript")) {
+    // cek meta refresh
+    let metaLink = $('meta[http-equiv="refresh"]').attr('content')
+    if (metaLink && metaLink.includes('url=')) {
+      link = metaLink.split('url=')[1]
+    }
   }
 
-  delete hydro.mediafire[m.sender];
-  break;
+  return {
+    title: $('div.dl-btn-label').text().trim() || "Tidak diketahui",
+    filename: $('div.dl-btn-label').attr('title') || "file",
+    url: link,
+    size: fileSize || "Tidak diketahui",
+    from: TimeMatch?.[1] || "Tidak diketahui",
+    date: TimeMatch?.[2] || "Tidak diketahui",
+    time: TimeMatch?.[3] || "Tidak diketahui"
+  }
+}
+
+  hydro.mediafire[m.sender] = true
+  await hydro.sendMessage(m.chat, { react: { text: "📦", key: m.key } })
+
+  try {
+    let result = await mediafireDownloader(text)
+    if (!result.url) return replyhydro("❌ Gagal mendapatkan link unduhan.")
+
+    let caption = `✅ *Berhasil mengunduh file dari MediaFire!*\n\n`
+      + `📂 *Nama File:* ${result.filename}\n`
+      + `📦 *Ukuran:* ${result.size}\n`
+      + `📅 *Tanggal Unggah:* ${result.date}\n`
+      + `⏰ *Waktu Unggah:* ${result.time}\n`
+      + `🔗 *Link:* ${result.url}`
+
+    await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
+    await hydro.sendMessage(m.chat, {
+      document: { url: result.url },
+      mimetype: 'application/octet-stream',
+      fileName: result.filename,
+      caption: caption
+    }, { quoted: m })
+
+  } catch (error) {
+    await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } })
+    replyhydro(`❌ *Gagal mengunduh file:* ${error.message}`)
+  }
+
+  delete hydro.mediafire[m.sender]
+  break
 }
 //==================================================================
 case 'tebakbendera': {
@@ -28270,7 +28355,7 @@ LOGIN: ${domain2}
 
 } 
         break
-        case 'listadmin': {
+        case 'listadm': {
   if (!Ahmad) return replytolak(`Maaf, Anda tidak dapat melihat daftar pengguna.`);
   let page = args[0] ? args[0] : '1';
   let f = await fetch(domain + "/api/application/users?page=" + page, {
@@ -29870,52 +29955,44 @@ const brat = `https://brat.siputzx.my.id/image?text=${encodeURIComponent(text)}&
 await hydro.sendImageAsSticker(m.chat, brat, m, {packname: global.packname})
 }
 break
-case 'bratvid':
-case 'bratvideo': {
-  if (!text) return m.reply('teksnya');
-  try {
-    const axios = require('axios');
-    const { tmpdir } = require('os');
-    const { join } = require('path');
-    const fs = require('fs');
-    const { spawn } = require('child_process');
-    const videoUrl = `https://brat.siputzx.my.id/gif?text=${encodeURIComponent(text)}&background=%23ffffff&color=%23000000&emojiStyle=apple&delay=500&endDelay=1000&width=352&height=352`
-    const res = await axios.get(videoUrl, { responseType: 'arraybuffer' });
-    const tmpMp4 = join(tmpdir(), `brat-${Date.now()}.mp4`);
-    const tmpWebp = join(tmpdir(), `brat-${Date.now()}.webp`);
-    fs.writeFileSync(tmpMp4, res.data);
-    await new Promise((resolve, reject) => {
-      const ffmpeg = spawn('ffmpeg', [
-        '-i', tmpMp4,
-        '-vf', 'scale=512:512:force_original_aspect_ratio=decrease,fps=15',
-        '-loop', '0',
-        '-ss', '0',
-        '-t', '6',
-        '-an',
-        '-vsync', '0',
-        '-s', '512x512',
-        '-f', 'webp',
-        tmpWebp
-      ]);
-      ffmpeg.on('close', (code) => {
-        if (code === 0) resolve();
-        else reject(new Error('FFmpeg failed with code ' + code));
-      });
-    });
-    const stickerBuffer = fs.readFileSync(tmpWebp);
-    await hydro.sendMessage(m.chat, {
-      sticker: stickerBuffer,
-      packname: global.packname,
-      author: global.author,
-    }, { quoted: m });
-    fs.unlinkSync(tmpMp4);
-    fs.unlinkSync(tmpWebp);
-  } catch (err) {
-    console.error("Error:", err);
-    m.reply('Gagal bikin sticker animasi. Coba lagi nanti.');
-  }
+case 'bratvid': case 'bratvideo': {
+    if (args.length < 1) return replyhydro(`Example: ${prefix + command} halo`);
+    let teks = args.join(" ");
+
+    try {
+        let url = `https://brat.siputzx.my.id/mp4?text=${encodeURIComponent(teks)}`;
+        let res = await fetch(url);
+        if (!res.ok) throw new Error("Gagal ambil video dari API");
+        let buffer = await res.buffer();
+
+        let pathVideo = `./temp/${m.sender}_bratvid.mp4`;
+        fs.writeFileSync(pathVideo, buffer);
+
+        let pathSticker = `./temp/${m.sender}_bratvid.webp`;
+        await ffmpeg(pathVideo)
+            .addOutputOptions([
+                "-vcodec", "libwebp",
+                "-vf", "scale=512:512:force_original_aspect_ratio=decrease,fps=15,pad=512:512:-1:-1:color=white@0.0",
+                "-loop", "0",
+                "-ss", "00:00:00",
+                "-t", "10",
+                "-preset", "default",
+                "-an",
+                "-vsync", "0"
+            ])
+            .save(pathSticker);
+
+        await hydro.sendMessage(m.chat, { sticker: fs.readFileSync(pathSticker) }, { quoted: m });
+
+        fs.unlinkSync(pathVideo);
+        fs.unlinkSync(pathSticker);
+
+    } catch (err) {
+        console.error(err);
+        replyhydro("❌ Terjadi error saat membuat stiker bratvid.");
+    }
 }
-break
+break;
 case 'furbrat': {
   if(!text) return reply('masukan text nya ler')
   hydro.sendImageAsSticker(from, `https://fastrestapis.fasturl.link/tool/furbrat?text=${encodeURIComponent(text)}`, m, { packname: global.botname, author: global.botname})
@@ -30204,6 +30281,62 @@ case 'animebrat-vid': {
     }
 }
 break
+case 'antitoxic': case 'antibadword': {
+    if (!m.isGroup) return replytolak(global.mess.only.group)
+    if (!(isGroupAdmins || Ahmad)) return replytolak(global.mess.only.admin)
+
+    if (args[0] === 'on') {
+        if (!nttoxic.includes(m.chat)) {
+            nttoxic.push(m.chat)
+            saveAntiToxic()
+        }
+        replyhydro('🟢 AntiKasar berhasil diaktifkan di grup ini!')
+    } else if (args[0] === 'off') {
+        if (nttoxic.includes(m.chat)) {
+            nttoxic = nttoxic.filter(id => id !== m.chat)
+            saveAntiToxic()
+        }
+        replyhydro('🔴 AntiKasar berhasil dimatikan di grup ini!')
+    } else {
+        replyhydro(`⚙️ Penggunaan:\n> ${prefix}antitoxic on\n> ${prefix}antitoxic off`)
+    }
+}
+break
+case 'addbadword':
+case 'addtoxic': {
+    if (!isGroup) return replytolak(global.mess.only.group);
+    if (!isAdmins && !Ahmad) return replytolak(global.mess.only.admin);
+    if (!args[0]) return replytolak(global.mess.query.text);
+
+    const word = args.join(" ").toLowerCase();
+    if (badwords.includes(word)) return replytolak(`"${word}" sudah ada dalam list badword.`);
+
+    badwords.push(word);
+    saveBadwords();
+    replyhydro(`✅ Badword "${word}" berhasil ditambahkan!`);
+}
+break;
+case 'delbadword':
+case 'deltoxic': {
+    if (!isGroup) return replytolak(global.mess.only.group);
+    if (!isAdmins && !Ahmad) return replytolak(global.mess.only.admin);
+    if (!args[0]) return replytolak(global.mess.query.text);
+
+    const word = args.join(" ").toLowerCase();
+    if (!badwords.includes(word)) return replytolak(`"${word}" tidak ada di list badword.`);
+
+    badwords = badwords.filter(w => w !== word);
+    saveBadwords();
+    replyhydro(`🗑️ Badword "${word}" berhasil dihapus!`);
+}
+break;
+case 'listbadword':
+case 'listtoxic': {
+    if (badwords.length < 1) return replyhydro("📭 Belum ada badword yang ditambahkan.");
+    let list = badwords.map((w, i) => `${i+1}. ${w}`).join("\n");
+    replyhydro(`📌 *Daftar Badword/Toxic*\n\n${list}`);
+}
+break;
 case 'hytam': {
   if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + command}*`);
   const { GoogleGenerativeAI } = require ("@google/generative-ai");
@@ -30253,7 +30386,7 @@ case 'hytam': {
     }
 
     if (resultImage) {
-      const tempPath = `./data/gemini_${Date.now()}.png`;
+      const tempPath = `./temp/gemini_${Date.now()}.png`;
       fs.writeFileSync(tempPath, resultImage);
 
       await hydro.sendMessage(m.chat, { 
@@ -31222,7 +31355,7 @@ if (!/webp/.test(mime)) return replyhydro('Reply sticker!')
                         //let img = await q.download()
                             let img = await hydro.downloadAndSaveMediaMessage(quoted, makeid(5))
                                 if (!img) return replyhydro('Reply a sticker!')
-                                    var stiker = await addExifAvatar(img, `Made by`, `Asisten Hydro 🌊`)
+                                    var stiker = await addExifAvatar(img, `Made by`, `${botname}`)
                                       } catch (e) {
                                           console.error(e)
                                               if (Buffer.isBuffer(e)) stiker = e
@@ -31474,8 +31607,8 @@ case 'ytaudio': {
   try {
   await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
   
-    // === API 1: ytapi.nauval.site ===
-    const api = `https://ytapi.nauval.site/download/audio?url=${encodeURIComponent(url)}&mode=url`;
+    // === API 1: ytdlpyton.nvlgroup.my.id ===
+    const api = `https://ytdlpyton.nvlgroup.my.id/download/audio?url=${encodeURIComponent(url)}&mode=url`;
     const { data } = await axios.get(api);
 
     if (!data.download_url) throw "Gagal ambil URL audio dari API utama.";
@@ -31495,7 +31628,7 @@ case 'ytaudio': {
 
     try {
       // === API 2 (fallback): api.vreden.my.id ===
-      const vredenApi = `https://api.vreden.my.id/api/ytmp3?url=${encodeURIComponent(url)}`;
+      const vredenApi = `https://api.vreden.my.id/api/v1/download/youtube/audio?url=${encodeURIComponent(url)}&quality=128`;
       const { data } = await axios.get(vredenApi);
 
       if (!data || !data.result?.download?.url) throw new Error('Fallback API tidak memberikan link download.');
@@ -31520,133 +31653,140 @@ case 'ytaudio': {
 break;
 case 'ytmp4':
 case 'ytvideo': {
-  if (!text) {
-    return replyhydro(
-      `🎬 *YouTube MP4 Downloader*\n\n` +
-      `📌 *Cara Penggunaan:*\n` +
-      `   • *${prefix + command}* <link> <resolusi>\n` +
-      `   • *${prefix + command}* <link>\n\n` +
-      `💡 *Contoh:*\n` +
-      `   ${prefix + command} https://youtu.be/abc123 720\n` +
-      `   ${prefix + command} https://youtu.be/abc123\n\n` +
-      `📍 *Keterangan:*\n` +
-      `   - Jika resolusi tidak diisi, akan muncul pilihan.\n` +
-      `   - Resolusi *1080p* ke atas hanya untuk Premium/Owner.\n`
-    );
+if (!text) {
+return replyhydro(
+`🎬 *YouTube MP4 Downloader*\n\n` +
+`📌 *Cara Penggunaan:*\n` +
+`   • *${prefix + command}* <link> <resolusi>\n` +
+`   • *${prefix + command}* <link>\n\n` +
+`💡 *Contoh:*\n` +
+`${prefix + command} https://youtu.be/abc123 720\n` +
+`${prefix + command} https://youtu.be/abc123\n\n` +
+`📍 *Keterangan:*\n` +
+`   - Jika resolusi tidak diisi, akan muncul pilihan.\n` +
+`   - Resolusi *1080p* ke atas hanya untuk Premium/Owner.\n`
+);
+}
+
+const args = text.split(' ');
+const link = args[0];
+const resolution = args[1];
+
+if (!isUrl(link) || !link.includes("youtu")) {
+return replyhydro("⚠️ Link tidak valid!\n\nSilakan masukkan link YouTube yang benar.");
+}
+
+if (!resolution) {
+try {
+const reso = ['144', '240', '360', '480', '720', '1080', '1440', '2160', '4320'];
+const rows = reso.map(r => ({
+header: "",
+title: r >= 1080 ? `${r}p 🔒 Premium` : `${r}p`,
+description: r >= 1080 ? "🔐 Khusus pengguna Premium/Owner" : `⬇ Unduh resolusi ${r}p`,
+id: `.ytmp4 ${link} ${r}`
+}));
+
+const msg = generateWAMessageFromContent(m.chat, {  
+    viewOnceMessage: {  
+      message: {  
+        messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },  
+        interactiveMessage: {  
+          body: { text: `📥 *Pilih resolusi video yang tersedia:*` },  
+          footer: { text: `💡 ${botname} Bot — Downloader Cepat` },  
+          header: {  
+            title: "📺 YouTube Video Downloader",  
+            subtitle: "Format: MP4",  
+            hasMediaAttachment: false,  
+          },  
+          nativeFlowMessage: {  
+            buttons: [{  
+              name: "single_select",  
+              buttonParamsJson: JSON.stringify({  
+                title: "🎯 Pilih Resolusi",  
+                sections: [{ title: "Resolusi Video", rows }]  
+              })  
+            }]  
+          }  
+        }  
+      }  
+    }  
+  }, { quoted: m }, {});  
+  await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });  
+} catch (e) {  
+  return replyhydro("⚠️ Gagal menampilkan pilihan resolusi.");  
+}
+
+} else {
+const isFreeResolution = ['144', '240', '360', '480', '720'].includes(resolution);
+
+// Batasi resolusi tinggi  
+if (!isPrem && !Ahmad && !isFreeResolution) {  
+  return replyhydro(  
+    `⛔ *Akses Ditolak!*\n\n` +  
+    `Resolusi *${resolution}p* hanya tersedia untuk:\n` +  
+    `   • 🟢 *Pengguna Premium*\n` +  
+    `   • 👑 *Pemilik Bot*\n\n` +  
+    `💡 *Tips:* Upgrade ke Premium untuk akses penuh resolusi tinggi.`  
+  );  
+}  
+
+try {  
+  await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });  
+
+  const apiUrl = `https://ytdlpyton.nvlgroup.my.id/download/?url=${encodeURIComponent(link)}&resolution=${resolution}&mode=url`;  
+  const { data } = await axios.get(apiUrl);  
+
+  if (!data.download_url) throw "Gagal mendapatkan URL download dari API utama.";  
+
+  const buffer = await getBuffer(data.download_url);  
+  const fileSizeMB = buffer.length / (1024 * 1024);  
+
+  const fileMsg = fileSizeMB > 100  
+    ? { document: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4' }  
+    : { video: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4', caption: `✅ *Berhasil Mengunduh*\n🎥 ${data.title}\n📌 Resolusi: ${resolution}p` };  
+
+  await hydro.sendMessage(m.chat, fileMsg, { quoted: m });  
+  await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });  
+
+} catch (err) {  
+    console.log("❌ API utama gagal, mencoba api ke 2 (Vreden)...");  
+
+    try {  
+      await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });  
+
+      const vredenApi = `https://api.vreden.my.id/api/v1/download/youtube/video?url=${encodeURIComponent(link)}&quality=${resolution}`;  
+      let { data } = await axios.get(vredenApi);  
+
+      if (!data || !data.status || !data.result?.download?.url) {  
+        console.log("⚠️ Resolusi tidak tersedia, fallback ke 360p...");  
+        const fallbackApi = `https://api.vreden.my.id/api/v1/download/youtube/video?url=${encodeURIComponent(link)}&quality=360`;  
+        data = (await axios.get(fallbackApi)).data;  
+      }  
+
+      if (!data || !data.status || !data.result?.download?.url) {  
+        throw new Error("Gagal mendapatkan URL download dari API Vreden.");  
+      }  
+
+      const videoData = data.result;  
+      const downloadInfo = videoData.download;  
+      const buffer = await getBuffer(downloadInfo.url);  
+      const sizeMB = buffer.length / (1024 * 1024);  
+
+      const fileMsg = sizeMB > 100  
+        ? { document: buffer, mimetype: 'video/mp4', fileName: downloadInfo.filename || `${videoData.metadata.title || "yt-video"}.mp4` }  
+        : { video: buffer, mimetype: 'video/mp4', fileName: downloadInfo.filename || `${videoData.metadata.title || "yt-video"}.mp4`, caption: `✅ *Berhasil Mengunduh*\n🎥 ${videoData.metadata.title || "YouTube Video"}\n📌 Resolusi: ${downloadInfo.quality}` };  
+
+      await hydro.sendMessage(m.chat, fileMsg, { quoted: m });  
+      await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });  
+
+    } catch (err2) {  
+      console.log("❌ Fallback Vreden juga gagal:", err2);  
+      await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });  
+      return replyhydro("⚠️ Maaf, video gagal diunduh. Silakan coba lagi dengan resolusi atau link berbeda.");  
+    }  
   }
 
-  const args = text.split(' ');
-  const link = args[0];
-  const resolution = args[1];
-
-  if (!isUrl(link) || !link.includes("youtu")) {
-    return replyhydro("⚠️ *Link tidak valid!*\n\nSilakan masukkan link YouTube yang benar.");
-  }
-
-  if (!resolution) {
-    try {
-      const reso = ['144', '240', '360', '480', '720', '1080', '1440', '2160'];
-      const rows = reso.map(r => ({
-        header: "",
-        title: r >= 1080 ? `${r}p 🔒 Premium` : `${r}p`,
-        description: r >= 1080 ? `🔐 Khusus pengguna Premium/Owner` : `⬇ Unduh resolusi ${r}p`,
-        id: `.ytmp4 ${link} ${r}`
-      }));
-
-      const msg = generateWAMessageFromContent(m.chat, {
-        viewOnceMessage: {
-          message: {
-            messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
-            interactiveMessage: {
-              body: { text: `📥 *Pilih resolusi video yang tersedia:*` },
-              footer: { text: '💡 Asisten Hydro Bot — Downloader Cepat' },
-              header: {
-                title: "📺 YouTube Video Downloader",
-                subtitle: "Format: MP4",
-                hasMediaAttachment: false,
-              },
-              nativeFlowMessage: {
-                buttons: [{
-                  name: "single_select",
-                  buttonParamsJson: JSON.stringify({
-                    title: "🎯 Pilih Resolusi",
-                    sections: [{ title: "Resolusi Video", rows }]
-                  })
-                }]
-              }
-            }
-          }
-        }
-      }, { quoted: m }, {});
-      await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
-    } catch (e) {
-      return replyhydro("⚠️ Gagal menampilkan pilihan resolusi.");
-    }
-
-  } else {
-    const isFreeResolution = ['144', '240', '360', '480', '720'].includes(resolution);
-
-    // Batasi resolusi tinggi
-    if (!isPrem && !Ahmad && !isFreeResolution) {
-      return replyhydro(
-        `⛔ *Akses Ditolak!*\n\n` +
-        `Resolusi *${resolution}p* hanya tersedia untuk:\n` +
-        `   • 🟢 *Pengguna Premium*\n` +
-        `   • 👑 *Pemilik Bot*\n\n` +
-        `💡 *Tips:* Upgrade ke Premium untuk akses penuh resolusi tinggi.`
-      );
-    }
-
-    try {
-      await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
-
-      const apiUrl = `https://ytapi.nauval.site/download/?url=${encodeURIComponent(link)}&resolution=${resolution}&mode=url`;
-      const { data } = await axios.get(apiUrl);
-
-      if (!data.download_url) throw "Gagal mendapatkan URL download dari API utama.";
-
-      const buffer = await getBuffer(data.download_url);
-      const fileSizeMB = buffer.length / (1024 * 1024);
-
-      const fileMsg = fileSizeMB > 80
-        ? { document: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4' }
-        : { video: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4', caption: `✅ *Berhasil Mengunduh*\n🎥 ${data.title}\n📌 Resolusi: ${resolution}p` };
-
-      await hydro.sendMessage(m.chat, fileMsg, { quoted: m });
-      await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
-
-    } catch (err) {
-      console.log("❌ API utama gagal, mencoba fallback Nekoo...");
-
-      try {
-        await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
-
-        // Resolusi yang tersedia di API Nekoo
-        const availableRes = ["360", "480", "720", "1080"];
-        const finalRes = availableRes.includes(resolution) ? resolution : "360";
-
-        const nekooApi = `https://api.nekoo.qzz.io/downloader/youtube?url=${encodeURIComponent(link)}&format=${finalRes}&type=video`;
-        const { data } = await axios.get(nekooApi);
-
-        if (!data || !data.result?.downloadUrl) throw new Error("Gagal mendapatkan URL download dari API Nekoo.");
-
-        const fallbackBuffer = await getBuffer(data.result.downloadUrl);
-        const fallbackSizeMB = fallbackBuffer.length / (1024 * 1024);
-
-        const fileMsg = fallbackSizeMB > 80
-          ? { document: fallbackBuffer, mimetype: 'video/mp4', fileName: `${data.result.title || "yt-video"}.mp4` }
-          : { video: fallbackBuffer, mimetype: 'video/mp4', fileName: `${data.result.title || "yt-video"}.mp4`, caption: `✅ *Berhasil Mengunduh*\n🎥 ${data.result.title || "YouTube Video"}\n📌 Resolusi: ${finalRes}p` };
-
-        await hydro.sendMessage(m.chat, fileMsg, { quoted: m });
-        await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
-
-      } catch (err2) {
-        console.log("❌ Fallback Nekoo juga gagal:", err2);
-        await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
-        return replyhydro("⚠️ Maaf, video gagal diunduh. Silakan coba lagi dengan resolusi atau link berbeda.");
-      }
-    }
-  }
+}
 }
 break;
 case "get": case ".g": {
@@ -31891,34 +32031,6 @@ unp = ownp.indexOf(ya)
 ownp.splice(unp, 1)
 fs.writeFileSync('./database/ownerpanel.json', JSON.stringify(ownp))
 replyhydro(`The Number ${ya} Has Been Removed Owner Panel!`)
-break
-case 'addbadword':{
-if (!Ahmad) return replytolak(mess.only.owner)
-if (args.length < 1) return replyhydro('Whats the word?')
-if (BadHydro.includes(q)) return replyhydro("The word is already in use")
-BadHydro.push(q)
-fs.writeFileSync('./database/bad.json', JSON.stringify(BadHydro))
-replyhydro(`Success Adding Bad Word\nCheck by typing ${prefix}listbadword`)
-}
-break
-case 'delbadword':{
-if (!Ahmad) return replytolak(mess.only.owner)
-if (args.length < 1) return replyhydro('Enter the word')
-if (!BadHydro.includes(q)) return replyhydro("The word does not exist in the database")
-let wanu = BadHydro.indexOf(q)
-BadHydro.splice(wanu, 1)
-fs.writeFileSync('./database/bad.json', JSON.stringify(BadHydro))
-replyhydro(`Success deleting bad word ${q}`)
-}
-break
-case 'listbadword':{
-let teks = '┌──⭓「 *BadWord List* 」\n│\n'
-for (let x of BadHydro) {
-teks += `│⭔ ${x}\n`
-}
-teks += `│\n└────────────⭓\n\n*Totally there are : ${BadHydro.length}*`
-replyhydro(teks)
-}
 break
 case 'addvideo':{
 if (!Ahmad) return replytolak(mess.only.owner)
@@ -32679,23 +32791,46 @@ case 'delsampah':{
 	});
 	  }
 	break 
-	case 'iqc': {
-  if (!text) return replyhydro(`Contoh penggunaan:\n\n• *${prefix + command} Aku ganteng*\n• *${prefix + command} Aku ganteng|03:15*`);
+case 'iqc': {
+  if (!text) return;
 
-  const displayName = pushname || 'User';
-  const profilePicUrl = (await hydro.profilePictureUrl(m.sender, 'image').catch(_ => null)) || 'https://i.ibb.co/3Fh9V6p/avatar-contact.png';
+  let parts = text.split("|").map(s => s.trim());
+  let pesan = parts[0];
+  let baterai = 3, sinyal = 3, jam;
 
-  let [pesan, waktu] = text.split("|").map(s => s.trim());
+  if (!pesan) return;
 
-  if (!pesan) return replyhydro(`Pesan tidak boleh kosong!\n\nContoh: *${prefix + command} Hai Dunia*`);
-
-  // Jika ada waktu, pastikan mengandung titik dua (:) seperti 12:00
-  if (waktu && !waktu.includes(":")) {
-    return replyhydro(`❌ Format waktu salah!\n\nGunakan titik dua (:) seperti contoh:\n*${prefix + command} Halo|07:30*`);
+  if (parts.length === 2) {
+    jam = parts[1];
+  } else if (parts.length === 3) {
+    baterai = !isNaN(parts[1]) ? parseInt(parts[1]) : 3;
+    sinyal = !isNaN(parts[2]) ? parseInt(parts[2]) : 3;
+  } else if (parts.length === 4) {
+    baterai = !isNaN(parts[1]) ? parseInt(parts[1]) : 3;
+    sinyal = !isNaN(parts[2]) ? parseInt(parts[2]) : 3;
+    jam = parts[3];
   }
 
-  let apiUrl = `https://ytapi.nauval.site/maker/iqc?text=${encodeURIComponent(pesan)}&user=${encodeURIComponent(displayName)}&profile_url=${encodeURIComponent(profilePicUrl)}`;
-  if (waktu) apiUrl += `&jam=${encodeURIComponent(waktu)}`;
+  // Batasi nilai
+  if (baterai < 0) baterai = 0;
+  if (baterai > 100) baterai = 100;
+  if (sinyal < 1) sinyal = 1;
+  if (sinyal > 4) sinyal = 4;
+
+  // Default jam = sekarang WIB
+  if (!jam) {
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const wib = new Date(utc + (7 * 3600000)); // UTC+7
+    const h = String(wib.getHours()).padStart(2, "0");
+    const m = String(wib.getMinutes()).padStart(2, "0");
+    jam = `${h}:${m}`;
+  }
+
+  // Validasi jam
+  if (jam && !jam.includes(":")) return;
+
+  let apiUrl = `https://brat.siputzx.my.id/iphone-quoted?messageText=${encodeURIComponent(pesan)}&carrierName=TELKOMSEL&batteryPercentage=${baterai}&signalStrength=${sinyal}&time=${encodeURIComponent(jam)}`;
 
   try {
     const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
@@ -32707,14 +32842,12 @@ case 'delsampah':{
     fs.writeFileSync(tmpPath, buffer);
 
     await hydro.sendMessage(m.chat, {
-      image: fs.readFileSync(tmpPath),
-      caption: `✅ *IQC berhasil dibuat!*`
+      image: fs.readFileSync(tmpPath)
     }, { quoted: m });
 
     fs.unlinkSync(tmpPath);
   } catch (err) {
     console.error(err);
-    replyhydro('❌ Gagal mengambil gambar dari server IQC.');
   }
 }
 break;
@@ -34424,59 +34557,62 @@ let regex1 = /(?:https|git)(?::\/\/|@)github\.com[\/:]([^\/:]+)\/(.+)/i
 }
 break
 case 'spotify': case 'spotifysearch': case 'spotifys':  {
-if (!text) return reply('Masukan judul lagu!')
-const resul = await fetchJson(`https://api.hiuraa.my.id/search/spotify?q=${encodeURIComponent(text)}`)
-const result = resul.result
+    if (!text) return reply('Masukan judul lagu!')
+
+    const result = await searchSpotify(text)
+
     let caption = result.map((v, i) => {
         return {
-                header: "",
-                title: v.title,
-                description: `Link: ${v.url}`,
-                id: '.spdl ' + v.url
-            }
-        })
-        let msg = generateWAMessageFromContent(m.chat, {
-            viewOnceMessage: {
-                message: {
-                    messageContextInfo: {
-                        deviceListMetadata: {},
-                        deviceListMetadataVersion: 2
+            header: "",
+            title: v.name,
+            description: `Artist: ${v.artists}\nPopularity: ${v.popularity}\nLink: ${v.link}`,
+            id: '.spdl ' + v.link
+        }
+    })
+
+    let msg = generateWAMessageFromContent(m.chat, {
+        viewOnceMessage: {
+            message: {
+                messageContextInfo: {
+                    deviceListMetadata: {},
+                    deviceListMetadataVersion: 2
+                },
+                interactiveMessage: {
+                    body: {
+                        text: `🔎 Hasil Pencarian Dari "${text}"\nSilahkan Pilih List dibawah ini`,
                     },
-                    interactiveMessage: {
-                        body: {
-                            text: `🔎 Hasil Pencarian Dari ${text}\nSilahkan Pilih List dibawah ini`,
-                        },
-                        footer: {
-                            text: 'Asisten Hydro'
-                        },
-                        header: {
-                            title: "Spotify - Search",
-                            subtitle: "",
-                            hasMediaAttachment: false,
-                        },
-                        nativeFlowMessage: {
-                            buttons: [
-                                {
-                                    name: "single_select",
-                                    buttonParamsJson: JSON.stringify({
-                                        title: "CLICK HERE",
-                                        sections: [
-                                            {
-                                                title: "",
-                                                rows: caption
-                                            }
-                                        ]
-                                    })
-                                }
-                            ]
-                        }
+                    footer: {
+                        text: `${botname}`
+                    },
+                    header: {
+                        title: "Spotify - Search",
+                        subtitle: "",
+                        hasMediaAttachment: false,
+                    },
+                    nativeFlowMessage: {
+                        buttons: [
+                            {
+                                name: "single_select",
+                                buttonParamsJson: JSON.stringify({
+                                    title: "CLICK HERE",
+                                    sections: [
+                                        {
+                                            title: "",
+                                            rows: caption
+                                        }
+                                    ]
+                                })
+                            }
+                        ]
                     }
                 }
             }
-        }, { quoted: m }, {});
-        await hydro.relayMessage(msg.key.remoteJid, msg.message, {
-            messageId: msg.key.id
-        });
+        }
+    }, { quoted: m }, {});
+    
+    await hydro.relayMessage(msg.key.remoteJid, msg.message, {
+        messageId: msg.key.id
+    });
 }
 break
 case 'spdl':
@@ -34485,7 +34621,7 @@ case 'spotifydl': {
 
     try {
         let result = await spotifydl(text); 
-        let captionvid = `∘ Title: ${result.title}\n∘ Artist: ${result.artist}\n\nAsisten Hydro 🌊`;
+        let captionvid = `∘ Title: ${result.title}\n∘ Artist: ${result.artist}\n\n${botname}`;
 
         const p = await new canvafy.Spotify()
             .setTitle(result.title)
@@ -35896,3 +36032,37 @@ let e = String(err)
 process.on('uncaughtException', function (err) {
 console.log('Caught exception: ', err)
 })
+
+function autoClearSession() {
+    const sessionDir = './furina';
+    const clearInterval = 4 * 60 * 60 * 1000;
+    
+    setInterval(async () => {
+        try {
+            const files = fs.readdirSync(sessionDir);
+            const filteredFiles = files.filter(file => 
+                file.startsWith('pre-key') ||
+                file.startsWith('sender-key') ||
+                file.startsWith('session-') ||
+                file.startsWith('app-state')
+            );
+
+            if (filteredFiles.length === 0) {
+                console.log(chalk.blue.bold('📂 [AUTO CLEAN] No session files to clean. Everything is tidy! 📑'));
+                return;
+            }
+
+            console.log(chalk.yellow.bold('📂 [AUTO CLEAN] Starting session cleanup... 🗃️'));
+            
+            filteredFiles.forEach(file => {
+                fs.unlinkSync(path.join(sessionDir, file));
+            });
+
+            console.log(chalk.green.bold(`🗃️ [AUTO CLEAN] Successfully removed ${filteredFiles.length} session files! 📂`));
+        } catch (error) {
+            console.error(chalk.red.bold('📑 [AUTO CLEAN ERROR]'), chalk.red.bold(error));
+        }
+    }, clearInterval);
+}
+
+autoClearSession();
