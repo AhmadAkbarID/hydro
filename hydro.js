@@ -64,6 +64,8 @@ const badPath = './database/bad.json';
 const antiToxicPath = './database/antitoxic.json'
 const resellerp = JSON.parse(fs.readFileSync('./database/resellerpanel.json'))
 const adminp = JSON.parse(fs.readFileSync('./database/adminpanel.json'))
+const hyds = JSON.parse(fs.readFileSync('./database/hyds.json'))
+const hydros = JSON.parse(fs.readFileSync('./database/hydros.json'))
 const ptp = JSON.parse(fs.readFileSync('./database/ptpanel.json'))
 const ownp = JSON.parse(fs.readFileSync('./database/ownerpanel.json'))
 const hydroverifikasiuser = JSON.parse(fs.readFileSync('./database/user.json'))
@@ -321,6 +323,8 @@ hydro.ev.emit('messages.upsert', msg)
 
         const jangan = m.isGroup ? pler.includes(m.chat) : false
     	const isPrem = prem.includes(m.sender)
+    	const isHyd = hyds.includes(m.sender)
+    	const isHydro = hydros.includes(m.sender)
     	const isReseller = resellerp.includes(m.sender)
     	const isAdminP = adminp.includes(m.sender)
     	const isPT = ptp.includes(m.sender)
@@ -1873,7 +1877,7 @@ jpegThumbnail: defaultpp } } }
 		const fgclink = {key: {participant: "0@s.whatsapp.net","remoteJid": "0@s.whatsapp.net"},"message": {"groupInviteMessage": {"groupJid": "6288213840883-1616169743@g.us","inviteCode": "m","groupName": wm, "caption": `${pushname}`, 'jpegThumbnail': thumb}}}
 		const fvideo = {key: { fromMe: false,participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {}) },message: { "videoMessage": { "title":botname, "h": wm,'seconds': '359996400', 'caption': `${pushname}`, 'jpegThumbnail': thumb}}}
 		const floc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: wm,jpegThumbnail: thumb}}}
-		const fkontak = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: `status@broadcast` } : {}) }, message: { 'contactMessage': { 'displayName': ownername, 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:XL;${ownername},;;;\nFN:${ownername}\nitem1.TEL;waid=6285892928715:6285892928715\nitem1.X-ABLabel:Mobile\nEND:VCARD`, 'jpegThumbnail': thumb, thumbnail: thumb,sendEphemeral: true}}}
+		const fkontak = { key: {participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: `status@broadcast` } : {}) }, message: { 'contactMessage': { 'displayName': ownername, 'vcard': `BEGIN:VCARD\nVERSION:3.0\nN:XL;${ownername},;;;\nFN:${ownername}\nitem1.TEL;waid=6285187063723:6285187063723\nitem1.X-ABLabel:Mobile\nEND:VCARD`, 'jpegThumbnail': thumb, thumbnail: thumb,sendEphemeral: true}}}
 	    const fakestatus = {key: {fromMe: false,participant: `0@s.whatsapp.net`, ...(m.chat ? { remoteJid: "status@broadcast" } : {})},message: { "imageMessage": {"url": "https://mmg.whatsapp.net/d/f/At0x7ZdIvuicfjlf9oWS6A3AR9XPh0P-hZIVPLsI70nM.enc","mimetype": "image/jpeg","caption": wm,"fileSha256": "+Ia+Dwib70Y1CWRMAP9QLJKjIJt54fKycOfB2OEZbTU=","fileLength": "28777","height": 1080,"width": 1079,"mediaKey": "vXmRR7ZUeDWjXy5iQk17TrowBzuwRya0errAFnXxbGc=","fileEncSha256": "sR9D2RS5JSifw49HeBADguI23fWDz1aZu4faWG/CyRY=","directPath": "/v/t62.7118-24/21427642_840952686474581_572788076332761430_n.enc?oh=3f57c1ba2fcab95f2c0bb475d72720ba&oe=602F3D69","mediaKeyTimestamp": "1610993486","jpegThumbnail": fs.readFileSync('./data/image/thumb.jpg'),"scansSidecar": "1W0XhfaAcDwc7xh1R8lca6Qg/1bB4naFCSngM2LKO2NoP5RI7K+zLw=="}}}
 
 let list = []
@@ -4038,6 +4042,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -4260,6 +4269,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -4456,6 +4470,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -4656,6 +4675,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -4852,6 +4876,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -5052,6 +5081,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -5248,6 +5282,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -5448,6 +5487,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -5644,6 +5688,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -5843,6 +5892,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -6040,6 +6094,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -6235,6 +6294,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -6522,6 +6586,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -6718,6 +6787,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -6917,6 +6991,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -7111,6 +7190,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -7310,6 +7394,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -7505,6 +7594,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -7704,6 +7798,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -7899,6 +7998,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -8098,6 +8202,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -8293,6 +8402,213 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
+          title: "Games Menu",
+          description: "🎮 Menampilkan Games Menu",
+          id: `gamemenu`, 
+        },
+        {
+          title: "Store Menu",
+          description: "🛍️ Menampilkan Store Menu",
+          id: `storemenu`, 
+        },
+        {
+          title: "Berita Menu",
+          description: "📮 Menampilkan Berita Menu",
+          id: `beritamenu`, 
+        },
+        {
+          title: "Cpanel Menu",
+          description: "🛠️ Menampilkan Cpanel Menu",
+          id: `cpanelmenu`, 
+        },
+        {
+          title: "Ngepush Menu", 
+          description: "💾 Menampilkan Ngepush Menu",
+          id: `pushmenu`, 
+        },
+        {
+          title: "Primbon Menu",
+          description: "💰 Menampilkan Primbon Menu",
+          id: `primbonmenu`, 
+        },
+        {
+          title: "Download Menu",
+          description: "📂 Menampilkan Download Menu",
+          id: `downloadmenu`, 
+        },
+        {
+          title: "AI Menu",
+          description: "🤖 Menampilkan AI Menu",
+          id: `aimenu`, 
+        },
+        {
+          title: "NSFW Menu",
+          description: "🔞 Menampilkan NSFW Menu",
+          id: `nsfwmenu`, 
+        },
+        {
+          title: "Anime Menu",
+          description: "🤍 Menampilkan NSFW Menu",
+          id: `animemenu`, 
+        },
+        {
+          title: "Ephoto360 Menu",
+          description: "🖼️ Menampilkan Ephoto360 Menu",
+          id: `ephoto360menu`, 
+        },
+        {
+          title: "Fun Menu",
+          description: "🥳 Menampilkan Fun Menu",
+          id: `funmenu`, 
+        },
+        {
+          title: "Islamic Menu",
+          description: "🕌 Menampilkan Islamic Menu",
+          id: `islamimenu`, 
+        },
+        {
+          title: "Database Menu",
+          description: "🖥️ Menampilkan Database Menu",
+          id: `databasemenu`, 
+        },
+        {
+          title: "Others Menu",
+          description: "📪 Menampilkan Others Menu",
+          id: `othermenu`, 
+        },
+        {
+          title: "RPG Menu",
+          description: "🧰 Menampilkan RPG Menu",
+          id: `rpgmenu`, 
+        },
+        {
+          title: "Domain Menu",
+          description: "🌐 Menampilkan Domain Menu",
+          id: `domainmenu`, 
+        },
+        {
+          title: "Anonymous Menu",
+          description: "👤 Menampilkan Anonymous Menu",
+          id: `anonymousmenu`, 
+        },
+        {
+          title: "Random Video Menu",
+          description: "🎥 Menampilkan Random Video Menu",
+          id: `randomvideomenu`, 
+        },
+        {
+          title: "Random Photo Menu",
+          description: "📷 Menampilkan Photo Video Menu",
+          id: `randomphotomenu`, 
+        },
+        {
+          title: "Sticker Menu",
+          description: "📝 Menampilkan Sticker Menu",
+          id: `stickermenu`, 
+        },
+        {
+          title: "Quotes Menu",
+          description: "💬 Menampilkan Quotes Menu",
+          id: `quotesmenu`, 
+        },
+        {
+          title: "Stalker Menu",
+          description: "🔍 Menampilkan Stalker Menu",
+          id: `stalkermenu`, 
+        },
+        {
+          title: "Bug Menu",
+          description: "🐛 Menampilkan Bug Menu",
+          id: `bugmenu`, 
+        },
+        {
+          title: "Digital Ocean Menu",
+          description: "🌐 Menampilkan Digital Ocean Menu",
+          id: `digitaloceanmenu`, 
+        },
+        {
+          title: "Pyterodactyle Menu",
+          description: "⚙️ Menampilkan Pyterodactyle Menu",
+          id: `pyterodactylemenu`, 
+        },
+      ]
+    },
+    {
+      title: `Dokumentasi asli dari script ini`, 
+      highlight_label: ``,
+      rows: [
+        {
+          title: "Script",
+          description: "💳 script ini gratis 100%",          id: `script`, 
+        },
+        {
+          title: "ʀᴀᴛɪɴɢ",
+          description: "🌟 ʀᴀᴛɪɴɢ ʙᴏᴛ ɪɴɪ",
+          id: `rating`,
+        },
+        {
+          title: "Info Bot",
+          description: "📋 Informasi total fitur dan lainnya",
+          id: `infobot`, 
+        },
+      ]
+    }
+  ]
+}
+    listbut2(m.chat, HydroSad, bet, m)
+}
+break
+case 'jashermenu': {
+  let HydroSad = `${jashermenu(prefix, hituet)}`
+const bet = {
+  title: "LIST MENU",
+  sections: [
+    {
+      title: `List menu yang sering dipakai`, 
+      highlight_label: `Populer`,
+      rows: [
+        {
+          title: "All Menu",
+          description: "📌 Menampilkan All Menu",
+          id: `allmenu`, 
+        },
+      ]
+    },
+    {
+      title: `List menu yang dipisahkan`, 
+      highlight_label: ``,
+      rows: [
+        {
+          title: "Baca Peraturan",
+          description: "🎉 Menampilkan peraturan",
+          id: `bacaperaturan`, 
+        },
+        {
+          title: "Donasi",
+          description: "💸 Menampilkan menu donasi",
+          id: `donasi`, 
+        },
+        {
+          title: "Owner Menu",
+          description: "👤 Menampilkan Owner Menu",
+          id: `ownermenu`, 
+        },
+        {
+          title: "Group Menu",
+          description: "👥 Menampilkan Group Menu",
+          id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -8492,6 +8808,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -8687,6 +9008,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -8886,6 +9212,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -9081,6 +9412,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -9280,6 +9616,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -9477,6 +9818,11 @@ const bet = {
           id: `groupmenu`, 
         },
         {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
+        },
+        {
           title: "Games Menu",
           description: "🎮 Menampilkan Games Menu",
           id: `gamemenu`, 
@@ -9672,6 +10018,11 @@ const bet = {
           title: "Group Menu",
           description: "👥 Menampilkan Group Menu",
           id: `groupmenu`, 
+        },
+        {
+          title: "ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          description: "⚡ ᴍᴇᴍᴜɴᴄᴜʟᴋᴀɴ ғɪᴛᴜʀ ᴊᴀꜱʜᴇʀ",
+          id: `jashermenu`, 
         },
         {
           title: "Games Menu",
@@ -14627,6 +14978,73 @@ case 'ceksewa': {
 }
 break;
 // ==========================================================
+case "jpmch": {
+  if (!Ahmad && !isHyd && !isHydro) return replytolak("⚠️ Hanya dapat diakses oleh Pengguna *Jasher Hydro*!");
+
+  global.jpmCooldown = global.jpmCooldown || {};
+  let now = Date.now();
+  let cooldown = 0;
+
+  if (isHyd) cooldown = 15 * 60 * 1000;
+  if (isHydro) cooldown = 5 * 60 * 1000;
+  if (Ahmad) cooldown = 0;
+
+  if (!Ahmad) {
+    if (global.jpmCooldown[m.sender] && (now - global.jpmCooldown[m.sender]) < cooldown) {
+      let sisa = cooldown - (now - global.jpmCooldown[m.sender]);
+      let menit = Math.floor(sisa / 60000);
+      let detik = Math.floor((sisa % 60000) / 1000);
+      return replytolak(`⏳ Fitur ini hanya bisa digunakan lagi dalam ${menit} menit ${detik} detik!`);
+    }
+    global.jpmCooldown[m.sender] = now;
+  }
+
+  if (!text) return replytolak("⚠️ Format Salah!\n\n📌 Contoh penggunaan:\n- `jpmch Halo semua!`\n- Balas gambar dengan caption: `jpmch Halo semua!`");
+
+  const filePath = './database/listid.json';
+  if (!fs.existsSync(filePath)) return replytolak("⚠️ Tidak ada daftar saluran!");
+  const daftarSaluran = JSON.parse(fs.readFileSync(filePath));
+
+  if (!daftarSaluran.length) return replytolak("⚠️ Tidak ada saluran yang terdaftar!");
+
+  let total = 0;
+  replyhydro(`🚀 Mengirim pesan ke ${daftarSaluran.length} saluran...\n\n⏳ Pesan akan dikirim dengan jeda 5 detik per channel.`);
+
+  let mediaPath = null;
+  try {
+    if ((/image/.test(mime)) && qmsg) {
+      mediaPath = await hydro.downloadAndSaveMediaMessage(qmsg);
+    }
+  } catch (e) {
+    console.error("Gagal download media:", e);
+  }
+
+  for (const idSaluran of daftarSaluran) {
+    try {
+      if (mediaPath) {
+        await hydro.sendMessage(idSaluran, {
+          image: fs.readFileSync(mediaPath),
+          caption: text,
+          contextInfo: {
+            forwardingScore: 1,
+            isForwarded: true
+          }
+        });
+      } else {
+        await hydro.sendMessage(idSaluran, { text: text });
+      }
+      total++;
+      await sleep(5000);
+    } catch (err) {
+      console.error(`❌ Gagal mengirim ke saluran ${idSaluran}:`, err);
+    }
+  }
+
+  if (mediaPath) fs.unlinkSync(mediaPath);
+
+  replyhydro(`✅ Selesai!\n\n✔️ Berhasil: ${total}\n❌ Gagal: ${daftarSaluran.length - total}\n\n💼 *Powered by ${botname}*`);
+}
+break;
 case 'totalchat':
   case 'totalpessn': {
     if (!global.db.chats[m.chat]?.totalChat) return m.reply('Tidak ada data chat.');
@@ -15596,6 +16014,74 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
   }
 }
 break
+case 'edit': case 'editimg': case 'editimage': case 'editgambar': case 'ubahgambar': case 'ubahfoto': {
+  const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+  if (!text) return replytolak(`⚠️ Masukkan teks\n\nContoh:\n- Kirim gambar dengan caption: *${prefix + command} ubah menjadi imut*`);
+
+  let qmsg = m.quoted ? m.quoted : m;
+  let mime = (qmsg.msg || qmsg).mimetype || "";
+  if (!/image\/(jpe?g|png)/.test(mime)) return replytolak(`Format ${mime} tidak didukung! Hanya jpeg/jpg/png`);
+
+  replyhydro(mess.wait);
+
+  try {
+    let imgData = await qmsg.download();
+    const base64Image = imgData.toString("base64");
+
+    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    const contents = [
+      { text: text },
+      {
+        inlineData: {
+          mimeType: mime,
+          data: base64Image
+        }
+      }
+    ];
+
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.0-flash-exp-image-generation",
+      generationConfig: {
+        responseModalities: ["Text", "Image"]
+      }
+    });
+
+    const response = await model.generateContent(contents);
+
+    let resultImage;
+    for (const part of response.response.candidates[0].content.parts) {
+      if (part.inlineData) {
+        resultImage = Buffer.from(part.inlineData.data, "base64");
+      }
+    }
+
+    if (resultImage) {
+      const tempPath = `./temp/gemini_${Date.now()}.png`;
+      fs.writeFileSync(tempPath, resultImage);
+
+      await hydro.sendMessage(
+        m.chat,
+        {
+          image: { url: tempPath },
+          caption: `✅ *Berhasil*\n📝 Prompt: ${text}`
+        },
+        { quoted: m }
+      );
+
+      setTimeout(() => {
+        try { fs.unlinkSync(tempPath) } catch {}
+      }, 30000);
+    } else {
+      replytolak("❌ Gagal mendapatkan hasil gambar.");
+    }
+
+  } catch (error) {
+    console.error(error);
+    replytolak(`Error: ${error.message}`);
+  }
+}
+break;
 case 'putihkan': case 'cerahkan': {
 if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + command}*`);
   const { GoogleGenerativeAI } = require ("@google/generative-ai");
@@ -27222,11 +27708,11 @@ m.reply('Katasandi atau IP tidak valid')
 }
 break
 //================================================================================
-case 'installpanel': {
+case 'installpanel': case 'instalpanel': {
 if (!Ahmad) return replytolak(mess.only.owner)
-if (!text) return m.reply(example("ipvps|pwvps|panel.com|node.com|ramserver *(contoh 100000)*"))
+if (!text) return replyhydro("ipvps|pwvps|panel.com|node.com|ramserver *(contoh 100000)*")
 let vii = text.split("|")
-if (vii.length < 5) return m.reply(example("ipvps|pwvps|panel.com|node.com|ramserver *(contoh 100000)*"))
+if (vii.length < 5) return replyhydro("ipvps|pwvps|panel.com|node.com|ramserver *(contoh 100000)*")
 let sukses = false
 
 const ress = new Client();
@@ -28403,7 +28889,7 @@ let egg = global.eggsnya
 let loc = global.location3
 let memo = "1050"
 let cpu = "30"
-let disk = "1050"
+let disk = "3050"
 let email = username + "@ahmadakbar.biz.id"
 try {
 if (!u) return
@@ -29754,8 +30240,7 @@ break
 case 'hdvid':
 case 'vidhd':
 case "hdvideo": {
-  if (!quoted || !/video/.test(mime)) 
-    return replyhydro("❗ Reply video yang ingin dijadikan HD!");
+  if (!quoted || !/video/.test(mime)) return replytolak("❗Reply video yang ingin dijadikan HD!");
 
   let [res, fpsText] = text?.trim().toLowerCase().split(" ");
   let fps = 60;
@@ -29763,7 +30248,7 @@ case "hdvideo": {
   if (fpsText && fpsText.endsWith("fps")) {
     fps = parseInt(fpsText.replace("fps", ""));
     if (isNaN(fps) || fps < 30 || fps > 240) {
-      return replyhydro("❗ FPS antara 30 - 240 (contoh: 60fps)");
+      return m.reply("❗ FPS antara 30 - 240 (contoh: 60fps)");
     }
   }
 
@@ -29777,7 +30262,9 @@ case "hdvideo": {
   };
 
   if (!resolutions[res]) {
-    return replyhydro(`Contoh penggunaan:\n${prefix + command} 720\n${prefix + command} 1080 60fps`);
+    return replyhydro(`Contoh penggunaan: ${prefix + command} 720
+
+${prefix + command} 1080 60fps`);
   }
 
   const targetHeight = resolutions[res];
@@ -29789,12 +30276,16 @@ case "hdvideo": {
 
   try {
     const downloaded = await hydro.downloadAndSaveMediaMessage(m.quoted, inputnya);
+    const FormData = require("form-data");
+    const axios = require("axios");
+    const fs = require("fs");
+
     const form = new FormData();
     form.append("video", fs.createReadStream(downloaded));
     form.append("resolution", targetHeight);
     form.append("fps", fps);
 
-    const response = await axios.post("http://193.149.164.168:4167/hdvideo", form, {
+    const response = await axios.post("http://api.drizznesiasite.biz.id:4167/hdvideo", form, {
       headers: form.getHeaders(),
       responseType: "stream",
       maxBodyLength: Infinity,
@@ -29809,7 +30300,7 @@ case "hdvideo": {
       const buffer = fs.readFileSync(fileOutput);
       await hydro.sendMessage(m.chat, {
         video: buffer,
-        caption: `✅ Video berhasil diubah ke ${res.toUpperCase()} ${fps}FPS`
+        caption: `Video berhasil diubah ke ${res.toUpperCase()} ${fps}FPS`
       }, { quoted: m });
 
       fs.unlinkSync(downloaded);
@@ -29824,6 +30315,78 @@ case "hdvideo": {
 }
 break;
 //==================================================================
+case "addid": {
+  if (!Ahmad) return replytolak(mess.only.owner);
+
+  const filePath = './database/listid.json';
+  if (!fs.existsSync(filePath)) fs.writeFileSync(filePath, JSON.stringify([]));
+
+  let daftarSaluran = JSON.parse(fs.readFileSync(filePath));
+  let idTarget = text && text.trim().length > 5 ? text.trim() : m.chat;
+
+  if (daftarSaluran.includes(idTarget)) {
+    return replyhydro(`⚠️ ID sudah ada di daftar: ${idTarget}`);
+  }
+
+  daftarSaluran.push(idTarget);
+  fs.writeFileSync(filePath, JSON.stringify(daftarSaluran, null, 2));
+
+  replyhydro(`✅ ID berhasil ditambahkan!\n📌 ID: ${idTarget}\n📊 Total ID: ${daftarSaluran.length}`);
+}
+break
+
+case "delid": {
+  if (!Ahmad) return replytolak(mess.only.owner);
+
+  const filePath = './database/listid.json';
+  if (!fs.existsSync(filePath)) fs.writeFileSync(filePath, JSON.stringify([]));
+
+  let daftarSaluran = JSON.parse(fs.readFileSync(filePath));
+  let idTarget = text && text.trim().length > 5 ? text.trim() : m.chat;
+
+  if (!daftarSaluran.includes(idTarget)) {
+    return replyhydro(`⚠️ ID tidak ada di daftar: ${idTarget}`);
+  }
+
+  daftarSaluran = daftarSaluran.filter(id => id !== idTarget);
+  fs.writeFileSync(filePath, JSON.stringify(daftarSaluran, null, 2));
+
+  replyhydro(`✅ ID berhasil dihapus!\n📌 ID: ${idTarget}\n📊 Total ID: ${daftarSaluran.length}`);
+}
+break
+
+case "listid": {
+  if (!Ahmad) return replytolak(mess.only.owner);
+
+  const filePath = './database/listid.json';
+  if (!fs.existsSync(filePath)) fs.writeFileSync(filePath, JSON.stringify([]));
+
+  let daftarSaluran = JSON.parse(fs.readFileSync(filePath));
+
+  if (daftarSaluran.length === 0) return replyhydro("📭 Tidak ada ID yang terdaftar.");
+
+  let teks = "📋 *Daftar Channel Tersimpan:*\n\n";
+
+  for (let i = 0; i < daftarSaluran.length; i++) {
+    let id = daftarSaluran[i];
+    try {
+      if (id.endsWith("@g.us")) {
+        let metadata = await hydro.groupMetadata(id);
+        let nama = metadata.subject || "Unknown";
+        let jumlah = metadata.participants ? metadata.participants.length : "Unknown";
+        teks += `${i + 1}. 📌 *${nama}*\n👥 ${jumlah} anggota\n🆔 ${id}\n\n`;
+      } else {
+        let name = (await hydro.onWhatsApp(id))[0]?.notify || "Unknown";
+        teks += `${i + 1}. 👤 *${name}*\n🆔 ${id}\n\n`;
+      }
+    } catch {
+      teks += `${i + 1}. 📌 *Unknown*\n👥 Unknown anggota\n🆔 ${id}\n\n`;
+    }
+  }
+
+  replyhydro(teks);
+}
+break
 case 'teraboxdl':
 case 'terabox': {
     if (!text) return m.reply(`Gunakan: ${prefix + command} <url>\n\nContoh: ${prefix + command} https://terabox.com/s/1B1nTfxPq9_Ib-rf_M_6oFg`);
@@ -31933,13 +32496,35 @@ break
 //=========================================\\
 case 'addprem': {
 if (!Ahmad) return replytolak(mess.only.owner)
-if (!args[0]) return replyhydro(`Use ${prefix+command} number\nExample ${prefix+command} 6285892928715`)
+if (!args[0]) return replyhydro(`Use ${prefix+command} number\nExample ${prefix+command} 6285187063723`)
 prrkek = q.split("|")[0].replace(/[^0-9]/g, '')+`@s.whatsapp.net`
 let ceknya = await hydro.onWhatsApp(prrkek)
 if (ceknya.length == 0) return replyhydro(`Masukkan nomor yang valid dan terdaftar di WhatsApp!!!`)
 prem.push(prrkek)
 fs.writeFileSync('./database/premium.json', JSON.stringify(prem))
 replyhydro(`The Number ${prrkek} Has Been Premium!`)
+}
+break
+case 'addhyd': {
+if (!Ahmad && !isHydro) return replytolak(mess.only.owner)
+if (!args[0]) return replyhydro(`Use ${prefix+command} number\nExample ${prefix+command} 6285187063723`)
+prrkek = q.split("|")[0].replace(/[^0-9]/g, '')+`@s.whatsapp.net`
+let ceknya = await hydro.onWhatsApp(prrkek)
+if (ceknya.length == 0) return replyhydro(`Masukkan nomor yang valid dan terdaftar di WhatsApp!!!`)
+prem.push(prrkek)
+fs.writeFileSync('./database/hyds.json', JSON.stringify(prem))
+replyhydro(`The Number ${prrkek} Has Been Own Jasher!`)
+}
+break
+case 'addhydro': {
+if (!Ahmad) return replytolak(mess.only.owner)
+if (!args[0]) return replyhydro(`Use ${prefix+command} number\nExample ${prefix+command} 6285187063723`)
+prrkek = q.split("|")[0].replace(/[^0-9]/g, '')+`@s.whatsapp.net`
+let ceknya = await hydro.onWhatsApp(prrkek)
+if (ceknya.length == 0) return replyhydro(`Masukkan nomor yang valid dan terdaftar di WhatsApp!!!`)
+prem.push(prrkek)
+fs.writeFileSync('./database/hydros.json', JSON.stringify(prem))
+replyhydro(`The Number ${prrkek} Has Been PT Jasher!`)
 }
 break
 case 'addresellerp': {
@@ -31989,7 +32574,7 @@ break
 //=========================================\\
 case 'delprem':
 if (!Ahmad) return replytolak(mess.only.owner)
-if (!args[0]) return replyhydro(`Use ${prefix+command} nomor\nExample ${prefix+command} 6285892928715`)
+if (!args[0]) return replyhydro(`Use ${prefix+command} nomor\nExample ${prefix+command} 6285187063723`)
 ya = q.split("|")[0].replace(/[^0-9]/g, '')+`@s.whatsapp.net`
 unp = prem.indexOf(ya)
 prem.splice(unp, 1)
@@ -35984,7 +36569,7 @@ let evaled = await eval(text)
 if (typeof evaled !== 'string') evaled = util.inspect(evaled)
 hydro.sendMessage(m.chat, {text: util.format(evaled)}, {quoted: m})
 } catch (e) {
-foca.sendMessage(m.chat, {text: util.format(e)}, {quoted: m})
+hydro.sendMessage(m.chat, {text: util.format(e)}, {quoted: m})
 }
 }
 
