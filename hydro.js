@@ -1739,7 +1739,7 @@ async function getAccessToken() {
 async function spotifydl(url) {
   return new Promise(async (resolve, reject) => {
     try {
-      const { data } = await axios.get(`https://api.siputzx.my.id/api/d/spotifyv2?url=${encodeURIComponent(url)}`);
+      const { data } = await axios.get(`https://api.hydrohost.web.id/api/d/spotifyv2?url=${encodeURIComponent(url)}`);
 
       if (!data.status || !data.data) {
         return reject(new Error("Gagal mengambil data dari API"));
@@ -13249,7 +13249,7 @@ case 'instagram': case 'igdl': case 'ig': case 'igvideo': case 'igimage': case '
 	  if (!text) return replyhydro(`Anda perlu memberikan URL video, postingan, reel, gambar Instagram apa pun`)
 	  hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }})
 try {
-      const data = await fetchJson(`https://api.siputzx.my.id/api/d/igdl?url=${encodeURIComponent(text)}`)
+      const data = await fetchJson(`https://api.hydrohost.web.id/api/d/igdl?url=${encodeURIComponent(text)}`)
       if (data && data.data && data.data.length > 0) {
           let sudahDikirim = false; 
             for (const item of data.data) {
@@ -13282,7 +13282,7 @@ break
 case 'snackvideo': {
   if (!text) return reply(mess.query.link)
   reply(mess.query.link)
-const data = fetchJson(`https://api.siputzx.my.id/api/d/snackvideo?url=${encodeURIComponent(text)}`)
+const data = fetchJson(`https://api.hydrohost.web.id/api/d/snackvideo?url=${encodeURIComponent(text)}`)
 const vidnya = data.result.media || ''
 const cption = data.result.title || ''
 hydro.sendMessage(m.chat, { caption: cption, video: { url: vidnya } }, { quoted: m });
@@ -16256,7 +16256,7 @@ case 'remini': {
 
         if (!tmpFilesLink) return replyhydro("❌ Gagal upload gambar ke tmpfiles.org.");
 
-        const upscaleUrl = `https://api.siputzx.my.id/api/iloveimg/upscale?image=${encodeURIComponent(tmpFilesLink)}&scale=4`;
+        const upscaleUrl = `https://api.hydrohost.web.id/api/iloveimg/upscale?image=${encodeURIComponent(tmpFilesLink)}&scale=4`;
         const response = await axios.get(upscaleUrl, { responseType: "arraybuffer" });
         const hdBuffer = response.data;
 
@@ -16558,7 +16558,7 @@ case 'nulis':
   case 'magernulis': {
     if(!text) return reply('mau nulis apa kak..')
     try {
-    hydro.sendMessage(m.chat, { image: { url: `https://api.siputzx.my.id/api/m/nulis?text=${encodeURIComponent(text)}&name=hydroID&class=berapa aja bebas` }, caption: 'berhasil..' }, { quoted: m })
+    hydro.sendMessage(m.chat, { image: { url: `https://api.hydrohost.web.id/api/m/nulis?text=${encodeURIComponent(text)}&name=hydroID&class=berapa aja bebas` }, caption: 'berhasil..' }, { quoted: m })
     } catch {
       reply('yah Error kak laporankan ke owner agar di perbaiki')
     }
@@ -35485,7 +35485,7 @@ case 'igstalk': {
   hydro.sendMessage(m.chat, { react: { text: '🕒', key: m.key }})
 
   try {
-    const dat = await fetchJson(`https://api.siputzx.my.id/api/stalk/instagram?username=${encodeURIComponent(text)}`)
+    const dat = await fetchJson(`https://api.hydrohost.web.id/api/stalk/instagram?username=${encodeURIComponent(text)}`)
     if (!dat || !dat.status || !dat.data) {
       return hydro.sendMessage(m.chat, { text: "Data tidak ditemukan atau API error." }, { quoted: m })
     }
@@ -35519,7 +35519,7 @@ case 'ttstalk': {
   hydro.sendMessage(m.chat, { react: { text: '🕒', key: m.key } });
 
   try {
-    const res = await fetchJson(`https://api.siputzx.my.id/api/stalk/tiktok?username=${encodeURIComponent(text)}`);
+    const res = await fetchJson(`https://api.hydrohost.web.id/api/stalk/tiktok?username=${encodeURIComponent(text)}`);
     if (!res || !res.status || !res.data) {
       throw new Error('Data tidak ditemukan atau format API salah.');
     }
@@ -36186,7 +36186,7 @@ case 'pin':
 case 'pinterest': {
   if (!text) return m.reply(`Contoh: ${prefix}pin christy jkt48`)
   try {
-    const { data } = await axios.get(`https://api.siputzx.my.id/api/s/pinterest?query=${encodeURIComponent(text)}&type=image`)
+    const { data } = await axios.get(`https://api.hydrohost.web.id/api/s/pinterest?query=${encodeURIComponent(text)}&type=image`)
     if (!data.status || !data.data || data.data.length === 0) return m.reply('Gambar tidak ditemukan.')
 
     const jumlahGambar = 15
