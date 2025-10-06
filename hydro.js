@@ -324,7 +324,7 @@ hydro.ev.emit('messages.upsert', msg)
         const jangan = m.isGroup ? pler.includes(m.chat) : false
     	const isPrem = prem.includes(m.sender)
     	const isHyd = hyds.includes(m.sender)
-    	const isHydro = hydros.includes(m.sender)
+        const isHydro = hydros.includes(m.sender)
     	const isReseller = resellerp.includes(m.sender)
     	const isAdminP = adminp.includes(m.sender)
     	const isPT = ptp.includes(m.sender)
@@ -14979,7 +14979,7 @@ case 'ceksewa': {
 break;
 // ==========================================================
 case "jpmch": {
-  if (!Ahmad && !isHyd && !isHydro) return replytolak("⚠️ Hanya dapat diakses oleh Pengguna *Jasher Hydro*!");
+  if (!isHyd && !isHydro && !Ahmad) return replytolak("⚠️ Hanya dapat diakses oleh Pengguna *Jasher Hydro*!");
 
   global.jpmCooldown = global.jpmCooldown || {};
   let now = Date.now();
@@ -16794,7 +16794,7 @@ case 'sfile': {
   m.reply('📥 Sedang mengambil file dari Sfile, mohon tunggu...');
 
   try {
-    const api = `https://ytdlpyton.nvlgroup.my.id/sfile?url=${encodeURIComponent(url)}&mode=url`;
+    const api = `https://ytdl.hydrohost.web.id/sfile?url=${encodeURIComponent(url)}&mode=url`;
     const { data } = await axios.get(api);
 
     if (!data.ok || !data.data || !data.data.url) throw 'Gagal mengambil link direct dari API.';
@@ -20999,8 +20999,8 @@ function clockString(ms) {
     let __timers = new Date() - global.db.users[m.sender].lastngojek
     let _timers = 300000 - __timers
     let timers = clockString(_timers)
-    let name = conn.getName(m.sender)
-    let victim = conn.getName(target)
+    let name = hydro.getName(m.sender)
+    let victim = hydro.getName(target)
 
     let user = global.db.users[m.sender]
     let targetUser = global.db.users[target]
@@ -21066,8 +21066,6 @@ Total order sebelumnya: ${user.ojekk}
         }, 0)
 
         user.lastngojek = new Date() * 1
-    } else {
-        reply(`Kamu terlalu lelah untuk memaksa lagi! Istirahat dulu selama\n*${timers}*`)
     }
 }
 break;
@@ -30519,43 +30517,55 @@ await hydro.sendImageAsSticker(m.chat, brat, m, {packname: global.packname})
 }
 break
 case 'bratvid': case 'bratvideo': {
-    if (args.length < 1) return replyhydro(`Example: ${prefix + command} halo`);
-    let teks = args.join(" ");
+    if (!text && (!m.quoted || !m.quoted.text)) return m.reply(`Kirim/reply pesan *${prefix + command}* Teksnya`)
+    const teks = (m.quoted ? m.quoted.text : text).split(' ')
+    const tempDir = path.join(process.cwd(), 'temp')
+    if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true })
 
     try {
-        let url = `https://brat.siputzx.my.id/mp4?text=${encodeURIComponent(teks)}`;
-        let res = await fetch(url);
-        if (!res.ok) throw new Error("Gagal ambil video dari API");
-        let buffer = await res.buffer();
+        const framePaths = []
+        for (let i = 0; i < teks.length; i++) {
+            const currentText = teks.slice(0, i + 1).join(' ')
+            let res
+            try {
+                res = await getBuffer('https://brat.siputzx.my.id/mp4?text=' + encodeURIComponent(currentText))
+            } catch (e) {
+                res = await getBuffer('https://aqul-brat.hf.space/?text=' + encodeURIComponent(currentText))
+            }
+            const framePath = path.join(tempDir, `${m.sender}_${i}.mp4`)
+            fs.writeFileSync(framePath, res)
+            framePaths.push(framePath)
+        }
 
-        let pathVideo = `./temp/${m.sender}_bratvid.mp4`;
-        fs.writeFileSync(pathVideo, buffer);
+        const fileListPath = path.join(tempDir, `${m.sender}.txt`)
+        let fileListContent = ''
+        for (let i = 0; i < framePaths.length; i++) {
+            fileListContent += `file '${framePaths[i]}'\n`
+            fileListContent += `duration 0.5\n`
+        }
+        fileListContent += `file '${framePaths[framePaths.length - 1]}'\n`
+        fileListContent += `duration 3\n`
+        fs.writeFileSync(fileListPath, fileListContent)
 
-        let pathSticker = `./temp/${m.sender}_bratvid.webp`;
-        await ffmpeg(pathVideo)
-            .addOutputOptions([
-                "-vcodec", "libwebp",
-                "-vf", "scale=512:512:force_original_aspect_ratio=decrease,fps=15,pad=512:512:-1:-1:color=white@0.0",
-                "-loop", "0",
-                "-ss", "00:00:00",
-                "-t", "10",
-                "-preset", "default",
-                "-an",
-                "-vsync", "0"
-            ])
-            .save(pathSticker);
+        const outputVideoPath = path.join(tempDir, `${m.sender}-output.mp4`)
+        execSync(`ffmpeg -y -f concat -safe 0 -i "${fileListPath}" -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2,fps=30" -c:v libx264 -preset veryfast -pix_fmt yuv420p "${outputVideoPath}"`)
 
-        await hydro.sendMessage(m.chat, { sticker: fs.readFileSync(pathSticker) }, { quoted: m });
+        const outputStickerPath = path.join(tempDir, `${m.sender}_bratvid.webp`)
+        execSync(`ffmpeg -i "${outputVideoPath}" -vcodec libwebp -vf "scale=512:512:force_original_aspect_ratio=decrease,fps=15,pad=512:512:-1:-1:color=white@0.0" -loop 0 -ss 00:00:00 -t 10 -an -vsync 0 "${outputStickerPath}"`)
 
-        fs.unlinkSync(pathVideo);
-        fs.unlinkSync(pathSticker);
+        await hydro.sendMessage(m.chat, { sticker: fs.readFileSync(outputStickerPath) }, { quoted: m })
 
-    } catch (err) {
-        console.error(err);
-        replyhydro("❌ Terjadi error saat membuat stiker bratvid.");
+        framePaths.forEach(f => fs.unlinkSync(f))
+        fs.unlinkSync(fileListPath)
+        fs.unlinkSync(outputVideoPath)
+        fs.unlinkSync(outputStickerPath)
+
+    } catch (e) {
+        console.error(e)
+        m.reply('❌ Terjadi Kesalahan Saat Memproses bratvid!')
     }
 }
-break;
+break
 case 'furbrat': {
   if(!text) return reply('masukan text nya ler')
   hydro.sendImageAsSticker(from, `https://fastrestapis.fasturl.link/tool/furbrat?text=${encodeURIComponent(text)}`, m, { packname: global.botname, author: global.botname})
@@ -32170,8 +32180,8 @@ case 'ytaudio': {
   try {
   await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
   
-    // === API 1: ytdlpyton.nvlgroup.my.id ===
-    const api = `https://ytdlpyton.nvlgroup.my.id/download/audio?url=${encodeURIComponent(url)}&mode=url`;
+    // === API 1: ytdl.hydrohost.web.id ===
+    const api = `https://ytdl.hydrohost.web.id/download/audio?url=${encodeURIComponent(url)}&mode=url`;
     const { data } = await axios.get(api);
 
     if (!data.download_url) throw "Gagal ambil URL audio dari API utama.";
@@ -32296,7 +32306,7 @@ if (!isPrem && !Ahmad && !isFreeResolution) {
 try {  
   await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });  
 
-  const apiUrl = `https://ytdlpyton.nvlgroup.my.id/download/?url=${encodeURIComponent(link)}&resolution=${resolution}&mode=url`;  
+  const apiUrl = `https://ytdl.hydrohost.web.id/download/?url=${encodeURIComponent(link)}&resolution=${resolution}&mode=url`;  
   const { data } = await axios.get(apiUrl);  
 
   if (!data.download_url) throw "Gagal mendapatkan URL download dari API utama.";  
@@ -33300,26 +33310,32 @@ case 'checkme':
 hydro.sendMessage(from, { image: buff, caption: profile, mentions: [bet]},{quoted:m})
 break
 case 'toimg': {
-	hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }})
-	const getRandom = (ext) => {
-            return `${Math.floor(Math.random() * 10000)}${ext}`
-        }
-        if (!m.quoted) return replyhydro(`_Reply to Any Sticker._`)
-        let mime = m.quoted.mtype
-if (mime =="imageMessage" || mime =="stickerMessage")
-{
-        let media = await hydro.downloadAndSaveMediaMessage(m.quoted)
-        let name = await getRandom('.png')
-        exec(`ffmpeg -i ${media} ${name}`, (err) => {
-        	fs.unlinkSync(media)
-            let buffer = fs.readFileSync(name)
-            hydro.sendMessage(m.chat, { image: buffer }, { quoted: m })      
-fs.unlinkSync(name)
-        })
-        
-} else return replyhydro(`Please reply to non animated sticker`)
+    hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }})
+    const getRandom = (ext) => {
+        return `${Math.floor(Math.random() * 10000)}${ext}`
     }
-    break
+    if (!m.quoted) return replyhydro(`_Reply to Any Sticker._`)
+    let mime = m.quoted.mtype
+    if (mime == "imageMessage" || mime == "stickerMessage") {
+        let media = await hydro.downloadAndSaveMediaMessage(m.quoted, "./temp/")
+        let name = `./temp/${getRandom('.png')}`
+        exec(`ffmpeg -y -i ${media} ${name}`, (err) => {
+            if (err) {
+                fs.unlinkSync(media)
+                return replyhydro("❌ Gagal convert, pastikan ffmpeg terinstall")
+            }
+            fs.unlinkSync(media)
+            if (fs.existsSync(name)) {
+                let buffer = fs.readFileSync(name)
+                hydro.sendMessage(m.chat, { image: buffer }, { quoted: m })
+                fs.unlinkSync(name)
+            } else {
+                replyhydro("❌ File tidak ditemukan setelah convert")
+            }
+        })
+    } else return replyhydro(`Please reply to non animated sticker`)
+}
+break
 case 'swm': case 'steal': case 'stickerwm': case 'take': case 'wm': {
   const getRandom = (ext) => {
             return `${Math.floor(Math.random() * 10000)}${ext}`
