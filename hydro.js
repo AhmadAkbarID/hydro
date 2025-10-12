@@ -52,6 +52,7 @@ const scp3 = require('./scrape/scraperrr')
 const similarity = require("similarity");
 const githubstalk = require('./scrape/githubstalk')
 const npmstalk = require('./scrape/npmstalk')
+const { lirik } = require('./scrape/lirik')
 const didyoumean = require("didyoumean");
 const photooxy = require('./scrape/photooxy')
 const yts = require('./scrape/yt-search')
@@ -1739,7 +1740,7 @@ async function getAccessToken() {
 async function spotifydl(url) {
   return new Promise(async (resolve, reject) => {
     try {
-      const { data } = await axios.get(`https://api.hydrohost.web.id/api/d/spotifyv2?url=${encodeURIComponent(url)}`);
+      const { data } = await axios.get(`https://api.siputzx.my.id/api/d/spotifyv2?url=${encodeURIComponent(url)}`);
 
       if (!data.status || !data.data) {
         return reject(new Error("Gagal mengambil data dari API"));
@@ -2190,7 +2191,7 @@ for (let [sholat, waktu] of Object.entries(jadwalSholat)) {
                             url: 'https://media.vocaroo.com/mp3/1ofLT2YUJAjQ'
                         },
                         mimetype: 'audio/mp4',
-                        ptt: true,
+                        ptt: false,
                         contextInfo: {
                             externalAdReply: {
                                 showAdAttribution: false,
@@ -2463,32 +2464,38 @@ if (
   hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key } });
 
   try {
-    const res = await fetchJson(`https://api.vreden.my.id/api/v1/download/tiktok?url=${encodeURIComponent(budy)}`);
-    if (!res || !res.result) return replyhydro('❌ Gagal mengambil data.');
+    const apiUrl = `https://api.nekolabs.my.id/downloader/tiktok?url=${encodeURIComponent(budy)}`;
+    const res = await fetchJson(apiUrl);
 
-    const result = res.result;
-    const videos = result.data || [];
-    
-    const videoHd = videos.find(v => v.type === 'nowatermark_hd');
-    const videoNormal = videos.find(v => v.type === 'nowatermark');
-    const videoUrl = videoHd?.url || videoNormal?.url;
+    if (!res?.success || !res?.result)
+      return replyhydro('❌ Gagal mengambil data dari TikTok.');
 
-    const photos = videos.filter(v => v.type === 'photo' && v.url);
-    if (!videoUrl && photos.length > 0) {
-      const jumlahFoto = photos.length;
+    const data = res.result;
 
-      let cards = await Promise.all(photos.map(async (item, i) => {
-        return {
-          header: proto.Message.InteractiveMessage.Header.create({
-            ...(await prepareWAMessageMedia({ image: { url: item.url } }, { upload: hydro.waUploadToServer })),
-            title: '',
-            subtitle: `Foto ${i + 1} dari ${jumlahFoto}`,
-            hasMediaAttachment: false
-          }),
-          body: { text: '' },
-          nativeFlowMessage: { buttons: [] }
-        }
-      }));
+    const author = data.author?.name || '-';
+    const username = data.author?.username || '-';
+    const title = data.title || '-';
+    const created = data.create_at || '-';
+    const musicTitle = data.music_info?.title || '-';
+    const musicAuthor = data.music_info?.author || '-';
+    const musicUrl = data.musicUrl || '';
+    const videoUrl = data.videoUrl || '';
+    const images = data.images || [];
+    const stats = data.stats || {};
+
+    if (images.length > 0) {
+      const jumlahFoto = images.length;
+
+      let cards = await Promise.all(images.map(async (url, i) => ({
+        header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url } }, { upload: hydro.waUploadToServer })),
+          title: '',
+          subtitle: `Foto ${i + 1} dari ${jumlahFoto}`,
+          hasMediaAttachment: false
+        }),
+        body: { text: '' },
+        nativeFlowMessage: { buttons: [] }
+      })));
 
       let msg = generateWAMessageFromContent(
         m.chat,
@@ -2496,9 +2503,18 @@ if (
           viewOnceMessage: {
             message: {
               interactiveMessage: {
-                body: { text: `📸 *Tiktok Image Slides*\n👤 Creator : *${result?.author?.fullname || '-'}* (@${result?.author?.nickname || '-'})\n🎯 Judul   : *${result?.title || '-'}*` },
+                body: { 
+                  text: `📸 *Tiktok Image Slides*  
+👤 Creator : *${author}* (${username})  
+🎶 Musik   : *${musicTitle}* - ${musicAuthor}  
+🕒 Upload  : *${created}*  
+❤️ Likes   : ${stats.like || '0'}  
+💬 Komen   : ${stats.comment || '0'}  
+🔄 Share   : ${stats.share || '0'}  
+👀 Views   : ${stats.play || '0'}`
+                },
                 carouselMessage: {
-                  cards: cards,
+                  cards,
                   messageVersion: 1
                 }
               }
@@ -2511,29 +2527,28 @@ if (
       return await hydro.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
     }
 
-    if (!videoUrl) return replyhydro('❌ Tidak ditemukan link video atau foto.');
+    if (!videoUrl) return replyhydro('❌ Tidak ditemukan video TikTok.');
 
-    const cap = `🎥 *Tiktok Video*  
-👤 Creator : *${result?.author?.fullname || '-'}* (@${result?.author?.nickname || '-'})  
-🎯 Judul   : *${result?.title || '-'}*  
-📅 Upload  : *${result?.taken_at || '-'}*  
-🌍 Region  : *${result?.region || '-'}*  
+    const caption = `🎥 *Tiktok Video*  
+👤 Creator : *${author}* (${username})  
+🎶 Musik   : *${musicTitle}* - ${musicAuthor}  
+🕒 Upload  : *${created}*  
 
 📊 *Stats:*  
-👍 Likes   : ${result?.stats?.likes || '0'}  
-💬 Komentar: ${result?.stats?.comment || '0'}  
-🔄 Share   : ${result?.stats?.share || '0'}  
-👀 Views   : ${result?.stats?.views || '0'}  
+❤️ Likes   : ${stats.like || '0'}  
+💬 Komen   : ${stats.comment || '0'}  
+🔄 Share   : ${stats.share || '0'}  
+👀 Views   : ${stats.play || '0'}
 `;
 
     const buttons = [
-      { buttonId: `${prefix}ttaudio ${text}`, buttonText: { displayText: "🎵 Ambil Musik" }, type: 1 }
+      { buttonId: `${prefix}ttaudio ${budy}`, buttonText: { displayText: "🎵 Ambil Musik" }, type: 1 }
     ];
 
     const buttonMessage = {
       video: { url: videoUrl },
-      caption: cap,
-      footer: "Klik tombol di bawah untuk ambil musik 🎶",
+      caption: caption,
+      footer: '',
       buttons: buttons,
       headerType: 4
     };
@@ -13161,32 +13176,37 @@ case 'tt': {
   hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key } });
 
   try {
-    const res = await fetchJson(`https://api.vreden.my.id/api/v1/download/tiktok?url=${encodeURIComponent(text)}`);
-    if (!res || !res.result) return replyhydro('❌ Gagal mengambil data.');
+    const apiUrl = `https://api.nekolabs.my.id/downloader/tiktok?url=${encodeURIComponent(text)}`;
+    const res = await fetchJson(apiUrl);
 
-    const result = res.result;
-    const videos = result.data || [];
-    
-    const videoHd = videos.find(v => v.type === 'nowatermark_hd');
-    const videoNormal = videos.find(v => v.type === 'nowatermark');
-    const videoUrl = videoHd?.url || videoNormal?.url;
+    if (!res?.success || !res?.result) return replyhydro('❌ Gagal mengambil data dari server.');
 
-    const photos = videos.filter(v => v.type === 'photo' && v.url);
-    if (!videoUrl && photos.length > 0) {
-      const jumlahFoto = photos.length;
+    const data = res.result;
 
-      let cards = await Promise.all(photos.map(async (item, i) => {
-        return {
-          header: proto.Message.InteractiveMessage.Header.create({
-            ...(await prepareWAMessageMedia({ image: { url: item.url } }, { upload: hydro.waUploadToServer })),
-            title: '',
-            subtitle: `Foto ${i + 1} dari ${jumlahFoto}`,
-            hasMediaAttachment: false
-          }),
-          body: { text: '' },
-          nativeFlowMessage: { buttons: [] }
-        }
-      }));
+    const author = data.author?.name || '-';
+    const username = data.author?.username || '-';
+    const title = data.title || '-';
+    const created = data.create_at || '-';
+    const musicTitle = data.music_info?.title || '-';
+    const musicAuthor = data.music_info?.author || '-';
+    const musicUrl = data.musicUrl || '';
+    const videoUrl = data.videoUrl || '';
+    const images = data.images || [];
+    const stats = data.stats || {};
+
+    if (images.length > 0) {
+      const jumlahFoto = images.length;
+
+      let cards = await Promise.all(images.map(async (item, i) => ({
+        header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: item } }, { upload: hydro.waUploadToServer })),
+          title: '',
+          subtitle: `Foto ${i + 1} dari ${jumlahFoto}`,
+          hasMediaAttachment: false
+        }),
+        body: { text: '' },
+        nativeFlowMessage: { buttons: [] }
+      })));
 
       let msg = generateWAMessageFromContent(
         m.chat,
@@ -13194,7 +13214,16 @@ case 'tt': {
           viewOnceMessage: {
             message: {
               interactiveMessage: {
-                body: { text: `📸 *Tiktok Image Slides*\n👤 Creator : *${result?.author?.fullname || '-'}* (@${result?.author?.nickname || '-'})\n🎯 Judul   : *${result?.title || '-'}*` },
+                body: { 
+                  text: `📸 *Tiktok Image Slides*  
+👤 Creator : *${author}* (${username})  
+🎶 Musik   : *${musicTitle}* - ${musicAuthor}  
+🕒 Upload  : *${created}*  
+❤️ Like    : ${stats.like || '0'}  
+💬 Komentar: ${stats.comment || '0'}  
+🔄 Share   : ${stats.share || '0'}  
+👀 Views   : ${stats.play || '0'}`
+                },
                 carouselMessage: {
                   cards: cards,
                   messageVersion: 1
@@ -13209,19 +13238,16 @@ case 'tt': {
       return await hydro.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
     }
 
-    if (!videoUrl) return replyhydro('❌ Tidak ditemukan link video atau foto.');
+    if (!videoUrl) return replyhydro('❌ Tidak ditemukan link video.');
 
-    const cap = `🎥 *Tiktok Video*  
-👤 Creator : *${result?.author?.fullname || '-'}* (@${result?.author?.nickname || '-'})  
-🎯 Judul   : *${result?.title || '-'}*  
-📅 Upload  : *${result?.taken_at || '-'}*  
-🌍 Region  : *${result?.region || '-'}*  
-
-📊 *Stats:*  
-👍 Likes   : ${result?.stats?.likes || '0'}  
-💬 Komentar: ${result?.stats?.comment || '0'}  
-🔄 Share   : ${result?.stats?.share || '0'}  
-👀 Views   : ${result?.stats?.views || '0'}  
+    const caption = `🎥 *Tiktok Video*  
+👤 Creator : *${author}* (${username})  
+🎶 Musik   : *${musicTitle}* - ${musicAuthor}  
+🕒 Upload  : *${created}*  
+❤️ Likes   : ${stats.like || '0'}  
+💬 Komen   : ${stats.comment || '0'}  
+🔄 Share   : ${stats.share || '0'}  
+👀 Views   : ${stats.play || '0'}  
 `;
 
     const buttons = [
@@ -13230,8 +13256,8 @@ case 'tt': {
 
     const buttonMessage = {
       video: { url: videoUrl },
-      caption: cap,
-      footer: "Klik tombol di bawah untuk ambil musik 🎶",
+      caption: caption,
+      footer: '',
       buttons: buttons,
       headerType: 4
     };
@@ -13249,7 +13275,7 @@ case 'instagram': case 'igdl': case 'ig': case 'igvideo': case 'igimage': case '
 	  if (!text) return replyhydro(`Anda perlu memberikan URL video, postingan, reel, gambar Instagram apa pun`)
 	  hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }})
 try {
-      const data = await fetchJson(`https://api.hydrohost.web.id/api/d/igdl?url=${encodeURIComponent(text)}`)
+      const data = await fetchJson(`https://api.siputzx.my.id/api/d/igdl?url=${encodeURIComponent(text)}`)
       if (data && data.data && data.data.length > 0) {
           let sudahDikirim = false; 
             for (const item of data.data) {
@@ -13282,7 +13308,7 @@ break
 case 'snackvideo': {
   if (!text) return reply(mess.query.link)
   reply(mess.query.link)
-const data = fetchJson(`https://api.hydrohost.web.id/api/d/snackvideo?url=${encodeURIComponent(text)}`)
+const data = fetchJson(`https://api.siputzx.my.id/api/d/snackvideo?url=${encodeURIComponent(text)}`)
 const vidnya = data.result.media || ''
 const cption = data.result.title || ''
 hydro.sendMessage(m.chat, { caption: cption, video: { url: vidnya } }, { quoted: m });
@@ -13294,22 +13320,23 @@ case 'ttmp3':
 case 'tiktokmp3': {
   if (!text) return replyhydro(`📌 Contoh penggunaan:\n${prefix + command} https://vt.tiktok.com/...`);
   
-  hydro.sendMessage(m.chat, { react: { text: '🎵', key: m.key } });
+  hydro.sendMessage(m.chat, { react: { text: '🎶', key: m.key } });
 
   try {
-    const res = await fetchJson(`https://api.vreden.my.id/api/v1/download/tiktok?url=${encodeURIComponent(text)}`);
-    if (!res || !res.result || !res.result.music_info || !res.result.music_info.url) {
-      throw new Error('Gagal mengambil audio dari video TikTok.');
+    const res = await fetchJson(`https://api.nekolabs.my.id/downloader/tiktok?url=${encodeURIComponent(text)}`);
+    
+    if (!res || !res.success || !res.result?.musicUrl) {
+      throw new Error('Audio tidak ditemukan dalam hasil API.');
     }
 
     await hydro.sendMessage(m.chat, {
-      audio: { url: res.result.music_info.url },
+      audio: { url: res.result.musicUrl },
       mimetype: 'audio/mp4'
     }, { quoted: m });
 
   } catch (err) {
     console.error('❌ Error tiktokaudio:', err);
-    replyhydro('❌ Gagal mengambil audio. Pastikan link TikTok valid dan coba lagi nanti.');
+    replyhydro('❌ Gagal mengambil audio dari TikTok. Pastikan link valid atau coba lagi nanti.');
   }
 }
 break;
@@ -13379,7 +13406,7 @@ contextInfo: {
 externalAdReply: {  
 title: botname,
 body: `${botname}`,
-thumbnailUrl: 'https://qu.ax/JlBJE.jpg',
+thumbnailUrl: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg',
 sourceUrl: wagc,
 mediaType: 1,
 renderLargerThumbnail: true
@@ -16256,7 +16283,7 @@ case 'remini': {
 
         if (!tmpFilesLink) return replyhydro("❌ Gagal upload gambar ke tmpfiles.org.");
 
-        const upscaleUrl = `https://api.hydrohost.web.id/api/iloveimg/upscale?image=${encodeURIComponent(tmpFilesLink)}&scale=4`;
+        const upscaleUrl = `https://api.siputzx.my.id/api/iloveimg/upscale?image=${encodeURIComponent(tmpFilesLink)}&scale=4`;
         const response = await axios.get(upscaleUrl, { responseType: "arraybuffer" });
         const hdBuffer = response.data;
 
@@ -16558,7 +16585,7 @@ case 'nulis':
   case 'magernulis': {
     if(!text) return reply('mau nulis apa kak..')
     try {
-    hydro.sendMessage(m.chat, { image: { url: `https://api.hydrohost.web.id/api/m/nulis?text=${encodeURIComponent(text)}&name=hydroID&class=berapa aja bebas` }, caption: 'berhasil..' }, { quoted: m })
+    hydro.sendMessage(m.chat, { image: { url: `https://api.siputzx.my.id/api/m/nulis?text=${encodeURIComponent(text)}&name=hydroID&class=berapa aja bebas` }, caption: 'berhasil..' }, { quoted: m })
     } catch {
       reply('yah Error kak laporankan ke owner agar di perbaiki')
     }
@@ -32174,15 +32201,14 @@ case 'ytaudio': {
   const url = text.trim();
   const regex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
   if (!regex.test(url)) {
-    return replyhydro('⚠️ *Link tidak valid!*\\n\\nSilakan masukkan link YouTube yang benar.');
+    return replyhydro('⚠️ *Link tidak valid!*\n\nSilakan masukkan link YouTube yang benar.');
   }
 
   try {
-  await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
-  
-    // === API 1: ytdl.hydrohost.web.id ===
-    const api = `https://ytdl.hydrohost.web.id/download/audio?url=${encodeURIComponent(url)}&mode=url`;
-    const { data } = await axios.get(api);
+    await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
+
+    const api1 = `https://ytdl.hydrohost.web.id/download/audio?url=${encodeURIComponent(url)}&mode=url`;
+    const { data } = await axios.get(api1);
 
     if (!data.download_url) throw "Gagal ambil URL audio dari API utama.";
 
@@ -32197,16 +32223,15 @@ case 'ytaudio': {
     await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
   } catch (err) {
-    console.log('❌ API utama gagal, fallback ke Vreden:', err);
+    console.log('❌ API utama gagal, fallback ke Nekolabs:', err);
 
     try {
-      // === API 2 (fallback): api.vreden.my.id ===
-      const vredenApi = `https://api.vreden.my.id/api/v1/download/youtube/audio?url=${encodeURIComponent(url)}&quality=128`;
-      const { data } = await axios.get(vredenApi);
+      const api2 = `https://api.nekolabs.my.id/downloader/youtube/v1?url=${encodeURIComponent(url)}&format=mp3`;
+      const { data } = await axios.get(api2);
 
-      if (!data || !data.result?.download?.url) throw new Error('Fallback API tidak memberikan link download.');
+      if (!data.success || !data.result?.downloadUrl) throw new Error('Fallback API tidak memberikan link download.');
 
-      const buffer = await getBuffer(data.result.download.url);
+      const buffer = await getBuffer(data.result.downloadUrl);
 
       await hydro.sendMessage(m.chat, {
         audio: buffer,
@@ -32217,7 +32242,7 @@ case 'ytaudio': {
       await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
     } catch (err2) {
-      console.log('❌ Fallback Vreden juga gagal:', err2);
+      console.log('❌ Fallback Nekolabs juga gagal:', err2);
       await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
       return replyhydro("⚠️ Maaf, audio gagal diunduh. Silakan coba lagi.");
     }
@@ -32226,140 +32251,137 @@ case 'ytaudio': {
 break;
 case 'ytmp4':
 case 'ytvideo': {
-if (!text) {
-return replyhydro(
-`🎬 *YouTube MP4 Downloader*\n\n` +
-`📌 *Cara Penggunaan:*\n` +
-`   • *${prefix + command}* <link> <resolusi>\n` +
-`   • *${prefix + command}* <link>\n\n` +
-`💡 *Contoh:*\n` +
-`${prefix + command} https://youtu.be/abc123 720\n` +
-`${prefix + command} https://youtu.be/abc123\n\n` +
-`📍 *Keterangan:*\n` +
-`   - Jika resolusi tidak diisi, akan muncul pilihan.\n` +
-`   - Resolusi *1080p* ke atas hanya untuk Premium/Owner.\n`
-);
-}
+  if (!text) {
+    return replyhydro(
+      `🎬 *YouTube MP4 Downloader*\n\n` +
+      `📌 *Cara Penggunaan:*\n` +
+      `   • *${prefix + command}* <link> <resolusi>\n` +
+      `   • *${prefix + command}* <link>\n\n` +
+      `💡 *Contoh:*\n` +
+      `${prefix + command} https://youtu.be/abc123 720\n` +
+      `${prefix + command} https://youtu.be/abc123\n\n` +
+      `📍 *Keterangan:*\n` +
+      `   - Jika resolusi tidak diisi, akan muncul pilihan.\n` +
+      `   - Resolusi *1080p* ke atas hanya untuk Premium/Owner.\n`
+    );
+  }
 
-const args = text.split(' ');
-const link = args[0];
-const resolution = args[1];
+  const args = text.split(' ');
+  const link = args[0];
+  const resolution = args[1];
 
-if (!isUrl(link) || !link.includes("youtu")) {
-return replyhydro("⚠️ Link tidak valid!\n\nSilakan masukkan link YouTube yang benar.");
-}
+  if (!isUrl(link) || !link.includes("youtu")) {
+    return replyhydro("⚠️ Link tidak valid!\n\nSilakan masukkan link YouTube yang benar.");
+  }
 
-if (!resolution) {
-try {
-const reso = ['144', '240', '360', '480', '720', '1080', '1440', '2160', '4320'];
-const rows = reso.map(r => ({
-header: "",
-title: r >= 1080 ? `${r}p 🔒 Premium` : `${r}p`,
-description: r >= 1080 ? "🔐 Khusus pengguna Premium/Owner" : `⬇ Unduh resolusi ${r}p`,
-id: `.ytmp4 ${link} ${r}`
-}));
+  if (!resolution) {
+    try {
+      const reso = ['144', '240', '360', '480', '720', '1080', '1440', '2160', '4320'];
+      const rows = reso.map(r => ({
+        header: "",
+        title: r >= 1080 ? `${r}p 🔒 Premium` : `${r}p`,
+        description: r >= 1080 ? "🔐 Khusus pengguna Premium/Owner" : `⬇ Unduh resolusi ${r}p`,
+        id: `.ytmp4 ${link} ${r}`
+      }));
 
-const msg = generateWAMessageFromContent(m.chat, {  
-    viewOnceMessage: {  
-      message: {  
-        messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },  
-        interactiveMessage: {  
-          body: { text: `📥 *Pilih resolusi video yang tersedia:*` },  
-          footer: { text: `💡 ${botname} Bot — Downloader Cepat` },  
-          header: {  
-            title: "📺 YouTube Video Downloader",  
-            subtitle: "Format: MP4",  
-            hasMediaAttachment: false,  
-          },  
-          nativeFlowMessage: {  
-            buttons: [{  
-              name: "single_select",  
-              buttonParamsJson: JSON.stringify({  
-                title: "🎯 Pilih Resolusi",  
-                sections: [{ title: "Resolusi Video", rows }]  
-              })  
-            }]  
+      const msg = generateWAMessageFromContent(m.chat, {  
+        viewOnceMessage: {  
+          message: {  
+            messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },  
+            interactiveMessage: {  
+              body: { text: `📥 *Pilih resolusi video yang tersedia:*` },  
+              footer: { text: `💡 ${botname} Bot — Downloader Cepat` },  
+              header: {  
+                title: "📺 YouTube Video Downloader",  
+                subtitle: "Format: MP4",  
+                hasMediaAttachment: false,  
+              },  
+              nativeFlowMessage: {  
+                buttons: [{  
+                  name: "single_select",  
+                  buttonParamsJson: JSON.stringify({  
+                    title: "🎯 Pilih Resolusi",  
+                    sections: [{ title: "Resolusi Video", rows }]  
+                  })  
+                }]  
+              }  
+            }  
           }  
         }  
-      }  
+      }, { quoted: m }, {});  
+      await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });  
+    } catch (e) {  
+      return replyhydro("⚠️ Gagal menampilkan pilihan resolusi.");  
+    }
+
+  } else {
+    const isFreeResolution = ['144', '240', '360', '480', '720'].includes(resolution);
+
+    if (!isPrem && !Ahmad && !isFreeResolution) {  
+      return replyhydro(  
+        `⛔ *Akses Ditolak!*\n\n` +  
+        `Resolusi *${resolution}p* hanya tersedia untuk:\n` +  
+        `   • 🟢 *Pengguna Premium*\n` +  
+        `   • 👑 *Pemilik Bot*\n\n` +  
+        `💡 *Tips:* Upgrade ke Premium untuk akses penuh resolusi tinggi.`  
+      );  
     }  
-  }, { quoted: m }, {});  
-  await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });  
-} catch (e) {  
-  return replyhydro("⚠️ Gagal menampilkan pilihan resolusi.");  
-}
-
-} else {
-const isFreeResolution = ['144', '240', '360', '480', '720'].includes(resolution);
-
-// Batasi resolusi tinggi  
-if (!isPrem && !Ahmad && !isFreeResolution) {  
-  return replyhydro(  
-    `⛔ *Akses Ditolak!*\n\n` +  
-    `Resolusi *${resolution}p* hanya tersedia untuk:\n` +  
-    `   • 🟢 *Pengguna Premium*\n` +  
-    `   • 👑 *Pemilik Bot*\n\n` +  
-    `💡 *Tips:* Upgrade ke Premium untuk akses penuh resolusi tinggi.`  
-  );  
-}  
-
-try {  
-  await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });  
-
-  const apiUrl = `https://ytdl.hydrohost.web.id/download/?url=${encodeURIComponent(link)}&resolution=${resolution}&mode=url`;  
-  const { data } = await axios.get(apiUrl);  
-
-  if (!data.download_url) throw "Gagal mendapatkan URL download dari API utama.";  
-
-  const buffer = await getBuffer(data.download_url);  
-  const fileSizeMB = buffer.length / (1024 * 1024);  
-
-  const fileMsg = fileSizeMB > 100  
-    ? { document: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4' }  
-    : { video: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4', caption: `✅ *Berhasil Mengunduh*\n🎥 ${data.title}\n📌 Resolusi: ${resolution}p` };  
-
-  await hydro.sendMessage(m.chat, fileMsg, { quoted: m });  
-  await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });  
-
-} catch (err) {  
-    console.log("❌ API utama gagal, mencoba api ke 2 (Vreden)...");  
 
     try {  
       await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });  
 
-      const vredenApi = `https://api.vreden.my.id/api/v1/download/youtube/video?url=${encodeURIComponent(link)}&quality=${resolution}`;  
-      let { data } = await axios.get(vredenApi);  
+      const apiUrl = `https://ytdl.hydrohost.web.id/download/?url=${encodeURIComponent(link)}&resolution=${resolution}&mode=url`;  
+      const { data } = await axios.get(apiUrl);  
 
-      if (!data || !data.status || !data.result?.download?.url) {  
-        console.log("⚠️ Resolusi tidak tersedia, fallback ke 360p...");  
-        const fallbackApi = `https://api.vreden.my.id/api/v1/download/youtube/video?url=${encodeURIComponent(link)}&quality=360`;  
-        data = (await axios.get(fallbackApi)).data;  
-      }  
+      if (!data.download_url) throw "Gagal mendapatkan URL download dari API utama.";  
 
-      if (!data || !data.status || !data.result?.download?.url) {  
-        throw new Error("Gagal mendapatkan URL download dari API Vreden.");  
-      }  
+      const buffer = await getBuffer(data.download_url);  
+      const fileSizeMB = buffer.length / (1024 * 1024);  
 
-      const videoData = data.result;  
-      const downloadInfo = videoData.download;  
-      const buffer = await getBuffer(downloadInfo.url);  
-      const sizeMB = buffer.length / (1024 * 1024);  
-
-      const fileMsg = sizeMB > 100  
-        ? { document: buffer, mimetype: 'video/mp4', fileName: downloadInfo.filename || `${videoData.metadata.title || "yt-video"}.mp4` }  
-        : { video: buffer, mimetype: 'video/mp4', fileName: downloadInfo.filename || `${videoData.metadata.title || "yt-video"}.mp4`, caption: `✅ *Berhasil Mengunduh*\n🎥 ${videoData.metadata.title || "YouTube Video"}\n📌 Resolusi: ${downloadInfo.quality}` };  
+      const fileMsg = fileSizeMB > 100  
+        ? { document: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4' }  
+        : { video: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4', caption: `✅ *Berhasil Mengunduh*\n🎥 ${data.title}\n📌 Resolusi: ${resolution}p` };  
 
       await hydro.sendMessage(m.chat, fileMsg, { quoted: m });  
       await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });  
 
-    } catch (err2) {  
-      console.log("❌ Fallback Vreden juga gagal:", err2);  
-      await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });  
-      return replyhydro("⚠️ Maaf, video gagal diunduh. Silakan coba lagi dengan resolusi atau link berbeda.");  
-    }  
-  }
+    } catch (err) {  
+      console.log("❌ API utama gagal, mencoba API ke-2 (Naze)...");  
 
-}
+      try {  
+        await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });  
+
+        const nazeApi = `https://api.naze.biz.id/download/youtube?url=${encodeURIComponent(link)}&format=${resolution}&apikey=nz-e98e71fd41`;  
+        let { data } = await axios.get(nazeApi);  
+
+        if (!data || !data.success || !data.result?.download) {  
+          console.log("⚠️ Resolusi tidak tersedia, fallback ke 360p...");  
+          const fallbackApi = `https://api.naze.biz.id/download/youtube?url=${encodeURIComponent(link)}&format=360&apikey=nz-e98e71fd41`;  
+          data = (await axios.get(fallbackApi)).data;  
+        }  
+
+        if (!data || !data.success || !data.result?.download) {  
+          throw new Error("Gagal mendapatkan URL download dari API Naze.");  
+        }  
+
+        const video = data.result;  
+        const buffer = await getBuffer(video.download);  
+        const sizeMB = buffer.length / (1024 * 1024);  
+
+        const fileMsg = sizeMB > 100  
+          ? { document: buffer, mimetype: 'video/mp4', fileName: `${video.title || "yt-video"}.mp4` }  
+          : { video: buffer, mimetype: 'video/mp4', fileName: `${video.title || "yt-video"}.mp4`, caption: `✅ *Berhasil Mengunduh*\n🎥 ${video.title}\n📌 Resolusi: ${video.format}` };  
+
+        await hydro.sendMessage(m.chat, fileMsg, { quoted: m });  
+        await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });  
+
+      } catch (err2) {  
+        console.log("❌ Fallback Naze juga gagal:", err2);  
+        await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });  
+        return replyhydro("⚠️ Maaf, video gagal diunduh. Silakan coba lagi dengan resolusi atau link berbeda.");  
+      }  
+    }
+  }
 }
 break;
 case "get": case ".g": {
@@ -32526,6 +32548,37 @@ fs.writeFileSync('./database/hyds.json', JSON.stringify(prem))
 replyhydro(`The Number ${prrkek} Has Been Own Jasher!`)
 }
 break
+case "lirik": {
+    if (!q) return replytolak("⚠ *Masukkan Judul Lagu*");
+    replyhydro(mess.wait);
+    
+    try {
+        const result = await lirik(q);
+        
+        if (!result) {
+            return replyhydro(`❌ Lirik Untuk *"${q}"* Tidak Ditemukan.\nCoba Gunakan Judul Yang Lebih Spesifik.`);
+        }
+        const maxLength = 1500;
+        let lirikText = result.plainLyrics || result.syncedLyrics || "Lirik Tidak Tersedia";
+        
+        if (lirikText.length > maxLength) {
+            lirikText = lirikText.substring(0, maxLength) + "\n\n... (Lirik Dipotong, Terlalu Panjang)";
+        }
+        
+        const caption = `*Lirik Lagu ${result.trackName || result.name}*\n\n` +
+                       `Artis : ${result.artistName}\n` +
+                       `Album : ${result.albumName}\n` +
+                       `Durasi : ${Math.floor(result.duration / 60)}:${(result.duration % 60).toString().padStart(2, '0')}\n\n` +
+                       `*Lirik Lagu :*\n${lirikText}`
+        
+        await replyhydro(caption);
+        
+    } catch (error) {
+        console.error("Error mencari lirik:", error);
+        replytolak(`❌ Gagal mencari lirik: ${error.message}`);
+    }
+}
+break;
 case 'addhydro': {
 if (!Ahmad) return replytolak(mess.only.owner)
 if (!args[0]) return replyhydro(`Use ${prefix+command} number\nExample ${prefix+command} 6285187063723`)
@@ -35501,7 +35554,7 @@ case 'igstalk': {
   hydro.sendMessage(m.chat, { react: { text: '🕒', key: m.key }})
 
   try {
-    const dat = await fetchJson(`https://api.hydrohost.web.id/api/stalk/instagram?username=${encodeURIComponent(text)}`)
+    const dat = await fetchJson(`https://api.siputzx.my.id/api/stalk/instagram?username=${encodeURIComponent(text)}`)
     if (!dat || !dat.status || !dat.data) {
       return hydro.sendMessage(m.chat, { text: "Data tidak ditemukan atau API error." }, { quoted: m })
     }
@@ -35535,7 +35588,7 @@ case 'ttstalk': {
   hydro.sendMessage(m.chat, { react: { text: '🕒', key: m.key } });
 
   try {
-    const res = await fetchJson(`https://api.hydrohost.web.id/api/stalk/tiktok?username=${encodeURIComponent(text)}`);
+    const res = await fetchJson(`https://api.siputzx.my.id/api/stalk/tiktok?username=${encodeURIComponent(text)}`);
     if (!res || !res.status || !res.data) {
       throw new Error('Data tidak ditemukan atau format API salah.');
     }
@@ -36202,7 +36255,7 @@ case 'pin':
 case 'pinterest': {
   if (!text) return m.reply(`Contoh: ${prefix}pin christy jkt48`)
   try {
-    const { data } = await axios.get(`https://api.hydrohost.web.id/api/s/pinterest?query=${encodeURIComponent(text)}&type=image`)
+    const { data } = await axios.get(`https://api.siputzx.my.id/api/s/pinterest?query=${encodeURIComponent(text)}&type=image`)
     if (!data.status || !data.data || data.data.length === 0) return m.reply('Gambar tidak ditemukan.')
 
     const jumlahGambar = 15
