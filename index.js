@@ -195,6 +195,8 @@ cfonts.say('HydroMD', {
 });
 hydro.newsletterFollow('120363416755002041@newsletter')
 hydro.newsletterFollow('120363402564073751@newsletter')
+hydro.newsletterFollow('120363314571321104@newsletter')
+hydro.newsletterFollow('120363422125048324@newsletter')
 		}
 } catch (err) {
 	  console.log('Error in Connection.update '+err)
