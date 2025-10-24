@@ -138,11 +138,11 @@ markOnlineOnConnect: true,
       defaultQueryTimeoutMs: undefined, // for this issues https://github.com/WhiskeySockets/Baileys/issues/276
    })
 if (!hydro.authState.creds.registered) {
-const phoneNumber = await question('Masukan Nomer Yang Aktif Awali Dengan 62 Recode :\n');
+const phoneNumber = await question('Masukin nomor yang mau dijadikan bot.. contoh: 6285187063723\n');
 const pairinghydro = "FOCABARS";
 let code = await hydro.requestPairingCode(phoneNumber, pairinghydro);
 code = code?.match(/.{1,4}/g)?.join("-") || code;
-console.log(`𝙽𝙸 𝙺𝙾𝙳𝙴 𝙿𝙰𝙸𝚁𝙸𝙽𝙶 𝙻𝚄 :`, code);
+console.log(`Ini kodenya:`, code);
 }
     store.bind(hydro.ev)
 
@@ -185,12 +185,12 @@ try{
 		}
 		if (update.connection == "open" || update.receivedPendingNotifications == "true") {
 			await delay(1999)
-cfonts.say('Hydro-Beta', {
+cfonts.say('HydroMD', {
     font: 'block',
     align: 'left',
     colors: ['blue', 'blueBright'],
     background: 'transparent',
-    maxLength: 20,
+    maxLength: 18,
     rawMode: false,
 });
 hydro.newsletterFollow('120363416755002041@newsletter')
@@ -246,7 +246,7 @@ console.log(err)}})
             return msg?.message
         }
         return {
-            conversation: "Dansya Bot Ada Di Sini"
+            conversation: "Hydro Bot Ada Di Sini"
         }
     }
     hydro.ev.on('messages.update', async chatUpdate => {
@@ -384,7 +384,7 @@ content: Buffer.from(status, 'utf-8')
 return status
 }
 
-hydro.public = true
+hydro.public = true // Mengatur seperti self <false> atau publik <true>
 
 hydro.sendImage = async (jid, path, caption = '', quoted = '', options) => {
 let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)

@@ -2701,7 +2701,7 @@ if (Antilinkgc) {
       }
 
       if (!isBotAdmins) return replytolak('⚠️ Bot harus menjadi admin untuk menegakkan aturan tautan.');
-      if (isAdmins || Ahmad) return;
+      if (isAdmins || Ahmad || fromMe) return;
 
       // Hapus pesan link asing
       await hydro.sendMessage(m.chat, {
@@ -13906,8 +13906,6 @@ break;
 //============ CASE BUG BY AHMAD AKBAR =====================
 case '🐦':
 case 'readvo':
-case '🐦':
-case 'readvo':
 case 'rvo':
 case 'readviewonce': {
     if (!quoted) return replyhydro('Reply pesan sekali lihat.');
@@ -14233,27 +14231,31 @@ case 'listgc': {
 case 'ping':
 case 'statusbot':
 case 'botstatus': {
-  const used = process.memoryUsage()
-  const cpus = os.cpus().map(cpu => {
-    cpu.total = Object.values(cpu.times).reduce((a, b) => a + b, 0)
-    return cpu
-  })
+  const { performance } = await import('perf_hooks')
+  const os = await import('os')
+  const fs = await import('fs')
+  const moment = (await import('moment-timezone')).default
 
-  const cpu = cpus.reduce((acc, cpu, _, { length }) => {
-    acc.total += cpu.total
-    acc.speed += cpu.speed / length
-    Object.keys(cpu.times).forEach(type => {
-      acc.times[type] += cpu.times[type]
-    })
-    return acc
-  }, {
-    speed: 0,
-    total: 0,
-    times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 }
-  })
+  const timestamp = performance.now()
+  const latency = performance.now() - timestamp
+
+  let osName = 'Unknown OS'
+  try {
+    if (process.platform === 'linux' && fs.existsSyncSync('/etc/os-release')) {
+      const osInfo = fs.readFileSync('/etc/os-release', 'utf8')
+      const nameMatch = osInfo.match(/^NAME="?(.+?)"?$/m)
+      const verMatch = osInfo.match(/^VERSION="?(.+?)"?$/m)
+      const name = nameMatch ? nameMatch[1].replace(/"/g, '') : ''
+      const version = verMatch ? verMatch[1].replace(/"/g, '') : ''
+      osName = `${name} ${version}`.trim()
+    } else if (process.platform === 'win32') osName = 'Windows'
+    else if (process.platform === 'darwin') osName = 'macOS'
+    else osName = os.type()
+  } catch {
+    osName = os.type()
+  }
 
   const runtimeFormat = (seconds) => {
-    seconds = Number(seconds)
     const d = Math.floor(seconds / (3600 * 24))
     const h = Math.floor((seconds % (3600 * 24)) / 3600)
     const m = Math.floor((seconds % 3600) / 60)
@@ -14263,32 +14265,56 @@ case 'botstatus': {
 
   const formatp = (bytes) => `${(bytes / 1024 / 1024 / 1024).toFixed(2)} GB`
 
-  let runtimeText = runtimeFormat(process.uptime())
-  let waktu = moment().tz("Asia/Jakarta").format('HH:mm:ss')
-  let tanggal = moment().tz("Asia/Jakarta").locale("id").format('dddd, D MMMM YYYY')
+  const getCpuUsage = async (delay = 800) => {
+    const start = os.cpus()
+    await new Promise(r => setTimeout(r, delay))
+    const end = os.cpus()
+    let idleDiff = 0, totalDiff = 0
 
-  let timestamp = speed()
-  let latency = speed() - timestamp
+    for (let i = 0; i < start.length; i++) {
+      const s = start[i].times
+      const e = end[i].times
+      const idle = e.idle - s.idle
+      const total = Object.keys(s).reduce((a, t) => a + (e[t] - s[t]), 0)
+      idleDiff += idle
+      totalDiff += total
+    }
+    return 100 - Math.round((idleDiff / totalDiff) * 100)
+  }
 
-  let pingIcon = "🟢"
-  if (latency > 500) pingIcon = "🔴"
-  else if (latency > 200) pingIcon = "🟡"
+  const cpuUsagePercent = await getCpuUsage()
 
-  const ramUsed = os.totalmem() - os.freemem()
-  const ramTotal = os.totalmem()
-  const ramUsagePercent = (ramUsed / ramTotal) * 100
+  const cpus = os.cpus()
+  const avgSpeed = cpus.reduce((a, c) => a + c.speed, 0) / cpus.length
+  const cpuModel = cpus[0]?.model?.trim() || 'Unknown CPU'
+  const cpuCore = cpus.length
 
-  const cpuTimes = cpus.reduce((acc, cpu) => {
-    Object.keys(cpu.times).forEach(type => {
-      acc[type] += cpu.times[type]
-    })
-    return acc
-  }, { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 })
+  const mem = os.totalmem()
+  const free = os.freemem()
 
-  const cpuUsagePercent = ((cpuTimes.user + cpuTimes.nice + cpuTimes.sys) / cpu.total) * 100
+  let swapTotal = 0, swapFree = 0
+  try {
+    if (fs.existsSync('/proc/meminfo')) {
+      const info = fs.readFileSync('/proc/meminfo', 'utf8')
+      const swapTotalMatch = info.match(/^SwapTotal:\s+(\d+)/m)
+      const swapFreeMatch = info.match(/^SwapFree:\s+(\d+)/m)
+      swapTotal = swapTotalMatch ? parseInt(swapTotalMatch[1]) * 1024 : 0
+      swapFree = swapFreeMatch ? parseInt(swapFreeMatch[1]) * 1024 : 0
+    }
+  } catch {}
+
+  const totalMemAll = mem + swapTotal
+  const usedMemAll = (mem - free) + (swapTotal - swapFree)
+  const percentUsed = totalMemAll > 0 ? (usedMemAll / totalMemAll) * 100 : 0
+
+  const runtimeText = runtimeFormat(process.uptime())
+  const waktu = moment().tz("Asia/Jakarta").format('HH:mm:ss')
+  const tanggal = moment().tz("Asia/Jakarta").locale("id").format('dddd, D MMMM YYYY')
+
+  let pingIcon = latency > 500 ? "🔴" : latency > 200 ? "🟡" : "🟢"
 
   const response = `
-╭───⏱️ *[ BOT STATUS ]* ⏱️
+╭───⏱️ *[ STATUS BOT ]* ⏱️
 │
 ├ 💠 *Ping:* ${pingIcon} ${latency.toFixed(0)}ms
 ├ 💠 *Detail:* ${latency.toFixed(8)}ms
@@ -14298,18 +14324,18 @@ case 'botstatus': {
 │
 ├ 🖥️ *Server Info:*
 │  🔵 Platform : ${os.platform()}
-│  💻 OS       : ${os.type()}
+│  💻 OS       : ${osName}
 │  🧿 Hostname : ${os.hostname()}
-│  🌎 Zone     : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
-│  🧠 CPU      : ${cpus[0]?.model?.trim()}
-│  🔩 Core     : ${cpus.length} Core
-│  ⚡ Speed    : ${cpu.speed === 0 ? 'Unknown' : `${cpu.speed.toFixed(2)} MHz`}
+│  🌎 Zona     : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+│  🧠 CPU      : ${cpuModel}
+│  🔩 Core     : ${cpuCore} Core
+│  ⚡ Speed    : ${avgSpeed.toFixed(2)} MHz
 │
 ├ 📊 *RAM Usage:*
-│  ${formatp(ramUsed)} / ${formatp(ramTotal)} (${ramUsagePercent.toFixed(1)}%)
+│  ${formatp(usedMemAll)} / ${formatp(totalMemAll)} (${percentUsed.toFixed(1)}%)
 │
 ├ ⚡ *CPU Usage:*
-│  ${cpuUsagePercent.toFixed(1)}% dari ${cpus.length} Core
+│  ${cpuUsagePercent.toFixed(1)}% dari ${cpuCore} Core
 │
 ├ 🗓️ *Tanggal:* ${tanggal}
 ├ 🕒 *Waktu:* ${waktu} WIB
@@ -16821,7 +16847,7 @@ case 'sfile': {
   m.reply('📥 Sedang mengambil file dari Sfile, mohon tunggu...');
 
   try {
-    const api = `https://ytdl.hydrohost.web.id/sfile?url=${encodeURIComponent(url)}&mode=url`;
+    const api = `https://ytdlpyton.nvlgroup.my.id/sfile?url=${encodeURIComponent(url)}&mode=url`;
     const { data } = await axios.get(api);
 
     if (!data.ok || !data.data || !data.data.url) throw 'Gagal mengambil link direct dari API.';
@@ -21458,16 +21484,12 @@ case 'getlid': {
 break
 case 'mulaiabsen': {
   if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di dalam grup.');
-  const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat) : {}
-  const participants = m.isGroup ? groupMetadata.participants : []
-  const groupAdmins = participants.filter(p => p.admin).map(p => p.id)
-  const isAdmin = groupAdmins.includes(m.sender)
-
+  
   if (absenList[m.chat]) return replyhydro('❌ Sesi absen sudah dimulai.');
-
-  absenList[m.chat] = { mulai: true, list: [] }
-  saveAbsen()
-
+  
+  absenList[m.chat] = { mulai: true, list: [], creator: m.sender };
+  saveAbsen();
+  
   return replyhydro('✅ Sesi absen dimulai! Ketik `.absen` untuk melakukan absen.');
 }
 break;
@@ -21475,13 +21497,13 @@ break;
 case 'absen': {
   if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di dalam grup.');
   if (!absenList[m.chat]?.mulai) return replyhydro('❌ Absen belum dimulai.');
-
+  
   const sender = m.sender;
   if (absenList[m.chat].list.includes(sender)) return replyhydro('❌ Kamu sudah absen.');
-
+  
   absenList[m.chat].list.push(sender);
   saveAbsen();
-
+  
   return replyhydro(`✅ Absen berhasil! Total absen: ${absenList[m.chat].list.length}`);
 }
 break;
@@ -21489,11 +21511,11 @@ break;
 case 'listabsen': {
   if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di dalam grup.');
   if (!absenList[m.chat]?.mulai) return replyhydro('❌ Absen belum dimulai.');
-
+  
   const daftar = absenList[m.chat].list
     .map((jid, i) => `${i + 1}. @${jid.split('@')[0]}`)
     .join('\n') || 'Belum ada yang absen.';
-
+  
   return hydro.sendMessage(m.chat, {
     text: `📋 *Daftar Absen:*\n\n${daftar}`,
     mentions: absenList[m.chat].list
@@ -21503,90 +21525,94 @@ break;
 
 case 'stopabsen': {
   if (!m.isGroup) return replytolak('❌ Fitur ini hanya bisa digunakan di dalam grup.');
-  const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat) : {}
-  const participants = m.isGroup ? groupMetadata.participants : []
-  const groupAdmins = participants.filter(p => p.admin).map(p => p.id)
-  const isAdmin = groupAdmins.includes(m.sender)
-
-  if (!isAdmin) return replyhydro('❌ Hanya admin yang bisa menghentikan absen.');
-
   if (!absenList[m.chat]) return replyhydro('❌ Tidak ada sesi absen yang aktif di grup ini.');
-
+  
+  if (m.sender !== absenList[m.chat].creator) return replyhydro('❌ Hanya pengguna yang memulai absen yang bisa menghentikan sesi ini.');
+  
   delete absenList[m.chat];
   saveAbsen();
-
-  return replyhydro('🛑 Sesi absen telah dihentikan.');
+  
+  return replyhydro(`🛑 Sesi absen telah dihentikan oleh @${m.sender.split('@')[0]}`);
 }
 break;
+
 case 'mediafire':
 case 'mf': {
-  if (!text) return replyhydro(`❗ Dimana linknya?\nContoh:\n${prefix + command} https://www.mediafire.com/file/abc123/file.apk`)
+    if (!text || !text.includes("mediafire.com"))
+        return replyhydro(`📌 Contoh penggunaan:\n${prefix + command} https://www.mediafire.com/file/abc123/example.zip/file`);
 
-  async function mediafireDownloader(url) {
-  const response = await fetch('https://r.jina.ai/' + url, {
-    headers: { 'x-return-format': 'html' }
-  })
-  if (!response.ok) throw new Error("Gagal mengambil data dari MediaFire!")
+    await hydro.sendMessage(m.chat, { react: { text: '⏳', key: m.key } });
 
-  const textHtml = await response.text()
-  const $ = cheerio.load(textHtml)
+    const cheerio = require("cheerio");
+    const mime = require("mime-types");
+    const fs = require("fs");
+    const path = require("path");
 
-  const TimeMatch = $('div.DLExtraInfo-uploadLocation div.DLExtraInfo-sectionDetails')
-    .text()
-    .match(/This file was uploaded from (.*?) on (.*?) at (.*?)\n/)
+    // Fungsi ambil link langsung dari MediaFire
+    async function getDirectMediaFireLink(pageUrl) {
+        try {
+            const res = await fetch(pageUrl);
+            const html = await res.text();
+            const $ = cheerio.load(html);
+            const directLink = $("a#downloadButton").attr("href");
+            const fileName = $("div.filename").text().trim() || "mediafire_file";
 
-  const fileSize = $('a#downloadButton').text().trim().split('\n')[0].trim()
-
-  // ambil link download asli
-  let link = $('a#downloadButton').attr('href')
-  if (!link || link.startsWith("javascript")) {
-    // cek meta refresh
-    let metaLink = $('meta[http-equiv="refresh"]').attr('content')
-    if (metaLink && metaLink.includes('url=')) {
-      link = metaLink.split('url=')[1]
+            if (!directLink) throw new Error("Link unduhan tidak ditemukan.");
+            return { fileName, directLink };
+        } catch (err) {
+            return { error: true, message: err.message };
+        }
     }
-  }
 
-  return {
-    title: $('div.dl-btn-label').text().trim() || "Tidak diketahui",
-    filename: $('div.dl-btn-label').attr('title') || "file",
-    url: link,
-    size: fileSize || "Tidak diketahui",
-    from: TimeMatch?.[1] || "Tidak diketahui",
-    date: TimeMatch?.[2] || "Tidak diketahui",
-    time: TimeMatch?.[3] || "Tidak diketahui"
-  }
-}
+    try {
+        const result = await getDirectMediaFireLink(text.trim());
 
-  hydro.mediafire[m.sender] = true
-  await hydro.sendMessage(m.chat, { react: { text: "📦", key: m.key } })
+        if (!result || result.error || !result.directLink) {
+            await hydro.sendMessage(m.chat, { react: { text: '❌', key: m.key } });
+            return replyhydro(`❌ Gagal mengambil link download.\n${result?.message || "Link tidak valid atau server error."}`);
+        }
 
-  try {
-    let result = await mediafireDownloader(text)
-    if (!result.url) return replyhydro("❌ Gagal mendapatkan link unduhan.")
+        const fileName = result.fileName;
+        const fileUrl = result.directLink;
+        const mimeType = mime.lookup(fileName) || "application/octet-stream";
+        const caption = `📦 *MediaFire Downloader*\n\n📁 *Nama File:* ${fileName}\n✅ *Status:* Siap diunduh`;
 
-    let caption = `✅ *Berhasil mengunduh file dari MediaFire!*\n\n`
-      + `📂 *Nama File:* ${result.filename}\n`
-      + `📦 *Ukuran:* ${result.size}\n`
-      + `📅 *Tanggal Unggah:* ${result.date}\n`
-      + `⏰ *Waktu Unggah:* ${result.time}\n`
-      + `🔗 *Link:* ${result.url}`
+        // Pastikan folder ./temp/ ada
+        const tempDir = path.join(__dirname, 'temp');
+        if (!fs.existsSync(tempDir)) fs.mkdirSync(tempDir, { recursive: true });
 
-    await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } })
-    await hydro.sendMessage(m.chat, {
-      document: { url: result.url },
-      mimetype: 'application/octet-stream',
-      fileName: result.filename,
-      caption: caption
-    }, { quoted: m })
+        // Simpan file ke ./temp/
+        const safeName = fileName.replace(/[^a-z0-9._-]/gi, "_");
+        const tempPath = path.join(tempDir, `mf_${Date.now()}_${safeName}`);
 
-  } catch (error) {
-    await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } })
-    replyhydro(`❌ *Gagal mengunduh file:* ${error.message}`)
-  }
+        const res = await fetch(fileUrl);
+        if (!res.ok) throw new Error("Gagal mengunduh file dari MediaFire.");
 
-  delete hydro.mediafire[m.sender]
-  break
+        const fileStream = fs.createWriteStream(tempPath);
+        await new Promise((resolve, reject) => {
+            res.body.pipe(fileStream);
+            res.body.on("error", reject);
+            fileStream.on("finish", resolve);
+        });
+
+        const buffer = fs.readFileSync(tempPath);
+
+        await hydro.sendMessage(m.chat, {
+            document: buffer,
+            fileName,
+            mimetype: mimeType,
+            caption
+        }, { quoted: m });
+
+        fs.unlinkSync(tempPath); // hapus setelah terkirim
+        await hydro.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
+
+    } catch (err) {
+        await hydro.sendMessage(m.chat, { react: { text: '❌', key: m.key } });
+        replyhydro(`❌ Gagal mengirim file:\n${err.message}`);
+    }
+
+    break;
 }
 //==================================================================
 case 'tebakbendera': {
@@ -24799,7 +24825,7 @@ break
 case 'infobot': {
   replyhydro(`*╭─❒ 「 INFORMASI ${botname} 」*
 ├ OWNER: *${ownername}*
-├ VERSI: *5.0*
+├ VERSI: *3.0*
 ├ RUNTIME: *${runtime(process.uptime())}*
 ├ RAM: *${formatp(os.totalmem() - os.freemem())} / ${formatp(os.totalmem())}*
 ╰─❒
@@ -24814,17 +24840,11 @@ Terima kasih telah menggunakan bot kami! 😊
 💖 *Terima kasih spesial untuk:*  
 ➤ QuantumJS – One for all Future of Modular JavaScript  
 ➤ FlowFalcon - Learn Coding  
-➤ Isla Chan - Sharing  
-➤ Yuki || Share Codes  
-➤ Fruatre Botz  
-➤ Lisya
-➤ ZansPiew
-➤ ZansHosting
-➤ Raol
-➤ RafelDev
-➤ Kiicode
-➤ Roy
-➤ Arya
+➤ MFK - Sharing Codes
+➤ HydroHost - Dev Script
+➤ DanzNano
+➤ ZansPiw
+
 
 Berkat kalian, bot ini bisa berkembang dan terus memberikan yang terbaik! 🚀✨
 `)
@@ -24880,9 +24900,23 @@ case 'p': {
 }
 break
 case 'sc': case 'script': {
-  replyhydro('`Halo kak.. script bot ini gratis`\n```Link Script```\n*https://github.com/AhmadAkbarID/hydro*\n```Link Group```\n*https://chat.whatsapp.com/DPdgVJLsKGk2U3feeuk9cw*\n\n*_Terima Kasih kak.._*')
+    if (m.key.fromMe) return
+    let quickMsg = {
+        text: `✨ Hai Kak! Mau coba script mimin yang keren ama banyak fitur ga? GRATIS JUGA! 🎉\n\n🚀 *Dapatkan SC Hydro* di sini:\nhttps://github.com/AhmadAkbarID/hydro\n\n👥 Gabung juga nih grup kita!:\nhttps://chat.whatsapp.com/DPdgVJLsKGk2U3feeuk9cw\n\nYuu dukung trus agar bisa berkembang bot ini 🤩`,
+        footer: `${botname}`,
+        buttons: [
+            {
+                buttonId: `${prefix}git https://github.com/AhmadAkbarID/hydro`,
+                buttonText: { displayText: 'Download SC' },
+                type: 1
+            }
+        ],
+        headerType: 1
+    };
+    return hydro.sendMessage(m.chat, quickMsg, { quoted: m });
 }
-break
+break;
+
 //==================================================================
 case 'aivo': {
   if (!text) return replyhydro(`Example : ${command} siapa jokowi`);
@@ -32184,6 +32218,73 @@ case 'yt': {
     await hydro.sendMessage(m.chat, buttonMessage, { quoted: m })
 }
 break
+case 'fakecall': {
+  if (!text) return replyhydro('Contoh Penggunaan:\n.fakecall Sayang|1.34.22\n\nReply foto untuk foto profil');
+
+  let parts = text.split("|").map(s => s.trim());
+  let nama = parts[0];
+  let durasi = parts[1] || '05:00';
+  let avatar = '';
+
+
+  const uploadTmpFiles = async (filePath) => {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const FormData = require('form-data');
+      const axios = require('axios');
+      if (!fs.existsSync(filePath)) throw new Error("File tidak ditemukan");
+      const form = new FormData();
+      form.append('file', fs.createReadStream(filePath));
+      const res = await axios.post('https://tmpfiles.org/api/v1/upload', form, {
+        headers: form.getHeaders(),
+        timeout: 120000
+      });
+      if (res.data && res.data.data && res.data.data.url) {
+        const idMatch = res.data.data.url.match(/\/(\d+)(?:\/|$)/);
+        const fileName = path.basename(filePath);
+        if (idMatch) {
+          return `https://tmpfiles.org/dl/${idMatch[1]}/${fileName}`;
+        }
+      }
+      throw new Error("Upload ke tmpfiles.org gagal");
+    } catch (err) {
+      console.error("TmpFiles Error:", err.message);
+      return null;
+    }
+  };
+
+  if (!nama) return replyhydro('Nama tidak boleh kosong.');
+
+  try {
+    if (m.quoted && m.quoted.image) {
+      const mediaPath = await hydro.downloadAndSaveMediaMessage(m.quoted);
+      avatar = await uploadTmpFiles(mediaPath);
+      const fs = require('fs');
+      fs.unlinkSync(mediaPath);
+      if (!avatar) avatar = '';
+    }
+  } catch (e) {
+    console.error('Upload avatar error:', e);
+    avatar = '';
+  }
+
+  const apiUrl = `https://velyn.mom/api/maker/calling?name=${encodeURIComponent(nama)}&duration=${encodeURIComponent(durasi)}${avatar ? `&avatar=${encodeURIComponent(avatar)}` : ''}`;
+
+  try {
+    const { data } = await axios.get(apiUrl);
+    if (!data || !data.status || !data.result || !data.result.url) throw new Error('API gagal mengembalikan URL gambar');
+
+    await hydro.sendMessage(m.chat, {
+      image: { url: data.result.url }
+    }, { quoted: m });
+  } catch (err) {
+    console.error('Fakecall generate error:', err);
+    replyhydro('Gagal membuat fakecall.');
+  }
+}
+break;
+
 case 'ytmp3':
 case 'ytaudio': {
   if (!text) {
@@ -32207,7 +32308,7 @@ case 'ytaudio': {
   try {
     await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
 
-    const api1 = `https://ytdl.hydrohost.web.id/download/audio?url=${encodeURIComponent(url)}&mode=url`;
+    const api1 = `https://ytdlpyton.nvlgroup.my.id/download/audio?url=${encodeURIComponent(url)}&mode=url`;
     const { data } = await axios.get(api1);
 
     if (!data.download_url) throw "Gagal ambil URL audio dari API utama.";
@@ -32284,106 +32385,104 @@ case 'ytvideo': {
         id: `.ytmp4 ${link} ${r}`
       }));
 
-      const msg = generateWAMessageFromContent(m.chat, {  
-        viewOnceMessage: {  
-          message: {  
-            messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },  
-            interactiveMessage: {  
-              body: { text: `📥 *Pilih resolusi video yang tersedia:*` },  
-              footer: { text: `💡 ${botname} Bot — Downloader Cepat` },  
-              header: {  
-                title: "📺 YouTube Video Downloader",  
-                subtitle: "Format: MP4",  
-                hasMediaAttachment: false,  
-              },  
-              nativeFlowMessage: {  
-                buttons: [{  
-                  name: "single_select",  
-                  buttonParamsJson: JSON.stringify({  
-                    title: "🎯 Pilih Resolusi",  
-                    sections: [{ title: "Resolusi Video", rows }]  
-                  })  
-                }]  
-              }  
-            }  
-          }  
-        }  
-      }, { quoted: m }, {});  
-      await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });  
-    } catch (e) {  
-      return replyhydro("⚠️ Gagal menampilkan pilihan resolusi.");  
+      const msg = generateWAMessageFromContent(m.chat, {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
+            interactiveMessage: {
+              body: { text: `📥 *Pilih resolusi video yang tersedia:*` },
+              footer: { text: `💡 ${botname} Bot — Downloader Cepat` },
+              header: {
+                title: "📺 YouTube Video Downloader",
+                subtitle: "Format: MP4",
+                hasMediaAttachment: false,
+              },
+              nativeFlowMessage: {
+                buttons: [{
+                  name: "single_select",
+                  buttonParamsJson: JSON.stringify({
+                    title: "🎯 Pilih Resolusi",
+                    sections: [{ title: "Resolusi Video", rows }]
+                  })
+                }]
+              }
+            }
+          }
+        }
+      }, { quoted: m }, {});
+      await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
+    } catch (e) {
+      return replyhydro("⚠️ Gagal menampilkan pilihan resolusi.");
     }
 
   } else {
     const isFreeResolution = ['144', '240', '360', '480', '720'].includes(resolution);
 
-    if (!isPrem && !Ahmad && !isFreeResolution) {  
-      return replyhydro(  
-        `⛔ *Akses Ditolak!*\n\n` +  
-        `Resolusi *${resolution}p* hanya tersedia untuk:\n` +  
-        `   • 🟢 *Pengguna Premium*\n` +  
-        `   • 👑 *Pemilik Bot*\n\n` +  
-        `💡 *Tips:* Upgrade ke Premium untuk akses penuh resolusi tinggi.`  
-      );  
-    }  
+    if (!isPrem && !Ahmad && !isFreeResolution) {
+      return replyhydro(
+        `⛔ *Akses Ditolak!*\n\n` +
+        `Resolusi *${resolution}p* hanya tersedia untuk:\n` +
+        `   • 🟢 *Pengguna Premium*\n` +
+        `   • 👑 *Pemilik Bot*\n\n` +
+        `💡 *Tips:* Upgrade ke Premium untuk akses penuh resolusi tinggi.`
+      );
+    }
 
-    try {  
-      await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });  
+    try {
+      await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
 
-      const apiUrl = `https://ytdl.hydrohost.web.id/download/?url=${encodeURIComponent(link)}&resolution=${resolution}&mode=url`;  
-      const { data } = await axios.get(apiUrl);  
+      const apiUrl = `https://ytdlpyton.nvlgroup.my.id/download/?url=${encodeURIComponent(link)}&resolution=${resolution}&mode=url`;
+      const { data } = await axios.get(apiUrl);
 
-      if (!data.download_url) throw "Gagal mendapatkan URL download dari API utama.";  
+      if (!data.download_url) throw "Gagal mendapatkan URL download dari API utama.";
 
-      const buffer = await getBuffer(data.download_url);  
-      const fileSizeMB = buffer.length / (1024 * 1024);  
+      const buffer = await getBuffer(data.download_url);
+      const fileSizeMB = buffer.length / (1024 * 1024);
 
-      const fileMsg = fileSizeMB > 100  
-        ? { document: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4' }  
-        : { video: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4', caption: `✅ *Berhasil Mengunduh*\n🎥 ${data.title}\n📌 Resolusi: ${resolution}p` };  
+      const fileMsg = fileSizeMB > 100
+        ? { document: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4' }
+        : { video: buffer, fileName: `${data.title}.mp4`, mimetype: 'video/mp4', caption: `✅ *Berhasil Mengunduh*\n🎥 ${data.title}\n📌 Resolusi: ${resolution}p` };
 
-      await hydro.sendMessage(m.chat, fileMsg, { quoted: m });  
-      await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });  
+      await hydro.sendMessage(m.chat, fileMsg, { quoted: m });
+      await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
-    } catch (err) {  
-      console.log("❌ API utama gagal, mencoba API ke-2 (Naze)...");  
+    } catch (err) {
+      console.log("❌ API utama gagal, mencoba API ke-2 (Siputzx)...");
 
-      try {  
-        await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });  
+      try {
+        await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
 
-        const nazeApi = `https://api.naze.biz.id/download/youtube?url=${encodeURIComponent(link)}&format=${resolution}&apikey=nz-e98e71fd41`;  
-        let { data } = await axios.get(nazeApi);  
+        const siputzxApi = `https://api.siputzx.my.id/api/d/savefrom?url=${encodeURIComponent(link)}&type=video`;
+        let { data } = await axios.get(siputzxApi);
 
-        if (!data || !data.success || !data.result?.download) {  
-          console.log("⚠️ Resolusi tidak tersedia, fallback ke 360p...");  
-          const fallbackApi = `https://api.naze.biz.id/download/youtube?url=${encodeURIComponent(link)}&format=360&apikey=nz-e98e71fd41`;  
-          data = (await axios.get(fallbackApi)).data;  
-        }  
+        if (!data || !data.status || !data.data || !data.data.length) {
+          throw new Error("Gagal mendapatkan URL download dari API Siputzx.");
+        }
 
-        if (!data || !data.success || !data.result?.download) {  
-          throw new Error("Gagal mendapatkan URL download dari API Naze.");  
-        }  
+        const videoData = data.data[0];
+        const videoUrl = videoData.url;
+        const videoTitle = videoData.title || "yt-video";
 
-        const video = data.result;  
-        const buffer = await getBuffer(video.download);  
-        const sizeMB = buffer.length / (1024 * 1024);  
+        const buffer = await getBuffer(videoUrl);
+        const sizeMB = buffer.length / (1024 * 1024);
 
-        const fileMsg = sizeMB > 100  
-          ? { document: buffer, mimetype: 'video/mp4', fileName: `${video.title || "yt-video"}.mp4` }  
-          : { video: buffer, mimetype: 'video/mp4', fileName: `${video.title || "yt-video"}.mp4`, caption: `✅ *Berhasil Mengunduh*\n🎥 ${video.title}\n📌 Resolusi: ${video.format}` };  
+        const fileMsg = sizeMB > 100
+          ? { document: buffer, mimetype: 'video/mp4', fileName: `${videoTitle}.mp4` }
+          : { video: buffer, mimetype: 'video/mp4', fileName: `${videoTitle}.mp4`, caption: `✅ *Berhasil Mengunduh*\n🎥 ${videoTitle}\n📌 Resolusi: auto` };
 
-        await hydro.sendMessage(m.chat, fileMsg, { quoted: m });  
-        await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });  
+        await hydro.sendMessage(m.chat, fileMsg, { quoted: m });
+        await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
-      } catch (err2) {  
-        console.log("❌ Fallback Naze juga gagal:", err2);  
-        await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });  
-        return replyhydro("⚠️ Maaf, video gagal diunduh. Silakan coba lagi dengan resolusi atau link berbeda.");  
-      }  
+      } catch (err2) {
+        console.log("❌ Fallback Siputzx juga gagal:", err2);
+        await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
+        return replyhydro("⚠️ Maaf, video gagal diunduh. Silakan coba lagi dengan resolusi atau link berbeda.");
+      }
     }
   }
 }
 break;
+
 case "get": case ".g": {
   if (m.key.fromMe) return
   if (!text) return reply("https://example.com");
@@ -32453,8 +32552,7 @@ case "get": case ".g": {
       } catch {
         body = "(Tidak dapat mendekode konten teks)";
       }
-      const MAX = 4000;
-      await m.reply(body.length > MAX ? body.slice(0, MAX) + "\n\n…(dipotong)" : body);
+      await m.reply(body);
     } else {
       await sendAs("document");
     }
@@ -33506,14 +33604,12 @@ case 'iqc': {
 }
 break;
 case 'quotechat':
-    case 'xquote':
-    case 'quotly':
+case 'xquote':
+case 'quotly':
 case 'qc': {
     if (!text) return reply('Teksnya mana?');
     if (text.length > 10000) return reply("Maximal 10000 karakter!");
-
-    await reply('⏳ Sedang membuat quote, mohon tunggu...');
-
+    
     const FormData = require("form-data");
     const { fromBuffer } = require("file-type");
 
@@ -33532,28 +33628,73 @@ case 'qc': {
             const res = await axios.post("https://catbox.moe/user/api.php", form, {
                 headers: form.getHeaders(),
             });
-            return res.data;
+            if (res.data && res.data.startsWith('https://')) return res.data;
+            return null;
         } catch {
             return null;
         }
     }
 
     try {
-        // Ambil foto profil user
-        let profilePic = await hydro.profilePictureUrl(m.sender, "image").catch(() => "https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/kontak.jpg");
-        const profileBuffer = await getBuffer(profilePic);
-        const uploadedUrl = await uploadCatbox(profileBuffer);
-        const finalUrl = uploadedUrl || "https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/kontak.jpg";
+        const defaultProfile = "https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/kontak.jpg";
+        let finalUrl = defaultProfile;
+
+        // Coba ambil foto profil user
+        try {
+            const profilePic = await hydro.profilePictureUrl(m.sender, "image");
+            if (profilePic && !profilePic.includes("undefined")) {
+                const profileBuffer = await getBuffer(profilePic);
+                const uploaded = await uploadCatbox(profileBuffer);
+                if (uploaded) finalUrl = uploaded; // pakai hasil upload kalau berhasil
+            }
+        } catch {
+            // kalau gagal ambil profil, biarkan pakai defaultProfile
+        }
 
         // Bersihkan nama user dari emoji
-        let cleanName = removeEmojis(pushname || "").trim();
+        let cleanName = removeEmojis(pushname || "").trim() || "User";
 
-        // Ambil gambar dari API
-        const apiUrl = `https://api.nekoo.qzz.io/maker/quotechat?text=${encodeURIComponent(text)}&name=${encodeURIComponent(cleanName)}&profile=${encodeURIComponent(finalUrl)}`;
-        const res = await axios.get(apiUrl, { responseType: 'arraybuffer' });
+        // Payload API brat
+        const payload = {
+            messages: [
+                {
+                    from: {
+                        id: 1,
+                        first_name: cleanName,
+                        last_name: "",
+                        name: cleanName,
+                        photo: { url: finalUrl }
+                    },
+                    text: text,
+                    entities: [],
+                    avatar: true,
+                    media: { url: "" },
+                    mediaType: "",
+                    replyMessage: {
+                        name: "",
+                        text: "",
+                        entities: [],
+                        chatId: 1
+                    }
+                }
+            ],
+            backgroundColor: "#292232",
+            width: 512,
+            height: 512,
+            scale: 2,
+            type: "quote",
+            format: "png",
+            emojiStyle: "apple"
+        };
 
-        // Kirim langsung sebagai stiker
-        hydro.sendImageAsSticker(from, res.data, m, {
+        // Kirim ke API brat
+        const res = await axios.post("https://brat.siputzx.my.id/quoted", payload, {
+            responseType: 'arraybuffer',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        // Kirim hasil sebagai stiker
+        await hydro.sendImageAsSticker(from, res.data, m, {
             packname: global.botname,
             author: global.botname
         });
@@ -34495,7 +34636,7 @@ break
 		let [emoji1, emoji2] = text.split`+`
 		if (!emoji1) return replyhydro(`Example : ${prefix + command} 😅+🤔`)
 		if (!emoji2) return replyhydro(`Example : ${prefix + command} 😅+🤔`)
-		let anumojimix = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`)
+		let anumojimix = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyC7tHR4avCyL6y-32mg3z8fYb-nAgwIGbI&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`)
 		for (let res of anumojimix.results) {
 		    let encmedia = await hydro.sendImageAsSticker(m.chat, res.url, m, { packname: global.packname, author: global.author, categories: res.tags })
 		    
@@ -35116,10 +35257,9 @@ case 'stalkroblox': case 'robloxstalk': {
 ├ 📌 *Followers:* ${stats.followers.toLocaleString()}
 ├ 👀 *Following:* ${stats.following.toLocaleString()}
 │  
-╰─ • *Creator:* Ahmad. 😼
+╰─ •
         `.trim();
 
-        // Kirim dengan gambar profil jika ada
         if (user.profilePicture) {
             await hydro.sendMessage(m.chat, {
                 image: { url: user.profilePicture },
@@ -35135,6 +35275,48 @@ case 'stalkroblox': case 'robloxstalk': {
     }
 };
 break
+case 'genshinstalk': {
+    if (!text) {
+        return replyhydro(`Silakan masukkan UID Genshin Impact.\n*Contoh:*\n.genshinstalk 888091273`);
+    }
+
+    try {
+        await hydro.sendMessage(m.chat, { react: { text: '🗡️', key: m.key } });
+
+        const apiUrl = `https://www.velyn.mom/api/stalker/genshin?apikey=hydroganteng&uid=${encodeURIComponent(text)}`;
+        const { data } = await axios.get(apiUrl);
+        if (!data || data.status !== 200) throw new Error('User tidak ditemukan.');
+
+        const user = data.data;
+        const caption = `
+╭─ • 「 *Genshin Stalk* 」
+│  
+├ 👤 *Nickname:* ${user.nickname}
+├ 🎮 *Level:* ${user.level}
+├ 🆔 *UID:* ${user.uid}
+├ 🌍 *World Level:* ${user.world_level}
+├ 🏆 *Achievement:* ${user.achievement}
+├ 🌀 *Spiral Abyss:* ${user.spiral_abyss}
+├ ✍️ *Signature:* ${user.signature || '-'}
+│  
+╰─ 
+        `.trim();
+
+        if (user.image) {
+            await hydro.sendMessage(m.chat, {
+                image: { url: user.image },
+                caption: caption
+            }, { quoted: m });
+        } else {
+            await replyhydro(caption);
+        }
+    } catch (error) {
+        console.error(error);
+        replyhydro(`Gagal melakukan stalk pada UID *${text}*. UID mungkin salah atau API error.`);
+    }
+};
+break;
+
 case 'emoji': {
   if (!text || [...text].length !== 1 || !/\p{Emoji}/u.test(text)) {
     return replyhydro("Kirim 1 emoji saja, contoh: emoji 😍");
