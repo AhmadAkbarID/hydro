@@ -25062,7 +25062,7 @@ case 'swgc': {
 break
 
 case 'sendstatus': {
-  if (!iAhmad) return replytolak(mess.only.owner)
+  if (!Ahmad) return replytolak(mess.only.owner)
   const [groupId, ...contentARR] = args
   const contentDecoded = JSON.parse(decodeURIComponent(contentARR.join(' ')))
   let sent = await groupStatus(groupId, contentDecoded)
