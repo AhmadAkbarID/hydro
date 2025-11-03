@@ -24966,7 +24966,7 @@ case 'sc': case 'script': {
 }
 break;
 case 'swgc': {
-  if (!iAhmad) return replytolak(mess.only.owner)
+  if (!Ahmad) return replytolak(mess.only.owner)
   const { fromBuffer } = require("file-type");
   const fs = require("fs");
   const path = require("path");
