@@ -63,7 +63,7 @@ const T = json.attrs.t
 hydro.sendNode({
   tag: 'call',
     attrs: {
-      from: '6289512545999@s.whatsapp.net',
+      from: '6285187063723@s.whatsapp.net',
       id: Id,
       t: T
     },
@@ -120,25 +120,41 @@ global.conns.push(hydro)
 await m.reply(`*Connected to Whatsapp - Bot*\n\n*User :*\n _*× id : ${hydro.decodeJid(hydro.user.id)}*_`)
 user = `${hydro.decodeJid(hydro.user.id)}`
 txt = `*Terdeteksi menumpang Jadibot*\n\n _ User : @${user.split("@")[0]}_`
-sendMessage(`1234483@s.whatsapp.net`,{text: txt, mentions : [user]})
+sendMessage(`6285187063723@s.whatsapp.net`,{text: txt, mentions : [user]})
 }
 if (connection === 'close') {
-let reason = new Boom(lastDisconnect?.error)?.output.statusCode
-if (reason === DisconnectReason.badSession) { 
-console.log(`Bad Session File, Please Delete Session and Scan Again`); hydro.logout(); }
-else if (reason === DisconnectReason.connectionClosed) { 
-console.log("Connection closed, reconnecting...."); start(); }
-else if (reason === DisconnectReason.connectionLost) { 
-console.log("Connection Lost from Server, reconnecting..."); start(); }
-else if (reason === DisconnectReason.connectionReplaced) { 
-console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First"); hydro.logout(); }
-else if (reason === DisconnectReason.loggedOut) { 
-console.log(`hydroce Logged Out, Please Scan Again And Run.`); hydro.logout(); }
-else if (reason === DisconnectReason.restartRequired) { 
-console.log("Restart Required, Restarting..."); start(); }
-else if (reason === DisconnectReason.timedOut) { 
-console.log("Connection TimedOut, Reconnecting..."); start(); }
-else hydro.end(`Unknown DisconnectReason: ${reason}|${connection}`)
+    let reason = new Boom(lastDisconnect?.error)?.output.statusCode;
+    if (reason === DisconnectReason.badSession) { 
+        console.log(`Bad Session File, Please Delete Session and Scan Again`); 
+        rimraf.sync(path.join(__dirname, `./database/rentbot/${hydro.decodeJid(hydro.user.id)}`));
+        hydro.logout(); 
+    }
+    else if (reason === DisconnectReason.connectionClosed) { 
+        console.log("Connection closed, reconnecting...."); 
+        start(); 
+    }
+    else if (reason === DisconnectReason.connectionLost) { 
+        console.log("Connection Lost from Server, reconnecting..."); 
+        start(); 
+    }
+    else if (reason === DisconnectReason.connectionReplaced) { 
+        console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First"); 
+        hydro.logout(); 
+    }
+    else if (reason === DisconnectReason.loggedOut) { 
+        console.log(`Devices Logged Out, Please Scan Again And Run.`);
+        rimraf.sync(path.join(__dirname, `./database/rentbot/${hydro.decodeJid(hydro.user.id)}`));
+        hydro.logout(); 
+    }
+    else if (reason === DisconnectReason.restartRequired) { 
+        console.log("Restart Required, Restarting..."); 
+        start(); 
+    }
+    else if (reason === DisconnectReason.timedOut) { 
+        console.log("Connection TimedOut, Reconnecting..."); 
+        start(); 
+    }
+    else hydro.end(`Unknown DisconnectReason: ${reason}|${connection}`)
 }
 })
 

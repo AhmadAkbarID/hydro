@@ -48,7 +48,7 @@ const Pino = require("pino")
 const readline = require("readline")
 const colors = require('colors')
 const { start } = require('./lib/spinner')
-const { uncache, nocache } = require('./lib/loader')
+const { uncache, nocache, checkVersionUpdate } = require('./lib/loader')
 const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./lib/exif')
 const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetchJson, await, sleep, reSize } = require('./lib/myfunc')
 
@@ -81,6 +81,7 @@ require('./index.js')
 nocache('../index.js', module => console.log(color('[ CHANGE ]', 'green'), color(`'${module}'`, 'green'), 'Updated'))
 
 async function hydroInd() {
+    await checkVersionUpdate();
 	const {  saveCreds, state } = await useMultiFileAuthState(`./${sessionName}`)
 	const msgRetryCounterCache = new NodeCache()
     	const hydro = XeonBotIncConnect({
@@ -190,7 +191,7 @@ cfonts.say('HydroMD', {
     align: 'left',
     colors: ['blue', 'blueBright'],
     background: 'transparent',
-    maxLength: 18,
+    maxLength: 14,
     rawMode: false,
 });
 hydro.newsletterFollow('120363416755002041@newsletter')

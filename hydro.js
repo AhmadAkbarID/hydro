@@ -29,6 +29,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const { isSetWelcome, addSetWelcome, changeSetWelcome, removeSetWelcome } = require('./lib/setwelcome');
 const { Primbon } = require('scrape-primbon')
+const packageJson = require('./package.json'); 
 const primbon = new Primbon()
 const canvafy = require('canvafy')
 const { isSetLeft, addSetLeft, removeSetLeft, changeSetLeft } = require('./lib/setleft');
@@ -79,6 +80,7 @@ const siminya = JSON.parse(fs.readFileSync('./database/simi.json'))
 const ChatHydro = JSON.parse(fs.readFileSync('./database/ChatHydro.json'))
 const { isSetProses, addSetProses, removeSetProses, changeSetProses, getTextSetProses } = require('./lib/setproses');
 const { addResponList, delResponList, isAlreadyResponList, isAlreadyResponListGroup, sendResponList, updateResponList, getDataResponList } = require('./lib/respon-list');
+const versiSc = packageJson.version;
 const { isSetDone, addSetDone, removeSetDone, changeSetDone, getTextSetDone } = require('./lib/setdone');
 let whitelist = JSON.parse(fs.readFileSync('./database/whitelist.json'))
 let sewa = JSON.parse(fs.readFileSync('./database/sewa.json'));
@@ -285,7 +287,7 @@ hydro.ev.emit('messages.upsert', msg)
         const args = body.trim().split(/ +/).slice(1)
         const pushname = m.pushName || "Misterius"
         const botNumber = await hydro.decodeJid(hydro.user.id)
-        const Ahmad = [botNumber, ...owner].map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender);
+        const Ahmad = owner.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender);
         const text = q = args.join(" ")
         const quoted = m.quoted ? m.quoted : m
         const mime = (quoted.msg || quoted).mimetype || ''
@@ -955,6 +957,33 @@ if (m.sender.startsWith('212')) return hydro.updateBlockStatus(m.sender, 'block'
 //autokick 212
 if (global.autokickmorroco) {
 if (m.isGroup && m.sender.startsWith('212')) return 
+}
+
+async function groupStatus(jid, content) {
+  const { backgroundColor } = content;
+  delete content.backgroundColor;
+  const inside = await baileys.generateWAMessageContent(content, {
+    upload: hydro.waUploadToServer,
+    backgroundColor
+  });
+  const messageSecret = crypto.randomBytes(32);
+  const m = baileys.generateWAMessageFromContent(jid, {
+    messageContextInfo: {
+      messageSecret
+    },
+    groupStatusMessageV2: {
+      message: {
+        ...inside,
+        messageContextInfo: {
+          messageSecret
+        }
+      }
+    }
+  }, {});
+  await hydro.relayMessage(jid, m.message, {
+    messageId: m.key.id
+  });
+  return m;
 }
 
 async function sendhydroMessage(chatId, message, options = {}){
@@ -2008,23 +2037,8 @@ if (automati) {
     process.exit()
   })
 }
-if (shouldExit) {
-    nodecron.schedule('0 */15 * * * *', () => {
-        fs.readdir("./furina", async function (err, files) {
-let filteredArray = await files.filter(item => item.startsWith("pre-key") ||
-item.startsWith("sender-key") || item.startsWith("session-") || item.startsWith("app-state")
-   )
-if(filteredArray.length == 0) return console.log(`${teks}`)
-filteredArray.map(function(e, i){
-teks += (i+1)+`. ${e}\n`
-})     
-await filteredArray.forEach(function (file) {
-});
-await sleep(2000)
-console.log("Berhasil Dibersihkan")    
-});
-    })
-}
+
+
 if (!m.key.fromMe && m.isGroup && IsHydroChat) {
 const HydroChaty = `${budy}`
 HydroAI(pushname,HydroChaty)
@@ -3623,20 +3637,55 @@ replyhydro(`Kirim/Balas Gambar Dengan Caption ${prefix + command} text1|text2`)
 }
 }
 break
-case 'listjadibot': 
-try {
-let user = [... new Set([...global.conns.filter(hydro => hydro.user).map(hydro => hydro.user)])]
-te = "*Rentbot List*\n\n"
-for (let i of user){
-y = await hydro.decodeJid(i.id)
-te += " × User : @" + y.split("@")[0] + "\n"
-te += " × Name : " + i.name + "\n\n"
+case 'stopjadibot': {
+    try {
+        let jadibotIndex = global.conns.findIndex(hydro => hydro.decodeJid(hydro.user.id) === m.sender);
+        if (jadibotIndex === -1) {
+            return hydro.sendMessage(m.chat, { text: 'Kamu belum menjalankan jadibot atau sudah dihentikan.' }, { quoted: m });
+        }
+
+        let jadibotInstance = global.conns[jadibotIndex];
+        jadibotInstance.logout();
+        const rimraf = require('rimraf');
+        const path = require('path');
+        rimraf.sync(path.join(__dirname, `./database/rentbot/${hydro.decodeJid(jadibotInstance.user.id)}`));
+        
+        global.conns.splice(jadibotIndex, 1);
+
+        hydro.sendMessage(m.chat, { text: 'Jadibot berhasil dihentikan dan sesi dihapus.' }, { quoted: m });
+    } catch (err) {
+        hydro.sendMessage(m.chat, { text: 'Gagal menghentikan jadibot: ' + err.message }, { quoted: m });
+    }
 }
-hydro.sendMessage(from,{text:te,mentions: [y], },{quoted:m})
-} catch (err) {
-replyhydro(`Belum ada pengguna yang menyewa bot`)
+break;
+case 'jadibot': {
+ jadibot(hydro, m, m.chat)
 }
 break
+case 'listjadibot': 
+try {
+  const rentbotPath = path.join(__dirname, './database/rentbot');
+  let folders = fs.readdirSync(rentbotPath, { withFileTypes: true })
+                  .filter(dirent => dirent.isDirectory())
+                  .map(dirent => dirent.name);
+
+  if (folders.length === 0) throw new Error('Belum ada pengguna yang menyewa bot');
+
+  let te = `*Rentbot List*
+
+`;
+  let mentions = [];
+  for (let userFolder of folders) {
+    let userId = await hydro.decodeJid(userFolder + '@s.whatsapp.net');
+    mentions.push(userId);
+    te += ` × User : @${userId.split("@")[0]}
+`;
+  }
+  hydro.sendMessage(from, { text: te, mentions: mentions }, { quoted: m });
+} catch (err) {
+  hydro.sendMessage(from, { text: err.message || 'Belum ada pengguna yang menyewa bot' }, { quoted: m });
+}
+break;
 case 'clearall': {
 if (!Ahmad) return replytolak(mess.only.owner)
 hydro.chatModify({ delete: true, lastMessages: [{ key: m.key, messageTimestamp: m.messageTimestamp }] }, m.chat)
@@ -3799,7 +3848,7 @@ let teks = (`
 ➤ 🤖 Nᴀᴍᴀ Bᴏᴛ : *${botname}*
 ➤ ⚒️ Tᴏᴛᴀʟ : *${HydroFitur()} ғɪᴛᴜʀ*
 ➤ ⏱️ Aᴋᴛɪғ Sᴇʟᴀᴍᴀ : *${runtime(process.uptime())}*
-➤ 👾 Vᴇʀsɪ : *3.0*
+➤ 👾 Vᴇʀsɪ : *${versiSc}*
 
 ✨━━━〔 🎉 *𝐓𝐞𝐧𝐭𝐚𝐧𝐠 𝐊𝐚𝐦𝐢* 〕━━━✨
 
@@ -24916,6 +24965,113 @@ case 'sc': case 'script': {
     return hydro.sendMessage(m.chat, quickMsg, { quoted: m });
 }
 break;
+case 'swgc': {
+  if (!iAhmad) return replytolak(mess.only.owner)
+  const { fromBuffer } = require("file-type");
+  const fs = require("fs");
+  const path = require("path");
+
+  let content = {}
+  let buffer, ext, tempFile
+
+  if (m.quoted) {
+    try {
+      buffer = await m.quoted.download()
+      if (!buffer) return hydro.sendText(m.chat, "❌ Gagal mengambil media quoted.")
+      ext = (await fromBuffer(buffer))?.ext || 'bin'
+      tempFile = path.join(__dirname, `tmp_${Date.now()}.${ext}`)
+      fs.writeFileSync(tempFile, buffer)
+
+      const quotedType = m.quoted.mtype || Object.keys(m.quoted.message || {})[0] || ''
+      if (/image|video|audio/.test(quotedType)) {
+        if (/image/.test(quotedType)) {
+          content.image = { url: tempFile }
+          if (text) content.caption = text
+        } else if (/video/.test(quotedType)) {
+          content.video = { url: tempFile }
+          if (text) content.caption = text
+        } else if (/audio/.test(quotedType)) {
+          if (text) {
+            fs.unlinkSync(tempFile)
+            return hydro.sendText(m.chat, "Audio tidak boleh disertai caption.")
+          }
+          content.audio = { url: tempFile }
+          content.ptt = false
+        }
+      } else {
+        fs.unlinkSync(tempFile)
+        return hydro.sendText(m.chat, "Reply harus berupa image/video/audio.")
+      }
+    } catch (e) {
+      return hydro.sendText(m.chat, "❌ Media tidak valid atau gagal diproses.")
+    }
+  } else if (text) {
+    content.text = text
+  } else {
+    return hydro.sendText(m.chat, "Kirim media (foto/video/audio) atau teks, bisa dengan reply atau langsung.")
+  }
+
+  if (content.text && !content.text.trim()) return hydro.sendText(m.chat, "Teks tidak boleh kosong.")
+
+  let grupList = await store.chats.all().filter(v => v.id.endsWith('@g.us')).map(v => v.id)
+  let validGroups = []
+  for (let gid of grupList) {
+    try {
+      let metadata = await hydro.groupMetadata(gid)
+      validGroups.push({
+        title: metadata.subject,
+        description: gid,
+        id: `.sendstatus ${gid} ${encodeURIComponent(JSON.stringify(content))}`
+      })
+    } catch (e) {}
+  }
+
+  if (!validGroups.length) {
+    if (tempFile && fs.existsSync(tempFile)) fs.unlinkSync(tempFile)
+    return hydro.sendText(m.chat, "Tidak ada grup valid yang bisa dipilih.")
+  }
+
+  let msg = generateWAMessageFromContent(m.chat, {
+    viewOnceMessage: {
+      message: {
+        messageContextInfo: { deviceListMetadata: {}, deviceListMetadataVersion: 2 },
+        interactiveMessage: {
+          body: { text: "```Pilih Grup Tujuan ♨️```" },
+          nativeFlowMessage: {
+            buttons: [
+              {
+                name: "single_select",
+                buttonParamsJson: JSON.stringify({
+                  title: "PILIH GRUP",
+                  sections: [
+                    { title: "", rows: validGroups }
+                  ]
+                })
+              }
+            ]
+          }
+        }
+      }
+    }
+  }, { quoted: m }, {});
+
+  await hydro.relayMessage(msg.key.remoteJid, msg.message, {
+    messageId: msg.key.id
+  });
+}
+break
+
+case 'sendstatus': {
+  if (!iAhmad) return replytolak(mess.only.owner)
+  const [groupId, ...contentARR] = args
+  const contentDecoded = JSON.parse(decodeURIComponent(contentARR.join(' ')))
+  let sent = await groupStatus(groupId, contentDecoded)
+  if (contentDecoded?.image?.url && fs.existsSync(contentDecoded.image.url)) fs.unlinkSync(contentDecoded.image.url)
+  if (contentDecoded?.video?.url && fs.existsSync(contentDecoded.video.url)) fs.unlinkSync(contentDecoded.video.url)
+  if (contentDecoded?.audio?.url && fs.existsSync(contentDecoded.audio.url)) fs.unlinkSync(contentDecoded.audio.url)
+  hydro.sendText(m.chat, `Berhasil dikirim ke grup id: ${groupId}`)
+}
+break
 
 //==================================================================
 case 'aivo': {
@@ -32088,81 +32244,70 @@ async function getMod(q) {
 }
 break
 case 'yts': case 'ytsearch': {
-if (!text) return replyhydro(`Example : ${prefix + command} story wa anime`);
-const yts = require('yt-search');
-async function searchYouTube(text) {
-    let search = await yts(text);
-    let teks = `🔎 YouTube Search\n\nHasil Pencarian dari: ${text}\n\n`;
-    let no = 1;
-    let hasilPencarian = search.all.map(v => `${no++}. ${v.title}\n[Link]: ${v.url}`).join('\n\n');
-    teks += hasilPencarian;
-    await hydro.sendMessage(m.chat, { text: teks }, { quoted: m });
-}
-searchYouTube(text);
-          }
-            break
-case 'yts2': case 'ytsearch2': {
-if (!text) return replyhydro(`Example : ${prefix + command} story wa anime`)
-const yts = require('yt-search');
-async function searchYouTube(text) {
-    let search = await yts(text);
-    let teks = `🔎 YouTube Search\n\n Hasil Pencarian dari: ${text}\n\n`;
-    let no = 1;
-    let caption = search.all.map((v, i) => {
-        return {
-            header: "",
-            title: v.title,
-            description: `[ ytmp4 ] Link: ${v.url}`,
-            id: '.ytmp4 ' + v.url
-        };
-    });
+    if (!text) return replyhydro(`Example : ${prefix + command} story wa anime`);
+    const yts = require('yt-search');
+    async function searchYouTube(text) {
+        let search = await yts(text);
+        let groups = search.all.map((v) => {
+            return {
+                title: v.title, 
+                rows: [
+                    {
+                        title: "Download Video",
+                        description: `${v.url}`,
+                        id: '.ytmp4 ' + v.url
+                    },
+                    {
+                        title: "Download Audio",
+                        description: `${v.url}`,
+                        id: '.ytmp3 ' + v.url
+                    }
+                ]
+            };
+        });
 
-    let msg = generateWAMessageFromContent(m.chat, {
-        viewOnceMessage: {
-            message: {
-                messageContextInfo: {
-                    deviceListMetadata: {},
-                    deviceListMetadataVersion: 2
-                },
-                interactiveMessage: {
-                    body: {
-                        text: `🔎 Hasil Pencarian Dari ${text}\nSilahkan Pilih List di bawah ini`
+        let msg = generateWAMessageFromContent(m.chat, {
+            viewOnceMessage: {
+                message: {
+                    messageContextInfo: {
+                        deviceListMetadata: {},
+                        deviceListMetadataVersion: 2
                     },
-                    footer: {
-                        text: botname
-                    },
-                    header: proto.Message.InteractiveMessage.Header.create({
-          ...(await prepareWAMessageMedia({ image: { url: search.all[0].thumbnail } }, { upload: hydro.waUploadToServer })),
-          title: '',
-          gifPlayback: true,
-          subtitle: ownername,
-          hasMediaAttachment: false
-        }),
-                    nativeFlowMessage: {
-                        buttons: [
-                            {
-                                name: "single_select",
-                                buttonParamsJson: JSON.stringify({
-                                    title: "CLICK HERE",
-                                    sections: [
-                                        {
-                                            title: "",
-                                            rows: caption
-                                        }
-                                    ]
-                                })
-                            }
-                        ]
+                    interactiveMessage: {
+                        body: {
+                            text: `🔎 Hasil Pencarian Dari ${text}
+Silahkan Pilih List di bawah ini`
+                        },
+                        footer: {
+                            text: null
+                        },
+                        header: proto.Message.InteractiveMessage.Header.create({
+                            ...(await prepareWAMessageMedia({ image: { url: search.all[0].thumbnail } }, { upload: hydro.waUploadToServer })),
+                            title: '',
+                            gifPlayback: true,
+                            subtitle: ownername,
+                            hasMediaAttachment: false
+                        }),
+                        nativeFlowMessage: {
+                            buttons: [
+                                {
+                                    name: "single_select",
+                                    buttonParamsJson: JSON.stringify({
+                                        title: "PILIH DISINI",
+                                        sections: groups
+                                    })
+                                }
+                            ]
+                        }
                     }
                 }
             }
-        }
-    }, { quoted: m }, {});
-    await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
+        }, { quoted: m }, {});
+        await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
+    }
+    searchYouTube(text);
 }
-searchYouTube(text)
-          }
-            break
+break;
 case 'warcall': {
  if (!m.isGroup) return replytolak(mess.only.group)
 if(!text) return reply(`contoh: \n.warcall kontol`)
@@ -36868,6 +37013,7 @@ let e = String(err)
 process.on('uncaughtException', function (err) {
 console.log('Caught exception: ', err)
 })
+
 
 function autoClearSession() {
     const sessionDir = './furina';
