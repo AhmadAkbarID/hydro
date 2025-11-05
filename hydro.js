@@ -1021,7 +1021,7 @@ hydro.sendMessage(m.chat,
 { text: teks,
 contextInfo:{
 mentionedJid:[sender],
-forwardingScore: 999,
+forwardingScore: 99,
 isForwarded: true,
 forwardedNewsletterMessageInfo: {
       newsletterJid: `${channel}`,
@@ -1193,11 +1193,11 @@ message: {
 interactiveMessage: proto.Message.InteractiveMessage.create({
 contextInfo: {
 mentionedJid: [m.sender],
-forwardingScore: 999999,
+forwardingScore: 99,
 isForwarded: true,
 forwardedNewsletterMessageInfo: {
-newsletterJid: "120363416755002041@newsletter",
-newsletterName: `HYDRO COMMUNITY 📢📦`,
+newsletterJid: global.channel,
+newsletterName: global.channeln,
 serverMessageId: 1
 }
 },
@@ -13743,7 +13743,7 @@ case 'jadizombie': {
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -15893,7 +15893,7 @@ case 'tofigure': case 'tofigur': case 'jadifigure': case 'jadifigur': {
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -15952,7 +15952,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -16067,7 +16067,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -16131,7 +16131,7 @@ case 'edit': case 'editimg': case 'editimage': case 'editgambar': case 'ubahgamb
     let imgData = await qmsg.download();
     const base64Image = imgData.toString("base64");
 
-    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
     const contents = [
       { text: text },
       {
@@ -16194,7 +16194,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -16254,7 +16254,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -25867,7 +25867,7 @@ case 'dro': {
   const mime = require('mime-types');
   gue = m.sender;
 
-  const genAI = new Gemini.GoogleGenerativeAI('AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E');
+  const genAI = new Gemini.GoogleGenerativeAI('AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w');
   const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
   const quoted = m.quoted;
@@ -30683,47 +30683,61 @@ await hydro.sendMessage(m.chat, { video: { url: hasil.data.videoUrl }, caption: 
 
 }
 break
-case 'ttsearch': 
-case 'tiktoksearch': {
-    if (!text) return m.reply('Masukkan kata kunci pencarian!');
-    try {
-        const apiUrl = `https://www.ikyiizyy.my.id/api/search/tiktoksearch?q=${encodeURIComponent(text)}`;
-        const res = await axios.get(apiUrl);
-        if (!res.data.status || !res.data.result || !res.data.result.length) {
-            return m.reply('Gagal menemukan video TikTok!');
-        }
-        const videos = res.data.result;
-        await hydro.sendMessage(m.chat, { react: { text: "⏱️", key: m.key } });
+case 'ttsearch': {
+  if (!text) return replytolak(`Contoh: ${prefix}ttsearch Furina`);
+  try {
+    const { data } = await axios.get(`https://api.siputzx.my.id/api/s/tiktok?query=${encodeURIComponent(text)}`);
+    if (!data.status || !data.data || data.data.length === 0) return replyhydro('Video tidak ditemukan.');
 
-        for (let videoData of videos) {
-            const videoUrl = videoData.play;
-            const audioUrl = videoData.music_info.play;
-            await hydro.sendMessage(m.chat, {
-                video: { url: videoUrl },
-                caption: `🔰 *TIKTOK VIDEO SEARCH* 🔰
-📌 *Judul:* ${videoData.title}
-👤 *Author:* ${videoData.author.nickname} (@${videoData.author.unique_id})
-🎭 *Region:* ${videoData.region}
-⏳ *Durasi:* ${videoData.duration} detik
-📊 *Views:* ${videoData.play_count.toLocaleString()}
-👍 *Likes:* ${videoData.digg_count.toLocaleString()}
-💬 *Komentar:* ${videoData.comment_count.toLocaleString()}
-📎 *URL Video:* ${videoUrl}`,
-                thumbnail: { url: videoData.cover }
-            }, { quoted: m });
-            await hydro.sendMessage(m.chat, {
-                audio: { url: audioUrl },
-                mimetype: 'audio/mp4',
-                fileName: `${videoData.music_info.title}.mp3`
-            }, { quoted: m });
+    const videos = data.data.slice(0, 10);
+
+    let cards = await Promise.all(videos.map(async (item, i) => {
+      const videoData = await prepareWAMessageMedia({ video: { url: item.play } }, { upload: hydro.waUploadToServer });
+      const videoInfo = `*${item.title}*
+      
+🕐 Durasi: ${item.duration}s
+👤 Creator: ${item.author.nickname}
+👍 Likes: ${item.digg_count}
+💬 Komentar: ${item.comment_count}
+📨 Shares: ${item.share_count}`;
+
+      return {
+        header: proto.Message.InteractiveMessage.Header.create({
+          ...videoData,
+          title: '',
+          subtitle: `Video ${i + 1} dari ${videos.length}`,
+          hasMediaAttachment: true
+        }),
+        body: { text: videoInfo },
+        nativeFlowMessage: { buttons: [] }
+      };
+    }));
+
+    let msg = generateWAMessageFromContent(
+      m.chat,
+      {
+        viewOnceMessage: {
+          message: {
+            interactiveMessage: {
+              body: { text: `Hasil pencarian video TikTok untuk *${text}*` },
+              carouselMessage: {
+                cards: cards,
+                messageVersion: 1
+              }
+            }
+          }
         }
-        await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
-    } catch (error) {
-        console.error(`Error: ${error}`);
-        return m.reply(`Terjadi kesalahan: ${error.message}`);
-    }
+      },
+      { quoted: m }
+    );
+
+    await hydro.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+  } catch (err) {
+    console.error(err);
+    replyhydro('Terjadi kesalahan saat mengambil video.');
+  }
 }
-break
+break;
 case 'brat':
 case 'bratgambar':
 case 'bratimg':  {
@@ -31140,7 +31154,7 @@ case 'hytam': {
 
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBXw23l_Dodkj9nutVDBPeFKeb1R5Pip9E");
+    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
 
     const base64Image = imgData.toString("base64");
 
