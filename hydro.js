@@ -21814,15 +21814,15 @@ replyhydro(`*GAME TEKA-TEKI*\n\nWaktu habis!\n𖦹 Jawabannya adalah; *${json.ja
 	break
 	case 'mlstalk':{
 if (!text) return replytolak(`Kirim perintah ${prefix}mlstalk id|zone\nContoh: ${prefix}mlstalk 106281329|2228`)
-var id = q.split('|')[0]
+var idml = q.split('|')[0]
 var zon = q.split('|')[1]
-if (!id) return replytolak('ID wajib di isi')
+if (!idml) return replytolak('ID wajib di isi')
 if (!zon) return replytolak('ZoneID wajib di isi')
-let anu = await fetchJson('https://api.gamestoreindonesia.com/v1/order/prepare/MOBILE_LEGENDS?userId=' + id + '&zoneId=' + zon)
+let anu = await fetchJson('https://api.gamestoreindonesia.com/v1/order/prepare/MOBILE_LEGENDS?userId=' + idml + '&zoneId=' + zon)
 if (!anu.statusCode == "404") return replytolak("Id/zone tidak ditemukan")
     let dataa = anu.data
 replyhydro(`*BERHSAIL DITEMUKAN*
-ID: ${id}
+ID: ${idml}
 Zone: ${zon}
 Nickname: ${dataa}`)
 }
