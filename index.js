@@ -126,6 +126,10 @@ fireInitQueries: true,
 generateHighQualityLinkPreview: true,
 syncFullHistory: true,
 markOnlineOnConnect: true,
+shouldSyncHistoryMessage: msg => {
+        console.log(color(`\u001B[32mMemuat Chat [${msg.progress || 0}%]\u001B[39m`, 'blue'));
+        return !!msg.syncType;
+    },
       getMessage: async (key) => {
             if (store) {
                 const msg = await store.loadMessage(key.remoteJid, key.id)
@@ -157,6 +161,7 @@ try{
 			let reason = new Boom(lastDisconnect?.error)?.output.statusCode
 			if (reason === DisconnectReason.badSession) {
 				console.log(`Bad Session File, Please Delete Session and Scan Again`);
+				exec('rm -rf ./furina')
 				hydroInd()
 			} else if (reason === DisconnectReason.connectionClosed) {
 				console.log("Connection closed, reconnecting....");
@@ -169,6 +174,7 @@ try{
 				hydroInd()
 			} else if (reason === DisconnectReason.loggedOut) {
 				console.log(`Device Logged Out, Please Scan Again And Run.`);
+				exec('rm -rf ./furina')
 				hydroInd();
 			} else if (reason === DisconnectReason.restartRequired) {
 				console.log("Restart Required, Restarting...");
@@ -207,7 +213,7 @@ hydro.newsletterFollow('120363422125048324@newsletter')
 })
 
 await delay(5555) 
-start('2',colors.bold.white('\n\nMenunggu Pesan Baru..'))
+start(`🌊`)
 
 global.hydro = hydro
 
@@ -230,6 +236,7 @@ hydro.ev.on('creds.update', await saveCreds)
     }
     }
     })
+    
 hydro.ev.on('messages.upsert', async chatUpdate => {
 try {
 const kay = chatUpdate.messages[0]

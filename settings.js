@@ -1,7 +1,7 @@
 const chalk = require("chalk")
 const fs = require("fs")
 //aumto presence update
-global.autoTyping = true //auto tying in gc (true to on, false to off)
+global.autoTyping = false //auto tying in gc (true to on, false to off)
 global.autoRecord = false //auto recording (true to on, false to off)
 global.autoblockmorroco = false //auto block 212 (true to on, false to off)
 global.wlcm = false
@@ -12,7 +12,8 @@ global.antispam = false//auto kick spammer (true to on, false to off)
 global.channel = '120363416755002041@newsletter' // GANTI DENGAN ID CHMU KALO ADA
 global.channeln = 'HYDRO COMMUNITY 📢📦' // GANTI DENGAN NAMA CH MU
 //===============SETTING MENU==================\\
-global.thumbnail = 'https://qu.ax/JlBJE.jpg'
+global.thumbnail = 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg'
+global.music = 'https://raw.githubusercontent.com/AhmadAkbarID/media/main/menu.mp3'
 global.ig = '@focabar'
 global.tele = 'miminhydro'
 global.ttowner = '@focabar'
@@ -46,8 +47,8 @@ global.packname = "HYDRO"
 global.author = "\n\n\n\n\nDibuat Oleh Asisten Hydro\nNo hape/wa : 6283867608750"
 global.creator = "6285187063723@s.whatsapp.net"
 //======================== CPANEL FITUR ===========================\\
-global.domain = 'https://danznano.biz.id' // Isi Domain Lu jangan kasih tanda / di akhir link
-global.apikey = 'ptla_XzQKlP026s4Tfbb85TStK30DGPJlNN2mfDXh77HFchb' // Isi Apikey Plta Lu
+global.domain = 'https://panel.hydroarchon.xyz' // Isi Domain Lu jangan kasih tanda / di akhir link
+global.apikey = 'ptla_rBcXGJhiY4FHkclS6xVVcPk5gu5tGMUTfn6PWhEIsyq' // Isi Apikey Plta Lu
 global.capikey = 'ptlc_dHqgrA1oZZ0n6AA4hiT2uCKGKHpKxU5xjL1bxAJPKDx' // Isi Apikey Pltc Lu
 //=========================================================//
 global.apiDigitalOcean = "-"
@@ -61,10 +62,11 @@ global.docker2 = "ghcr.io/cekilpedia/vip:sanzubycekil" //jangan di ubah
 global.eggsnya2 = '15' // id eggs yang dipakai
 global.location2 = '1' // id location
 //===========================//
-global.virtuSimApiKey = 'k6R8Zfw1xGVBdgPvODLWtcie5hNyuS'
+global.virtuSimApiKey = 'k6R8Zfw1xGVBdgPvODLW5hNyuS'
 global.domainotp = "https://claudeotp.com/api"
 global.apikeyotp = "a395f97fe99f4fad0e790d10af518b9a"
 global.eggsnya = '15' // id eggs yang dipakai
+global.nodes = '2'
 global.location3 = '1' // id location
 global.tekspushkon = ""
 global.tekspushkonv2 = ""
@@ -72,24 +74,24 @@ global.tekspushkonv3 = ""
 global.tekspushkonv4 = ""
 //===========================//
 global.mess = {
-   wait: "*Permintaanmu sedang diproses 💝*",
+   wait: "*_Tunggu Sebentar.. Bot lagi berenang... 🏊_*",
    success: "Yay! Bot berhasil 🎉",
-   on: "*Yay! Nyala nih! 😝*",
-   off: "*Ahh! Mati deh.. 😴*",
+   on: "Yay! Nyala nih! 😝",
+   off: "Ahh! Mati deh.. 😴",
    query: {
-       text: "*Teksnya mana? Aku kan gabisa baca pikiran kaka 😉*",
-       link: "*Linknya dongg.. Aku gabisa tanpa link 😖*",
+       text: "Teksnya mana? Aku kan gabisa baca pikiran kaka 😉",
+       link: "Linknya dongg.. Aku gabisa tanpa link 😖",
    },
    error: {
-       fitur: "*Whoops!*\n> Eror nih.. laporkan ke owner agar diperbaiki 6285187063723 🙏",
+       fitur: "Whoops! Eror nih.. laporkan ke owner agar diperbaiki 6285187063723 🙏",
    },
    only: {
-       group: "*Eh, Kak! Fitur ini bisanya buat grup nihh 🫂*",
-       private: "*Eh, Kak! Fitur ini cuman bisa dipake chat pribadi! 🌚*",
+       group: "Eh, Kak! Fitur ini bisanya buat grup nihh 🫂",
+       private: "Eh, Kak! Fitur ini cuman bisa dipake chat pribadi! 🌚",
        owner: "Hanya untuk sang *Raja* 👑",
-       admin: "Fitur ini cuman bisa dipake *admin grup* yah! 🥳",
-       badmin: "Waduh! Aku butuh jadi *admin* agar bisa menggunakan fitur ini 🤯",
-       premium: "Kak, ini fitur *premium* loh!\n> Biar bisa jadi premium beli di 6285187063723 agar bisa menggunakan fitur ini 🤫",
+       admin: "Fitur ini cuman bisa dipake admin grup yah! 🥳",
+       badmin: "Waduh! Aku butuh jadi admin agar bisa menggunakan fitur ini 🤯",
+       premium: "Kak, ini fitur premium loh! Biar bisa jadi premium beli di 6285187063723 agar bisa menggunakan fitur ini 🤫",
    }
 }
 //========================================\\

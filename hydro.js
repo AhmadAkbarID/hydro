@@ -143,6 +143,10 @@ function gayaHalah(text) {
         .replace(/money/gi, 'manay')
 }
 
+function generatePin() {
+    return Math.floor(1000 + Math.random() * 9000).toString();
+}
+
 function gayaHilih(text) {
     if (/cingritilitiins|livil|rili|riwird|simikin|siring|birintiriksi|nishikigi chisiti/i.test(text)) {
         return null;
@@ -254,11 +258,11 @@ try {
   // await sleep(2000)  // 1000 = 1 detik
   
         const { type, quotedMsg, mentioned, now, fromMe } = m
-        const body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : '.'
-const bady = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype == 'interactiveResponseMessage') ? appenTextMessage(JSON.parse(m.msg.nativeFlowResponseMessage.paramsJson).id, chatUpdate) : (m.mtype == 'templateButtonReplyMessage') ? appenTextMessage(m.msg.selectedId, chatUpdate) : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ' '
+        const body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : `.`
+const bady = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype == 'interactiveResponseMessage') ? appenTextMessage(JSON.parse(m.msg.nativeFlowResponseMessage.paramsJson).id, chatUpdate) : (m.mtype == 'templateButtonReplyMessage') ? appenTextMessage(m.msg.selectedId, chatUpdate) : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ``
 
 const budy = (typeof m.text == 'string' ? m.text : '')
- const prefix = /[\uD800-\uDBFF][\uDC00-\uDFFF]/gi.test(body) ? body.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/gi)[0] : /^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi.test(body) ? body.match(/^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi)[0] : ''
+ const prefix = /[\uD800-\uDBFF][\uDC00-\uDFFF]/gi.test(body) ? body.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/gi)[0] : /^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi.test(body) ? body.match(/^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi)[0] : ``
 const isSewa = checkSewaGroup(m.chat, sewa)
 async function appenTextMessage(text, chatUpdate) {
 let messages = await generateWAMessage(m.chat, { text: text, mentions: m.mentionedJid }, {
@@ -1219,7 +1223,7 @@ hasMediaAttachment: true,
 //)), 
 // Cara ganti kefoto 
 ...(await prepareWAMessageMedia(
-      { image: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg'}}, 
+      { image: { url: global.thumbnail}}, 
       { upload: hydro.waUploadToServer })),
 }),
 gifPlayback: true,
@@ -4057,7 +4061,7 @@ const bet = {
   ]
 }
 await listbut2(m.chat, teks, bet, m)
-await hydro.sendMessage(from, { audio: { url: 'https://raw.githubusercontent.com/AhmadAkbarID/media/main/menu.mp3'} , mimetype: 'audio/mp4', ptt: false }, { quoted: m })
+await hydro.sendMessage(from, { audio: { url: global.music} , mimetype: 'audio/mp4', ptt: false }, { quoted: m })
 }
 break
 
@@ -13134,51 +13138,6 @@ Id : ${q}
 Nickname : ${data1}`)
 }
 break
-case 'mlstalk': {
-if (!text) return reply(`Contoh penggunaan:\n${prefix + command} id|zona id\n\nEx.\n${prefix + command} 157228049|2241`)
- async function mlstalk(id, zoneId) {
-    return new Promise(async (resolve, reject) => {
-      axios
-        .post(
-          'https://api.duniagames.co.id/api/transaction/v1/top-up/inquiry/store',
-          new URLSearchParams(
-            Object.entries({
-              productId: '1',
-              itemId: '2',
-              catalogId: '57',
-              paymentId: '352',
-              gameId: id,
-              zoneId: zoneId,
-              product_ref: 'REG',
-              product_ref_denom: 'AE',
-            })
-          ),
-          {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-              Referer: 'https://www.duniagames.co.id/',
-              Accept: 'application/json',
-            },
-          }
-        )
-        .then((response) => {
-          resolve(response.data.data.gameDetail)
-        })
-        .catch((err) => {
-          reject(err)
-        })
-    })
-}
-
-var { userName } = await mlstalk(text.split('|')[0], text.split('|')[1]).catch(async _ => await replyhydro("User tidak di temukan"))
-var vf = `*MOBILE LEGENDS STALK*
-
-*ID: ${text.split('|')[0]}*
-*ZONA ID: ${text.split('|')[1]}*
-*Username: ${userName ? userName : "Kosong"}*`
-reply(vf)
-         }
-         break
 case 'npmstalk':{
   reply(mess.wait)
 if (!q) return replyhydro(`Example ${prefix+command} xeonapi`)
@@ -13455,7 +13414,7 @@ contextInfo: {
 externalAdReply: {  
 title: botname,
 body: `${botname}`,
-thumbnailUrl: 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg',
+thumbnailUrl: global.thumbnail,
 sourceUrl: wagc,
 mediaType: 1,
 renderLargerThumbnail: true
@@ -13755,7 +13714,7 @@ case 'jadizombie': {
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
+      model: "gemini-2.5-flash-image",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -15423,7 +15382,7 @@ await replyhydro(`*[ Done ]*`)
             break
 
             case 'delete': case 'del': {
-if (!Ahmad) return replytolak(mess.only.owner)
+if (!isAdmins && !Ahmad) return replytolak('Khusus Admin!!')
 if (!m.quoted) throw false
 let { chat, id } = m.quoted
  hydro.sendMessage(m.chat, { delete: { remoteJid: m.chat, fromMe: false, id: m.quoted.id, participant: m.quoted.sender } })
@@ -15542,24 +15501,31 @@ case 'sulap': {
   if (target === m.sender) return replyhydro('❗ *Kamu tidak bisa mengeluarkan dirimu sendiri!*')
   if (owner.includes(target.split('@')[0])) return replyhydro('❗ *Tidak bisa mengeluarkan owner bot!*')
 
-  // Reaksi awal
   await hydro.sendMessage(m.chat, { react: { text: "🧙", key: m.key } })
-  await replyhydro(`🧙 *Abrakadabra...*\n✨ Persiapkan diri untuk menyaksikan keajaiban!`)
-  await sleep(2000)
 
-  await m.reply(`🌀 *Mengumpulkan kekuatan sihir...*`)
-  await sleep(2000)
+  const sentMsg = await hydro.sendMessage(m.chat, { 
+    text: `🧙 *Abrakadabra...*
+✨ Persiapkan diri untuk menyaksikan keajaiban!` 
+  }, { quoted: m });
 
-  await m.reply(`💫 *Mengarahkan tongkat ke target...*`)
-  await sleep(2000)
+  await sleep(5000)
+  await hydro.sendMessage(m.chat, { text: `🌀 *Mengumpulkan kekuatan sihir...*`, edit: sentMsg.key })
+  
+  await sleep(5000)
+  await hydro.sendMessage(m.chat, { text: `💫 *Mengarahkan tongkat ke target...*`, edit: sentMsg.key })
+  
+  await sleep(5000)
+  await hydro.sendMessage(m.chat, { text: `🎇 *Dalam hitungan 3 detik dia akan menghilang!*
+3️⃣...`, edit: sentMsg.key })
+  
+  await sleep(5000)
+  await hydro.sendMessage(m.chat, { text: `🎇 *Dalam hitungan 3 detik dia akan menghilang!*
+2️⃣...`, edit: sentMsg.key })
+  
+  await sleep(5000)
+  await hydro.sendMessage(m.chat, { text: `🎇 *Dalam hitungan 3 detik dia akan menghilang!*
+1️⃣... 💥`, edit: sentMsg.key })
 
-  await m.reply(`🎇 *Dalam hitungan 3 detik dia akan menghilang!*\n3️⃣...`)
-  await sleep(1000)
-  await replyhydro(`2️⃣...`)
-  await sleep(1000)
-  await replyhydro(`1️⃣... 💥`)
-
-  // Proses kick
   await hydro.groupParticipantsUpdate(m.chat, [target], 'remove')
   await replyhydro(`🎩 *Dan poof! Dia telah menghilang seperti sulap!* ✨`)
 }
@@ -15905,7 +15871,7 @@ case 'tofigure': case 'tofigur': case 'jadifigure': case 'jadifigur': {
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
+      model: "gemini-2.5-flash-image",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -15964,7 +15930,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
+      model: "gemini-2.5-flash-image",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -16079,7 +16045,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
+      model: "gemini-2.5-flash-image",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -16143,7 +16109,7 @@ case 'edit': case 'editimg': case 'editimage': case 'editgambar': case 'ubahgamb
     ];
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
+      model: "gemini-2.5-flash-image",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       }
@@ -16206,7 +16172,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
+      model: "gemini-2.5-flash-image",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -16266,7 +16232,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
+      model: "gemini-2.5-flash-image",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -21846,6 +21812,21 @@ replyhydro(`*GAME TEKA-TEKI*\n\nWaktu habis!\n𖦹 Jawabannya adalah; *${json.ja
 	 ]
 	}
 	break
+	case 'mlstalk':{
+if (!text) return replytolak(`Kirim perintah ${prefix}mlstalk id|zone\nContoh: ${prefix}mlstalk 106281329|2228`)
+var id = q.split('|')[0]
+var zon = q.split('|')[1]
+if (!id) return replytolak('ID wajib di isi')
+if (!zon) return replytolak('ZoneID wajib di isi')
+let anu = await fetchJson('https://api.gamestoreindonesia.com/v1/order/prepare/MOBILE_LEGENDS?userId=' + id + '&zoneId=' + zon)
+if (!anu.statusCode == "404") return replytolak("Id/zone tidak ditemukan")
+    let dataa = anu.data
+replyhydro(`*BERHSAIL DITEMUKAN*
+ID: ${id}
+Zone: ${zon}
+Nickname: ${dataa}`)
+}
+break
 //==================================================================
 case 'tebakbendera2': {
   if (!m.isGroup) return replytolak(mess.only.group)
@@ -28809,6 +28790,7 @@ let f = await fetch(domain + "/api/application/servers", {
 "description": "🏞️ BUYER HYDRO 🏞️\n>|| PANEL NYA DI PAKEK YA BUB >•<",
 "user": usr_id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "/usr/local/bin/${CMD_RUN};",
 "environment": {
@@ -29168,6 +29150,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -29293,6 +29276,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -29415,6 +29399,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -29538,6 +29523,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -29662,6 +29648,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -29786,6 +29773,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -29910,6 +29898,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -30034,6 +30023,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -30158,6 +30148,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -30282,6 +30273,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -30406,6 +30398,7 @@ let f3 = await fetch(domain + "/api/application/servers", {
 "description": " ",
 "user": user.id,
 "egg": parseInt(egg),
+"node": global.nodes,
 "docker_image": "ghcr.io/parkervcp/yolks:nodejs_18",
 "startup": "if [[ -d .git ]] && [[ \${AUTO_UPDATE} == \"1\" ]]; then git pull; fi; if [[ ! -z \${NODE_PACKAGES} ]]; then /usr/local/bin/npm install \${NODE_PACKAGES}; fi; if [[ ! -z \${UNNODE_PACKAGES} ]]; then /usr/local/bin/npm uninstall \${UNNODE_PACKAGES}; fi; if [ -f /home/container/package.json ]; then /usr/local/bin/npm install; fi; /usr/local/bin/\${CMD_RUN}",
 "environment": {
@@ -30515,7 +30508,7 @@ ${prefix + command} 1080 60fps`);
       const buffer = fs.readFileSync(fileOutput);
       await hydro.sendMessage(m.chat, {
         video: buffer,
-        caption: `Video berhasil diubah ke ${res.toUpperCase()} ${fps}FPS`
+        caption: `Video berhasil diubah ke ${res.toUpperCase()} ${fps}FPS\n\n> Tidak berhasil? ipmu blom masuk whitelist\nHubungi:\nt.me/sansdimz\n+62 896-0373-2786`
       }, { quoted: m });
 
       fs.unlinkSync(downloaded);
@@ -31169,7 +31162,7 @@ case 'hytam': {
     ];
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash-exp-image-generation",
+      model: "gemini-2.5-flash-image",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -32812,27 +32805,26 @@ case "lirik": {
     try {
         const result = await lirik(q);
         
-        if (!result) {
-            return replyhydro(`❌ Lirik Untuk *"${q}"* Tidak Ditemukan.\nCoba Gunakan Judul Yang Lebih Spesifik.`);
-        }
-        const maxLength = 1500;
-        let lirikText = result.plainLyrics || result.syncedLyrics || "Lirik Tidak Tersedia";
-        
-        if (lirikText.length > maxLength) {
-            lirikText = lirikText.substring(0, maxLength) + "\n\n... (Lirik Dipotong, Terlalu Panjang)";
+        if (result.error) {
+            return replyhydro(result.error);
         }
         
-        const caption = `*Lirik Lagu ${result.trackName || result.name}*\n\n` +
-                       `Artis : ${result.artistName}\n` +
-                       `Album : ${result.albumName}\n` +
-                       `Durasi : ${Math.floor(result.duration / 60)}:${(result.duration % 60).toString().padStart(2, '0')}\n\n` +
-                       `*Lirik Lagu :*\n${lirikText}`
+        const caption = `┌──「 *Lirik Ditemukan* 」
+│
+│  ◦ *Judul* : ${result.trackName}
+│  ◦ *Artis* : ${result.artistName}
+│  ◦ *Album* : ${result.albumName}
+│  ◦ *Durasi* : ${Math.floor(result.duration / 60)}:${(result.duration % 60).toString().padStart(2, '0')}
+│
+└─────────────────
+
+${result.lyrics}`;
         
         await replyhydro(caption);
         
     } catch (error) {
-        console.error("Error mencari lirik:", error);
-        replytolak(`❌ Gagal mencari lirik: ${error.message}`);
+        console.error("Error di case lirik:", error);
+        replytolak(`❌ Gagal memproses permintaan lirik: ${error.message}`);
     }
 }
 break;
@@ -35380,48 +35372,45 @@ if (!q) return replyhydro("Enter emoji, max 1 emoji, eg?" + ` ${prefix + command
 reply(mess.wait)
 emote(q, "10")
 break
-case 'stalkroblox': case 'robloxstalk': {
+case 'stalkroblox':
+case 'robloxstalk': {
     if (!text) {
-        return replyhydro(`Silakan masukkan username Roblox.\n*Contoh:*\n.robloxstalk Ninja_Noob443`);
+        return replyhydro(`Silakan masukkan username Roblox.
+*Contoh:*
+.robloxstalk Ninja_Noob443`);
     }
 
     try {
         await hydro.sendMessage(m.chat, { react: { text: '🎮', key: m.key } });
 
-        const apiUrl = `https://zenzxz.dpdns.org/stalker/roblox?username=${encodeURIComponent(text)}`;
+        const apiUrl = `https://www.velyn.mom/api/stalker/roblox?apikey=hydroganteng&username=${encodeURIComponent(text)}`;
         const { data } = await axios.get(apiUrl);
-        if (!data.status || !data.success) throw new Error('User tidak ditemukan.');
 
-        const user = data.data.account;
-        const presence = data.data.presence;
-        const stats = data.data.stats;
+        if (data.status !== 200) throw new Error('User tidak ditemukan atau API error.');
+
+        const user = data.data.result;
+        const lastOnline = data.data.lastOnline;
+        const profilePicture = data.data.profileDetails;
         
         const caption = `
 ╭─ • 「 *Roblox Stalk* 」
 │  
-├ 👤 *Username:* ${user.username}
+├ 👤 *Username:* ${user.name}
 ├ 🏷️ *Display Name:* ${user.displayName}
 ├ 📝 *Bio:* ${user.description || 'Tidak ada bio'}
 │  
-├ 📅 *Dibuat:* ${new Date(user.created).toLocaleString()}
+├ 📅 *Dibuat:* ${new Date(user.created).toLocaleString('id-ID')}
 ├ 🚫 *Banned:* ${user.isBanned ? '✅' : '❌'}
 ├ ✅ *Verified:* ${user.hasVerifiedBadge ? '✅' : '❌'}
 │  
-├ 🌐 *Status:* ${presence.isOnline ? '🟢 Online' : '🔴 Offline'}
-├ ⏱️ *Terakhir Online:* ${presence.lastOnline || 'Tidak diketahui'}
-├ 🎮 *Aktivitas Terakhir:* ${presence.recentGame}
-│  
-├ 📊 *Statistik:*
-├ 👥 *Friends:* ${stats.friendCount.toLocaleString()}
-├ 📌 *Followers:* ${stats.followers.toLocaleString()}
-├ 👀 *Following:* ${stats.following.toLocaleString()}
+├ ⏱️ *Terakhir Online:* ${lastOnline && lastOnline !== 'N/A' ? lastOnline : 'Tidak diketahui'}
 │  
 ╰─ •
         `.trim();
 
-        if (user.profilePicture) {
+        if (profilePicture) {
             await hydro.sendMessage(m.chat, {
-                image: { url: user.profilePicture },
+                image: { url: profilePicture },
                 caption: caption
             }, { quoted: m });
         } else {
@@ -35430,10 +35419,10 @@ case 'stalkroblox': case 'robloxstalk': {
 
     } catch (error) {
         console.error(error);
-        replyhydro(`Gagal melakukan stalk pada user *${text}*. Username mungkin salah.`);
+        replyhydro(`Gagal melakukan stalk pada user *${text}*. Username mungkin salah atau tidak valid.`);
     }
-};
-break
+}
+break;
 case 'genshinstalk': {
     if (!text) {
         return replyhydro(`Silakan masukkan UID Genshin Impact.\n*Contoh:*\n.genshinstalk 888091273`);
