@@ -310,7 +310,32 @@ hydro.ev.emit('messages.upsert', msg)
         const isQuotedContact = type === 'extendedTextMessage' && content.includes('contactMessage')
         const isQuotedDocument = type === 'extendedTextMessage' && content.includes('documentMessage')
 
-        const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat).catch(e => {}) : ''
+        store.groupMetadata = store.groupMetadata || {};
+        const invalidMembers = [];
+
+        if (m.isGroup) {
+            for (const [gid, meta] of Object.entries(store.groupMetadata || {})) {
+                if (!meta.participants) continue;
+                const missing = meta.participants.filter(p => !p.jid && !p.lid && p.id);
+                if (missing.length) {
+                    invalidMembers.push({
+                        groupId: gid,
+                        groupName: meta.subject || "(No Subject)",
+                        members: missing
+                    });
+                }
+            }
+
+            if (Object.keys(store.groupMetadata).length === 0 || invalidMembers.length >= 1) {
+                store.groupMetadata = await hydro.groupFetchAllParticipating();
+            }
+        }
+
+        const groupMetadata = m.isGroup
+            ? store.groupMetadata[m.chat]
+            || (store.groupMetadata[m.chat] = await hydro.groupMetadata(m.chat).catch(e => {}))
+            : '';
+
         const groupName = m.isGroup ? groupMetadata.subject : ''
         const participants = m.isGroup ? await groupMetadata.participants : ''
 
