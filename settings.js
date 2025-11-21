@@ -9,43 +9,42 @@ global.autokickmorroco = false //auto kick 212 (true to on, false to off)
 global.antispam = false//auto kick spammer (true to on, false to off)
 
 //===============SETTING MENU==================\\
-global.channel = '120363416755002041@newsletter' // GANTI DENGAN ID CHMU KALO ADA
-global.channeln = 'HYDRO COMMUNITY 📢📦' // GANTI DENGAN NAMA CH MU
+global.channel = '120363403040650621@newsletter' // GANTI DENGAN ID CHMU KALO ADA
+global.channeln = 'DAFZMODZ HOSTING NEEDS⚡' // GANTI DENGAN NAMA CH MU
 //===============SETTING MENU==================\\
-global.thumbnail = 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg'
-global.music = 'https://raw.githubusercontent.com/AhmadAkbarID/media/main/menu.mp3'
-global.ig = '@focabar'
-global.tele = 'miminhydro'
-global.ttowner = '@focabar'
-global.ownername = 'FocaBars'
-global.owner = ['6285187063723'] // SETTING JUGA DI FOLDER DATABASE 
-global.ownernomer = '6285187063723'
+global.thumbnail = 'https://files.catbox.moe/mmp46j.jpg'
+global.ig = '@dapaboys_'
+global.tele = 't.me/dafzskibidi'
+global.ttowner = '@ddap15'
+global.ownername = 'dapdir garis keras😝'
+global.owner = ['6283848734632'] // SETTING JUGA DI FOLDER DATABASE 
+global.ownernomer = '6283848734632'
 global.socialm = 'GitHub: -'
 global.location = 'Indonesia' 
 //========================setting Payment=====================\\
-global.nodana = '085187063723' // KOSONG KAN JIKA TIDAK ADA
-global.nogopay = '085187063723' // KOSONG KAN JIKA TIDAK ADA 
-global.noovo = false // KOSONG KAN JIKA TIDAK ADA
+global.nodana = '085361727445' // KOSONG KAN JIKA TIDAK ADA
+global.nogopay = '081343938035' // KOSONG KAN JIKA TIDAK ADA 
+global.noovo = '085361727445' // KOSONG KAN JIKA TIDAK ADA
 //==================setting Payment Name===========================\\
-global.andana = 'foca / Ahmad Akbar' // KOSONG KAN JIKA TIDAK ADA
-global.angopay = 'Ahmad Akbar' // KOSONG KAN JIKA TIDAK ADA
-global.anovo = false // KOSONG KAN JIKA TIDAK ADA
+global.andana = 'S****tri' // KOSONG KAN JIKA TIDAK ADA
+global.angopay = 'D**fa' // KOSONG KAN JIKA TIDAK ADA
+global.anovo = 'S****tri' // KOSONG KAN JIKA TIDAK ADA
 //==================setting bot===========================\\
-global.botname = "Asisten Hydro 🌊"
-global.ownernumber = '6285187063723'
-global.botnumber = '6283867608750'
-global.ownername = 'FocaBars'
-global.ownerNumber = ["6285187063723@s.whatsapp.net"]
+global.botname = "𝔡𝔞𝔭𝔡𝔦𝔯 𝔴𝔥𝔞𝔱𝔰𝔞𝔭𝔭 𝔟𝔬𝔱ッ"
+global.ownernumber = '6283848734632'
+global.botnumber = '6282164962732'
+global.ownername = 'DafzModz'
+global.ownerNumber = ["6283848734632@s.whatsapp.net"]
 global.ownerweb = ""
 global.websitex = ""
-global.wagc = "https://chat.whatsapp.com/LqCKICVcCgiJcrxttSRci3"
-global.saluran = "https://whatsapp.com/channel/0029VbAYRBf4o7qSa74h2m0t"
+global.wagc = "https://chat.whatsapp.com/J8do8ie8TWe08BDAzJe0qA"
+global.saluran = "https://whatsapp.com/channel/0029Vb7ItNu7YScuVEepN23Z"
 global.themeemoji = '🏞️'
-global.wm = "Asisten Hydro ||| WhatsApps Bots"
-global.botscript = 'Dah gede nyari sc 🗿🖕' //script link
-global.packname = "HYDRO"
-global.author = "\n\n\n\n\nDibuat Oleh Asisten Hydro\nNo hape/wa : 6283867608750"
-global.creator = "6285187063723@s.whatsapp.net"
+global.wm = "© POWERD BY BOT DAPDIR⚡"
+global.botscript = 'Dah gede nyari sc anj🗿🖕' //script link
+global.packname = "DAFZMODZ"
+global.author = "\n\n\n\n\nDibuat Oleh DafzModz\nNo hape/wa : 6283848734632"
+global.creator = "6283848734632@s.whatsapp.net"
 //======================== CPANEL FITUR ===========================\\
 global.domain = 'https://panel.hydroarchon.xyz' // Isi Domain Lu jangan kasih tanda / di akhir link
 global.apikey = 'ptla_rBcXGJhiY4FHkclS6xVVcPk5gu5tGMUTfn6PWhEIsyq' // Isi Apikey Plta Lu
