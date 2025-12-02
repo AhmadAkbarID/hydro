@@ -44,6 +44,9 @@ const fg = require('api-dylux')
 const { addSewaGroup, checkSewaGroup, getSewaPosition, toMs, msToDate, getGcName, expiredCheck, remindSewa } = require('./lib/sewa');
 const { ttsHololive, hololiveModels } = require('./scrape/holotts');
 const { msgFilter } = require('./lib/antispam')
+const nazekey = global.nz[Math.floor(Math.random() * global.nz.length)]
+const reactkey = global.frch[Math.floor(Math.random() * global.frch.length)]
+const geminikey = global.aiso[Math.floor(Math.random() * global.aiso.length)]
 const { ytDonlodMp3, ytDonlodMp4, ytPlayMp3, ytPlayMp4, ytSearch } = require('./scrape/yt')
 const anon = require('./lib/menfess') 
 const scp1 = require('./scrape/scraper') 
@@ -166,13 +169,6 @@ function gayaHilih(text) {
         .replace(/money/gi, 'miniy')
 }
 
-function saveWhitelist() {
-    fs.writeFileSync('./database/whitelist.json', JSON.stringify(whitelist, null, 2))
-}
-
-function saveWarnLinkCh() {
-    fs.writeFileSync('./database/antilinkch-warning.json', JSON.stringify(warnlinkch, null, 2));
-}
 let ntilinkall =JSON.parse(fs.readFileSync('./database/antilinkall.json'))
 let ntilinktwt =JSON.parse(fs.readFileSync('./database/antilinktwitter.json'))
 let ntilinktt =JSON.parse(fs.readFileSync('./database/antilinktiktok.json'))
@@ -183,10 +179,6 @@ let ntilinkytch =JSON.parse(fs.readFileSync('./database/antilinkytchannel.json')
 let ntilinkytvid =JSON.parse(fs.readFileSync('./database/antilinkytvideo.json')) 
 let antitagsw = JSON.parse(fs.readFileSync('./database/antitagsw.json'))
 let warnTagSw = JSON.parse(fs.readFileSync('./database/antitagsw-warning.json'))
-
-function saveAntitagWarning() {
-    fs.writeFileSync('./database/antitagsw-warning.json', JSON.stringify(warnTagSw, null, 2));
-}
 let openaigc = JSON.parse(fs.readFileSync('./database/openaigc.json'))
 let set_welcome_db = JSON.parse(fs.readFileSync('./database/set_welcome.json'));
 let set_left_db = JSON.parse(fs.readFileSync('./database/set_left.json'));
@@ -197,8 +189,18 @@ let set_done = JSON.parse(fs.readFileSync('./database/set_done.json'))
 let db_respon_list = JSON.parse(fs.readFileSync('./database/list-message.json'));
 let autoCloseDB = JSON.parse(fs.readFileSync('./database/autoco.json'));
 let autoCloseLastAction = {}; // Penanda eksekusi terakhir grup
+function saveWhitelist() {
+    fs.writeFileSync('./database/whitelist.json', JSON.stringify(whitelist, null, 2))
+}
+
+function saveWarnLinkCh() {
+    fs.writeFileSync('./database/antilinkch-warning.json', JSON.stringify(warnlinkch, null, 2));
+}
 function saveAutoClose() {
     fs.writeFileSync('./database/autoco.json', JSON.stringify(autoCloseDB, null, 2));
+}
+function saveAntitagWarning() {
+    fs.writeFileSync('./database/antitagsw-warning.json', JSON.stringify(warnTagSw, null, 2));
 }
 const DB_FILE = './database/database.json';
 function loadDB() {
@@ -259,10 +261,10 @@ try {
   
         const { type, quotedMsg, mentioned, now, fromMe } = m
         const body = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : `.`
-const bady = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype == 'interactiveResponseMessage') ? appenTextMessage(JSON.parse(m.msg.nativeFlowResponseMessage.paramsJson).id, chatUpdate) : (m.mtype == 'templateButtonReplyMessage') ? appenTextMessage(m.msg.selectedId, chatUpdate) : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ``
+const bady = (m.mtype === 'conversation') ? m.message.conversation : (m.mtype == 'imageMessage') ? m.message.imageMessage.caption : (m.mtype == 'videoMessage') ? m.message.videoMessage.caption : (m.mtype == 'extendedTextMessage') ? m.message.extendedTextMessage.text : (m.mtype == 'buttonsResponseMessage') ? m.message.buttonsResponseMessage.selectedButtonId : (m.mtype == 'listResponseMessage') ? m.message.listResponseMessage.singleSelectReply.selectedRowId : (m.mtype == 'templateButtonReplyMessage') ? m.message.templateButtonReplyMessage.selectedId : (m.mtype == 'interactiveResponseMessage') ? appenTextMessage(JSON.parse(m.msg.nativeFlowResponseMessage.paramsJson).id, chatUpdate) : (m.mtype == 'templateButtonReplyMessage') ? appenTextMessage(m.msg.selectedId, chatUpdate) : (m.mtype === 'messageContextInfo') ? (m.message.buttonsResponseMessage?.selectedButtonId || m.message.listResponseMessage?.singleSelectReply.selectedRowId || m.text) : ' '
 
-const budy = (typeof m.text == 'string' ? m.text : '')
- const prefix = /[\uD800-\uDBFF][\uDC00-\uDFFF]/gi.test(body) ? body.match(/[\uD800-\uDBFF][\uDC00-\uDFFF]/gi)[0] : /^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi.test(body) ? body.match(/^[°•π÷×¶∆£¢€¥®™+✓_=|~!?@()#,'"*+÷/\%^&.©^]/gi)[0] : ``
+let budy = m.message.conversation || (m.message.extendedTextMessage && m.message.extendedTextMessage.text) || ``
+ const prefix = '.'
 const isSewa = checkSewaGroup(m.chat, sewa)
 async function appenTextMessage(text, chatUpdate) {
 let messages = await generateWAMessage(m.chat, { text: text, mentions: m.mentionedJid }, {
@@ -310,7 +312,32 @@ hydro.ev.emit('messages.upsert', msg)
         const isQuotedContact = type === 'extendedTextMessage' && content.includes('contactMessage')
         const isQuotedDocument = type === 'extendedTextMessage' && content.includes('documentMessage')
 
-        const groupMetadata = m.isGroup ? await hydro.groupMetadata(m.chat).catch(e => {}) : ''
+        store.groupMetadata = store.groupMetadata || {};
+        const invalidMembers = [];
+
+        if (m.isGroup) {
+            for (const [gid, meta] of Object.entries(store.groupMetadata || {})) {
+                if (!meta.participants) continue;
+                const missing = meta.participants.filter(p => !p.jid && !p.lid && p.id);
+                if (missing.length) {
+                    invalidMembers.push({
+                        groupId: gid,
+                        groupName: meta.subject || "(No Subject)",
+                        members: missing
+                    });
+                }
+            }
+
+            if (Object.keys(store.groupMetadata).length === 0 || invalidMembers.length >= 1) {
+                store.groupMetadata = await hydro.groupFetchAllParticipating();
+            }
+        }
+
+        const groupMetadata = m.isGroup
+            ? store.groupMetadata[m.chat]
+            || (store.groupMetadata[m.chat] = await hydro.groupMetadata(m.chat).catch(e => {}))
+            : '';
+
         const groupName = m.isGroup ? groupMetadata.subject : ''
         const participants = m.isGroup ? await groupMetadata.participants : ''
 
@@ -356,7 +383,6 @@ hydro.ev.emit('messages.upsert', msg)
         const Antilinkch = m.isGroup ? ntlinkch.includes(m.chat) : false
         const Antilinkgc = m.isGroup ? ntlinkgc.includes(m.chat) : false
         const reactpsn = false
-        const antibot = true
         const AntiLinkYoutubeVid = m.isGroup ? ntilinkytvid.includes(from) : false
         const AntiLinkYoutubeChannel = m.isGroup ? ntilinkytch.includes(from) : false
         const isMute= mute.includes(m.chat) ? true : false
@@ -694,29 +720,6 @@ console.error(err)
 if (m.isGroup && isMute) {
 if (!isAdmins && !Ahmad) return
 }
-if (!m.key.fromMe && !hydro.public) {
-    if (!m.isGroup && db.settings[botNumber].onlygrub) {
-        return hydro.sendMessage(m.chat, {
-            text: `Bots sedang dalam Group Only\nSilahkan Bergabung\nhttps://chat.whatsapp.com/LqCKICVcCgiJcrxttSRci3`,
-            contextInfo: {
-                externalAdReply: {
-                    title: "Join Group Hydro",
-                    body: "Klik untuk bergabung dengan grup resmi",
-                    thumbnailUrl: 'https://i.ibb.co/8dFd0yY/group.jpg',
-                    sourceUrl: 'https://chat.whatsapp.com/LqCKICVcCgiJcrxttSRci3',
-                    mediaType: 1,
-                    showAdAttribution: false,
-                    renderLargerThumbnail: true
-                }
-            }
-        }, { quoted: m });
-    }
-
-    return; // Stop proses kalau bukan dari bot dan bot non-public
-}
-if (db.settings[botNumber].autoread) {
-            hydro.readMessages([m.key])
-}
 if (m.message && m.isGroup) {
     console.log(`
 ┌────────── [ GROUP CHAT LOG ] ──────────┐
@@ -989,7 +992,6 @@ async function groupStatus(jid, content) {
   });
   return m;
 }
-
 async function sendhydroMessage(chatId, message, options = {}){
     let generate = await generateWAMessage(chatId, message, options)
     let type2 = getContentType(generate.message)
@@ -1769,31 +1771,6 @@ async function getAccessToken() {
         console.error('Error getting Spotify access token:', error);
         throw 'An error occurred while obtaining Spotify access token.';
     }
-}
-async function spotifydl(url) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const { data } = await axios.get(`https://api.siputzx.my.id/api/d/spotifyv2?url=${encodeURIComponent(url)}`);
-
-      if (!data.status || !data.data) {
-        return reject(new Error("Gagal mengambil data dari API"));
-      }
-
-      const result = {
-        title: data.data.title,
-        description: data.data.description,
-        songTitle: data.data.songTitle,
-        artist: data.data.artist,
-        coverImage: data.data.coverImage,
-        mp3DownloadLink: data.data.mp3DownloadLink,
-        coverDownloadLink: data.data.coverDownloadLink
-      };
-
-      resolve(result);
-    } catch (error) {
-      reject(error);
-    }
-  });
 }
 async function searchSpotify(query) {
     try {
@@ -3433,6 +3410,14 @@ if (budy.toLowerCase() == jawaban) {
  delete tebakkalimat[m.sender.split('@')[0]]
 } else console.log('*Jawaban Salah!*')
 }
+function generateSN(length = 8) { 
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let randomPart = '';
+    for (let i = 0; i < length; i++) {
+        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return 'SN-' + randomPart;
+}
 
 //=========================================//
 hydro.tebaklirik = hydro.tebaklirik ? hydro.tebaklirik : {}  
@@ -3506,6 +3491,26 @@ let msg = {
 hydro.ev.emit('messages.upsert', msg)
 }
  
+if (isCmd && !m.key.fromMe) {
+    const user = global.db.users[m.sender]
+    const restrictedCmds = ['menu', 'allmenu']
+    
+    if (user && !user.registered && restrictedCmds.includes(command)) {
+        return hydro.sendMessage(m.chat, {
+            text: `⚠️ Kamu belum terdaftar!\nSilakan melakukan *${prefix}daftar nama,umur*`,
+            contextInfo: {
+                externalAdReply: {
+                    title: "Akses Ditolak",
+                    body: `Powered By ${botname}`,
+                    thumbnailUrl: global.thumbnail,
+                    mediaType: 1,
+                    showAdAttribution: false,
+                    renderLargerThumbnail: true
+                }
+            }
+        }, { quoted: m })
+    }
+}
 // Tebakan ML
 if (global.tebakanml[m.sender]) {
     let jawaban = global.tebakanml[m.sender].jawaban
@@ -3663,6 +3668,7 @@ case 'stopjadibot': {
 }
 break;
 case 'jadibot': {
+if (!isPrem) return replytolak(mess.only.premium)
  jadibot(hydro, m, m.chat)
 }
 break
@@ -11450,6 +11456,57 @@ case  'd18': {
              else reply(`gagal membuat subdomain\nMsg: ${e['error']}`)
            }); }
 break
+case 'daftar': {
+    const user = global.db.users[m.sender]
+    if (user.registered === true) return replytolak(`Kamu sudah terdaftar sebagai ${user.name}`)
+    if (!text || !text.includes(',')) return replytolak(`Contoh penggunaan: *${prefix}daftar nama,umur*`)
+
+    const [nama, umurStr] = text.split(',').map(v => v.trim())
+
+    if (!nama) return replytolak(`❌ Nama tidak boleh kosong!`)
+    if (nama.length < 4) return replytolak(`⚠️ Nama terlalu pendek!`)
+    if (!/^[a-zA-Z\s]+$/.test(nama)) return replytolak(`⚠️ Nama tidak valid`)
+
+    if (!umurStr) return replytolak(`❌ Format salah:\nContoh penggunaan: *${prefix}daftar nama,umur*`)
+    if (isNaN(umurStr)) return replytolak('⚠️ Umur harus berupa angka!')
+
+    const umur = parseInt(umurStr)
+    if (umur < 10) return reply(`Masa si umur kamu ${umur}? 🤔`)
+    if (umur > 60) return reply(`Tua banget 😂, yakin umurnya ${umur}?`)
+
+    const kodeReg = generateSN(8)
+    const tanggalDaftar = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })
+
+    user.name = nama
+    user.age = umur
+    user.sn = kodeReg
+    user.regTime = tanggalDaftar
+    user.registered = true
+
+    let caption = `
+╭─── *REGISTRASI BERHASIL*
+│ Nama: ${nama}
+│ Umur: ${umur}
+│ SN: ${kodeReg}
+│ Terdaftar pada: ${tanggalDaftar}
+╰────────────────`
+
+    await hydro.sendMessage(m.chat, {
+        text: caption,
+        contextInfo: {
+            mentionedJid: [m.sender],
+            externalAdReply: {
+                title: "✅ REGISTRASI BERHASIL",
+                body: "",
+                thumbnailUrl: global.thumbnail,
+                sourceUrl: "",
+                mediaType: 1,
+                renderLargerThumbnail: true
+            }
+        }
+    })
+}
+break
 case  'd19': {
         if (!Ahmad) return replytolak(mess.only.owner)
            function subDomain1(host, ip) {
@@ -13279,37 +13336,33 @@ case 'tt': {
 }
 break;
 //==============================================
-case 'instagram': case 'igdl': case 'ig': case 'igvideo': case 'igimage': case 'igvid': case 'igimg': {
-	  if (!text) return replyhydro(`Anda perlu memberikan URL video, postingan, reel, gambar Instagram apa pun`)
-	  hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }})
-try {
-      const data = await fetchJson(`https://api.siputzx.my.id/api/d/igdl?url=${encodeURIComponent(text)}`)
-      if (data && data.data && data.data.length > 0) {
-          let sudahDikirim = false; 
-            for (const item of data.data) {
-              if (sudahDikirim) break;
-                const hasil = item.url;
-                const cap = `Ini dia kak🔥`;
-                if (hasil.includes('dst-jpg') || hasil.includes('.jpg') || hasil.includes('.jpeg') || hasil.includes('image')) {
-                    await hydro.sendMessage(m.chat, { 
-                        image: { url: hasil }, 
-                        caption: cap 
-                    }, { quoted: m });
-                    sudahDikirim = true;
+case 'instagram':
+case 'igdl':
+case 'ig':
+case 'igvideo':
+case 'igimage':
+case 'igvid':
+case 'igimg': {
+    if (!text) return replyhydro('Anda perlu memberikan URL video, postingan, reel, gambar Instagram apa pun')
+    hydro.sendMessage(m.chat, { react: { text: '⏱️', key: m.key }})
+    try {
+        const data = await fetchJson(`https://api.naze.biz.id/download/instagram?url=${encodeURIComponent(text)}&apikey=${nazekey}`)
+        if (data.success && data.result && data.result.urls && data.result.urls.length > 0) {
+            const igCap = `Ini dia kak🔥`
+            for (const item of data.result.urls) {
+                if (item.is_video) {
+                    await hydro.sendMessage(m.chat, { video: { url: item.url }, caption: igCap }, { quoted: m })
                 } else {
-                    await hydro.sendMessage(m.chat, { 
-                        video: { url: hasil }, 
-                        caption: cap 
-                    }, { quoted: m });
-                } 
+                    await hydro.sendMessage(m.chat, { image: { url: item.url }, caption: igCap }, { quoted: m })
+                }
             }
         } else {
-            console.log('Error: Tidak ada media yang ditemukan di result');
-            await hydro.sendMessage(m.chat, { text: 'Maaf, media tidak ditemukan.' }, { quoted: m });
+            console.log('Error: Tidak ada media yang ditemukan di result')
+            await hydro.sendMessage(m.chat, { text: 'Maaf, media tidak ditemukan.' }, { quoted: m })
         }
     } catch (error) {
-        console.error('Gagal fetch media IG:', error);
-        await hydro.sendMessage(m.chat, { text: 'Terjadi kesalahan saat mengambil media.' }, { quoted: m });
+        console.error('Gagal fetch media IG:', error)
+        await hydro.sendMessage(m.chat, { text: 'Terjadi kesalahan saat mengambil media.' }, { quoted: m })
     }
 }
 break
@@ -13702,7 +13755,7 @@ case 'jadizombie': {
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
+    let genAI = new GoogleGenerativeAI(geminikey);
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -13714,7 +13767,7 @@ case 'jadizombie': {
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image",
+      model: "gemini-flash-lite-latest",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -13994,12 +14047,31 @@ case 'readviewonce': {
 }
 break;
 case 'join': {
-if (!Ahmad) return replytolak(mess.only.owner)
-if (!text) return replyhydro(`Contoh ${prefix+command} linkgc`)
-if (!isUrl(args[0]) && !args[0].includes('whatsapp.com')) return replyhydro('Link Invalid!')
-let result = args[0].split('https://chat.whatsapp.com/')[1]
-await hydro.groupAcceptInvite(result)
-await replyhydro(`*[ Done ]*`)
+    if (!Ahmad) return replytolak(mess.only.owner)
+    if (!text) return replyhydro(`Contoh penggunaan:\n${prefix + command} https://chat.whatsapp.com/xxx`)
+
+    const isUrl = (url) => url.match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/gi)
+
+    if (!isUrl(args[0]) && !args[0].includes('whatsapp.com')) return replyhydro('Link Invalid!')
+
+    let result = args[0].split('https://chat.whatsapp.com/')[1]
+    if (!result) return replyhydro('Link Invalid ❗')
+
+    replyhydro(mess.wait)
+
+    await hydro.groupAcceptInvite(result)
+        .then((res) => {
+            replyhydro('*[ Done ]* Berhasil join ke grup!')
+        })
+        .catch((err) => {
+            let errorStr = String(err)
+            if (errorStr.includes('400')) return replyhydro('Grup Tidak Di Temukan❗')
+            if (errorStr.includes('401')) return replyhydro('Bot Di Kick Dari Grup Tersebut❗')
+            if (errorStr.includes('409')) return replyhydro('Bot Sudah Join Di Grup Tersebut❗')
+            if (errorStr.includes('410')) return replyhydro('Url Grup Telah Di Setel Ulang❗')
+            if (errorStr.includes('500')) return replyhydro('Grup Penuh❗')
+            replyhydro('Gagal Join, pastikan link benar dan valid.')
+        })
 }
 break
 case 'poll': {
@@ -14239,105 +14311,198 @@ case 'listgc': {
 case 'ping':
 case 'statusbot':
 case 'botstatus': {
-  const { performance } = await import('perf_hooks')
-  const os = await import('os')
-  const fs = await import('fs')
-  const moment = (await import('moment-timezone')).default
+    const { performance } = require('perf_hooks')
+    const os = require('os')
+    const fs = require('fs')
+    const moment = require('moment-timezone')
+    const QuickChart = require('quickchart-js') 
 
-  const timestamp = performance.now()
-  const latency = performance.now() - timestamp
+    let timestamp = m.messageTimestamp ? (typeof m.messageTimestamp === 'number' ? m.messageTimestamp : m.messageTimestamp.low) : (Date.now() / 1000);
+    let now = Date.now();
+    let latensi = now - (timestamp * 1000);
 
-  let osName = 'Unknown OS'
-  try {
-    if (process.platform === 'linux' && fs.existsSyncSync('/etc/os-release')) {
-      const osInfo = fs.readFileSync('/etc/os-release', 'utf8')
-      const nameMatch = osInfo.match(/^NAME="?(.+?)"?$/m)
-      const verMatch = osInfo.match(/^VERSION="?(.+?)"?$/m)
-      const name = nameMatch ? nameMatch[1].replace(/"/g, '') : ''
-      const version = verMatch ? verMatch[1].replace(/"/g, '') : ''
-      osName = `${name} ${version}`.trim()
-    } else if (process.platform === 'win32') osName = 'Windows'
-    else if (process.platform === 'darwin') osName = 'macOS'
-    else osName = os.type()
-  } catch {
-    osName = os.type()
-  }
+    const startProcess = performance.now()
 
-  const runtimeFormat = (seconds) => {
-    const d = Math.floor(seconds / (3600 * 24))
-    const h = Math.floor((seconds % (3600 * 24)) / 3600)
-    const m = Math.floor((seconds % 3600) / 60)
-    const s = Math.floor(seconds % 60)
-    return `*${d}* ☀️ Hari\n│ *${h}* 🕐 Jam\n│ *${m}* ⏰ Menit\n│ *${s}* ⏱️ Detik`
-  }
-
-  const formatp = (bytes) => `${(bytes / 1024 / 1024 / 1024).toFixed(2)} GB`
-
-  const getCpuUsage = async (delay = 800) => {
-    const start = os.cpus()
-    await new Promise(r => setTimeout(r, delay))
-    const end = os.cpus()
-    let idleDiff = 0, totalDiff = 0
-
-    for (let i = 0; i < start.length; i++) {
-      const s = start[i].times
-      const e = end[i].times
-      const idle = e.idle - s.idle
-      const total = Object.keys(s).reduce((a, t) => a + (e[t] - s[t]), 0)
-      idleDiff += idle
-      totalDiff += total
+    let osName = 'Unknown OS'
+    try {
+        if (process.platform === 'linux' && fs.existsSync('/etc/os-release')) {
+            const osInfo = fs.readFileSync('/etc/os-release', 'utf8')
+            const nameMatch = osInfo.match(/^NAME="?(.+?)"?$/m)
+            const verMatch = osInfo.match(/^VERSION="?(.+?)"?$/m)
+            const name = nameMatch ? nameMatch[1].replace(/"/g, '') : ''
+            const version = verMatch ? verMatch[1].replace(/"/g, '') : ''
+            osName = `${name} ${version}`.trim()
+        } else if (process.platform === 'win32') osName = 'Windows'
+        else if (process.platform === 'darwin') osName = 'macOS'
+        else osName = os.type()
+    } catch {
+        osName = os.type()
     }
-    return 100 - Math.round((idleDiff / totalDiff) * 100)
-  }
 
-  const cpuUsagePercent = await getCpuUsage()
-
-  const cpus = os.cpus()
-  const avgSpeed = cpus.reduce((a, c) => a + c.speed, 0) / cpus.length
-  const cpuModel = cpus[0]?.model?.trim() || 'Unknown CPU'
-  const cpuCore = cpus.length
-
-  const mem = os.totalmem()
-  const free = os.freemem()
-
-  let swapTotal = 0, swapFree = 0
-  try {
-    if (fs.existsSync('/proc/meminfo')) {
-      const info = fs.readFileSync('/proc/meminfo', 'utf8')
-      const swapTotalMatch = info.match(/^SwapTotal:\s+(\d+)/m)
-      const swapFreeMatch = info.match(/^SwapFree:\s+(\d+)/m)
-      swapTotal = swapTotalMatch ? parseInt(swapTotalMatch[1]) * 1024 : 0
-      swapFree = swapFreeMatch ? parseInt(swapFreeMatch[1]) * 1024 : 0
+    const rtimage = (seconds) => {
+        const d = Math.floor(seconds / (3600 * 24))
+        const h = Math.floor((seconds % (3600 * 24)) / 3600)
+        const m = Math.floor((seconds % 3600) / 60)
+        const s = Math.floor(seconds % 60)
+        return `*${d}* Hari *${h}* Jam *${m}* Menit`
     }
-  } catch {}
+    
+    const runtimeFormat = (seconds) => {
+        const d = Math.floor(seconds / (3600 * 24))
+        const h = Math.floor((seconds % (3600 * 24)) / 3600)
+        const m = Math.floor((seconds % 3600) / 60)
+        const s = Math.floor(seconds % 60)
+        return `*${d}* ☀️ Hari\n│ *${h}* 🕐 Jam\n│ *${m}* ⏰ Menit\n│ *${s}* ⏱️ Detik`
+    }
 
-  const totalMemAll = mem + swapTotal
-  const usedMemAll = (mem - free) + (swapTotal - swapFree)
-  const percentUsed = totalMemAll > 0 ? (usedMemAll / totalMemAll) * 100 : 0
+    const formatp = (bytes) => `${(bytes / 1024 / 1024 / 1024).toFixed(2)} GB`
 
-  const runtimeText = runtimeFormat(process.uptime())
-  const waktu = moment().tz("Asia/Jakarta").format('HH:mm:ss')
-  const tanggal = moment().tz("Asia/Jakarta").locale("id").format('dddd, D MMMM YYYY')
+    const getCpuUsage = async (delay = 100) => {
+        const start = os.cpus()
+        await new Promise(r => setTimeout(r, delay))
+        const end = os.cpus()
+        let idleDiff = 0, totalDiff = 0
 
-  let pingIcon = latency > 500 ? "🔴" : latency > 200 ? "🟡" : "🟢"
+        for (let i = 0; i < start.length; i++) {
+            const s = start[i].times
+            const e = end[i].times
+            const idle = e.idle - s.idle
+            const total = Object.keys(s).reduce((a, t) => a + (e[t] - s[t]), 0)
+            idleDiff += idle
+            totalDiff += total
+        }
+        return 100 - Math.round((idleDiff / totalDiff) * 100)
+    }
 
-  const response = `
+    const cpuUsagePercent = await getCpuUsage()
+
+    const cpus = os.cpus()
+    const avgSpeed = cpus.reduce((a, c) => a + c.speed, 0) / cpus.length
+    const cpuModel = cpus[0]?.model?.trim() || 'Unknown CPU'
+    const cpuCore = cpus.length
+
+    const mem = os.totalmem()
+    const free = os.freemem()
+
+    let swapTotal = 0, swapFree = 0
+    try {
+        if (fs.existsSync('/proc/meminfo')) {
+            const info = fs.readFileSync('/proc/meminfo', 'utf8')
+            const swapTotalMatch = info.match(/^SwapTotal:\s+(\d+)/m)
+            const swapFreeMatch = info.match(/^SwapFree:\s+(\d+)/m)
+            swapTotal = swapTotalMatch ? parseInt(swapTotalMatch[1]) * 1024 : 0
+            swapFree = swapFreeMatch ? parseInt(swapFreeMatch[1]) * 1024 : 0
+        }
+    } catch {}
+
+    const totalMemAll = mem + swapTotal
+    const usedMemAll = (mem - free) + (swapTotal - swapFree)
+    const percentUsed = totalMemAll > 0 ? (usedMemAll / totalMemAll) * 100 : 0
+
+    const runtimeText = runtimeFormat(process.uptime())
+    const waktu = moment().tz("Asia/Jakarta").format('HH:mm:ss')
+    const tanggal = moment().tz("Asia/Jakarta").locale("id").format('dddd, D MMMM YYYY')
+
+    const endProcess = performance.now()
+    const responInSeconds = ((endProcess - startProcess) / 1000).toFixed(4)
+
+    const val = parseFloat(responInSeconds);
+    let p = 0;
+    
+    if (val >= 1.0000) p = 100;
+    else if (val <= 0.0001) p = 0;
+    else if (val <= 0.0010) p = 0 + ((val - 0.0001) / (0.0010 - 0.0001)) * 20;
+    else if (val <= 0.0100) p = 20 + ((val - 0.0010) / (0.0100 - 0.0010)) * 20;
+    else if (val <= 0.1000) p = 40 + ((val - 0.0100) / (0.1000 - 0.0100)) * 20;
+    else if (val <= 0.6000) p = 60 + ((val - 0.1000) / (0.6000 - 0.1000)) * 20;
+    else p = 80 + ((val - 0.6000) / (1.0000 - 0.6000)) * 20;
+
+    const chart = new QuickChart();
+    chart.setVersion('3');
+    chart.setWidth(500);
+    chart.setHeight(300);
+    chart.setConfig({
+        type: 'bar',
+        data: {
+            labels: [''],
+            datasets: [
+                { label: 'Safe', data: [20], backgroundColor: '#32CD32', barPercentage: 1, categoryPercentage: 1 },
+                { label: 'Low Risk', data: [20], backgroundColor: '#ADFF2F', barPercentage: 1, categoryPercentage: 1 },
+                { label: 'Warning', data: [20], backgroundColor: '#FFFF00', barPercentage: 1, categoryPercentage: 1 },
+                { label: 'High Risk', data: [20], backgroundColor: '#FFA500', barPercentage: 1, categoryPercentage: 1 },
+                { label: 'Critical', data: [20], backgroundColor: '#FF0000', barPercentage: 1, categoryPercentage: 1 },
+            ],
+        },
+        options: {
+            indexAxis: 'y',
+            layout: { padding: { top: 60, bottom: 20, left: 20, right: 20 } },
+            scales: {
+                x: {
+                    stacked: true, min: 0, max: 100,
+                    ticks: {
+                        display: true, color: '#999', maxRotation: 45, minRotation: 45,
+                        font: { size: 10 },
+                        callback: (val) => {
+                            const l = {0:'0.0001', 10:'0.0003', 20:'0.0010', 30:'0.0030', 40:'0.0100', 50:'0.0300', 60:'0.1000', 70:'0.3000', 80:'0.6000', 90:'0.8000', 100:'1.0000'};
+                            return l[val] || '';
+                        }
+                    },
+                    grid: { display: false }
+                },
+                y: { display: false, stacked: true }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false },
+                annotation: {
+                    clip: false,
+                    annotations: {
+                        text: {
+                            type: 'label',
+                            xValue: p, yValue: 0, yAdjust: -125,
+                            content: [`Respond: ${responInSeconds}s`], 
+                            color: 'black', font: { size: 14, weight: 'bold' },
+                            position: 'center', backgroundColor: 'transparent'
+                        },
+                        panah: {
+                            type: 'point', xValue: p, yValue: 0, yAdjust: -100,
+                            pointStyle: 'triangle', rotation: 180, radius: 8,
+                            backgroundColor: 'black', borderColor: 'black'
+                        },
+                        garis: {
+                            type: 'line', xMin: p, xMax: p, yMin: -0.5, yMax: 0.5,
+                            borderColor: 'black', borderWidth: 2, borderDash: [6, 4]
+                        }
+                    }
+                }
+            }
+        }
+    });
+    
+    let pingIcon
+    if (latensi < 100) pingIcon = "🟢"
+    else if (latensi < 300) pingIcon = "🔵"
+    else if (latensi < 600) pingIcon = "🟡"
+    else if (latensi < 1000) pingIcon = "🟠"
+    else pingIcon = "🔴"
+
+    const response = `
 ╭───⏱️ *[ STATUS BOT ]* ⏱️
 │
-├ 💠 *Ping:* ${pingIcon} ${latency.toFixed(0)}ms
-├ 💠 *Detail:* ${latency.toFixed(8)}ms
+├ 💠 *Ping:* ${pingIcon} ${latensi.toFixed(0)} ms
+├ 💠 *Respon:* ${responInSeconds} detik
 │
 ├ 📈 *Uptime:*
 │  ${runtimeText}
 │
 ├ 🖥️ *Server Info:*
 │  🔵 Platform : ${os.platform()}
-│  💻 OS       : ${osName}
+│  💻 OS        : ${osName}
 │  🧿 Hostname : ${os.hostname()}
-│  🌎 Zona     : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
-│  🧠 CPU      : ${cpuModel}
-│  🔩 Core     : ${cpuCore} Core
-│  ⚡ Speed    : ${avgSpeed.toFixed(2)} MHz
+│  🌎 Zona      : ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+│  🧠 CPU       : ${cpuModel}
+│  🔩 Core      : ${cpuCore} Core
+│  ⚡ Speed     : ${avgSpeed.toFixed(2)} MHz
 │
 ├ 📊 *RAM Usage:*
 │  ${formatp(usedMemAll)} / ${formatp(totalMemAll)} (${percentUsed.toFixed(1)}%)
@@ -14350,7 +14515,18 @@ case 'botstatus': {
 ╰─────────────────────
 `.trim()
 
-  replyhydro(response)
+    
+    hydro.sendMessage(m.chat, {
+text: response,
+contextInfo: {
+externalAdReply: {  
+title: "🏓 Status bot online >.<",
+body: botname,
+thumbnailUrl: chart.getUrl(),
+sourceUrl: "https://store.hydrohost.web.id",
+mediaType: 1,
+renderLargerThumbnail: true
+}}}, { quoted: m })
 }
 break
 case 'listadmin': {
@@ -15859,7 +16035,7 @@ case 'tofigure': case 'tofigur': case 'jadifigure': case 'jadifigur': {
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
+    let genAI = new GoogleGenerativeAI(geminikey);
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -15871,7 +16047,7 @@ case 'tofigure': case 'tofigur': case 'jadifigure': case 'jadifigur': {
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image",
+      model: "gemini-flash-lite-latest",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -15918,7 +16094,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
+    let genAI = new GoogleGenerativeAI(geminikey);
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -15930,7 +16106,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image",
+      model: "gemini-flash-lite-latest",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -16033,7 +16209,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
+    let genAI = new GoogleGenerativeAI(geminikey);
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -16045,7 +16221,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image",
+      model: "gemini-flash-lite-latest",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -16097,7 +16273,7 @@ case 'edit': case 'editimg': case 'editimage': case 'editgambar': case 'ubahgamb
     let imgData = await qmsg.download();
     const base64Image = imgData.toString("base64");
 
-    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
+    let genAI = new GoogleGenerativeAI(geminikey);
     const contents = [
       { text: text },
       {
@@ -16109,7 +16285,7 @@ case 'edit': case 'editimg': case 'editimage': case 'editgambar': case 'ubahgamb
     ];
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image",
+      model: "gemini-flash-lite-latest",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       }
@@ -16160,7 +16336,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
+    let genAI = new GoogleGenerativeAI(geminikey);
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -16172,7 +16348,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image",
+      model: "gemini-flash-lite-latest",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -16220,7 +16396,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
   m.reply(mess.wait);
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
+    let genAI = new GoogleGenerativeAI(geminikey);
     const base64Image = imgData.toString("base64");
     const contents = [
       { text: promptText },
@@ -16232,7 +16408,7 @@ if (!m.quoted) return m.reply(`Kirim/reply gambar dengan caption *${prefix + com
       }
     ];
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image",
+      model: "gemini-flash-lite-latest",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -16283,7 +16459,6 @@ case 'remini': {
     const path = require("path");
     const FormData = require("form-data");
 
-    // Upload ke tmpfiles.org
     async function uploadTmpFiles(filePath) {
         try {
             if (!fs.existsSync(filePath)) throw new Error("File tidak ditemukan");
@@ -16314,7 +16489,6 @@ case 'remini': {
 
         const sizeKB = (buffer.length / 1024).toFixed(2);
 
-        // simpan sementara file
         const { ext } = await fromBuffer(buffer);
         const tempFile = path.join(__dirname, `tmp_${Date.now()}.${ext || 'bin'}`);
         fs.writeFileSync(tempFile, buffer);
@@ -16324,9 +16498,14 @@ case 'remini': {
 
         if (!tmpFilesLink) return replyhydro("❌ Gagal upload gambar ke tmpfiles.org.");
 
-        const upscaleUrl = `https://api.siputzx.my.id/api/iloveimg/upscale?image=${encodeURIComponent(tmpFilesLink)}&scale=4`;
-        const response = await axios.get(upscaleUrl, { responseType: "arraybuffer" });
-        const hdBuffer = response.data;
+        const upscaleUrl = `https://api.nekolabs.web.id/tools/pxpic/upscale?imageUrl=${encodeURIComponent(tmpFilesLink)}`;
+        const response = await axios.get(upscaleUrl);
+        
+        if (!response.data.success || !response.data.result) throw new Error("Gagal mendapatkan respons sukses dari API.");
+        
+        const hdImageLink = response.data.result;
+        const hdResponse = await axios.get(hdImageLink, { responseType: "arraybuffer" });
+        const hdBuffer = hdResponse.data;
 
         const hdSizeKB = (hdBuffer.length / 1024).toFixed(2);
         const processTime = ((Date.now() - start) / 1000).toFixed(2);
@@ -16335,7 +16514,7 @@ case 'remini': {
 📂 *Ukuran Asli:* ${sizeKB} KB
 📂 *Ukuran HD:* ${hdSizeKB} KB
 ⚡ *Waktu Proses:* ${processTime} detik
-📌 *Keterangan:* Gambar telah ditingkatkan kualitasnya hingga *4x*.
+📌 *Keterangan:* Gambar telah ditingkatkan kualitasnya.
 ╰──────────────────────╯`;
 
         await hydro.sendMessage(m.chat, {
@@ -24932,7 +25111,7 @@ break
 case 'sc': case 'script': {
     if (m.key.fromMe) return
     let quickMsg = {
-        text: `✨ Hai Kak! Mau coba script mimin yang keren ama banyak fitur ga? GRATIS JUGA! 🎉\n\n🚀 *Dapatkan SC Hydro* di sini:\nhttps://github.com/AhmadAkbarID/hydro\n\n👥 Gabung juga nih grup kita!:\nhttps://chat.whatsapp.com/DPdgVJLsKGk2U3feeuk9cw\n\nYuu dukung trus agar bisa berkembang bot ini 🤩`,
+        text: `✨ Hai Kak! Mau coba script mimin yang keren ama banyak fitur ga? GRATIS JUGA! 🎉\n\n🚀 *Dapatkan SC Hydro* di sini:\nhttps://github.com/AhmadAkbarID/hydro\n\n👥 Gabung juga nih grup kita!:\nhttps://chat.whatsapp.com/FvSBEz1UezQ4G7Xwfrr9sF\n\nYuu dukung trus agar bisa berkembang bot ini 🤩`,
         footer: `${botname}`,
         buttons: [
             {
@@ -25848,8 +26027,8 @@ case 'dro': {
   const mime = require('mime-types');
   gue = m.sender;
 
-  const genAI = new Gemini.GoogleGenerativeAI('AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w');
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const genAI = new Gemini.GoogleGenerativeAI(geminikey);
+  const model = genAI.getGenerativeModel({ model: 'gemini-flash-lite-latest' });
 
   const quoted = m.quoted;
   const isMediaReply = quoted && (quoted.mimetype || quoted.imageMessage || quoted.audioMessage);
@@ -31147,7 +31326,7 @@ case 'hytam': {
 
   try {
     let imgData = await m.quoted.download();
-    let genAI = new GoogleGenerativeAI("AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w");
+    let genAI = new GoogleGenerativeAI(geminikey);
 
     const base64Image = imgData.toString("base64");
 
@@ -31162,7 +31341,7 @@ case 'hytam': {
     ];
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-image",
+      model: "gemini-flash-lite-latest",
       generationConfig: {
         responseModalities: ["Text", "Image"]
       },
@@ -32193,18 +32372,30 @@ hydro.sendMessage(m.chat, { audio: { url: data.audio }, mimetype: 'audio/mp4' },
 }
 break
 case 'google': {
-if (!q) return replyhydro(`Example : ${prefix + command} ${botname}`)
-reply(mess.wait)
-let google = require('google-it')
-google({'query': text}).then(res => {
-let teks = `Google Search From : ${text}\n\n`
-for (let g of res) {
-teks += `⭔ *Title* : ${g.title}\n`
-teks += `⭔ *Description* : ${g.snippet}\n`
-teks += `⭔ *Link* : ${g.link}\n\n────────────────────────\n\n`
-} 
-replyhydro(teks)
-})
+    if (!text) return replyhydro(`Example : ${prefix + command} ${botname}`)
+    reply(mess.wait)
+    
+    try {
+        let res = await fetchJson(`https://api.naze.biz.id/search/google?query=${encodeURIComponent(text)}&apikey=${nazekey}`)
+        
+        if (!res.success || !res.result || res.result.length === 0) {
+            return replyhydro('Maaf, tidak ditemukan hasil pencarian untuk kata kunci tersebut.')
+        }
+
+        let teks = `\n\n`
+        
+        for (let g of res.result) {
+            teks += `⭔ *Title* : ${g.title}\n`
+            teks += `⭔ *Description* : ${g.snippet}\n`
+            teks += `⭔ *Link* : ${g.link}\n\n────────────────────────\n\n`
+        }
+        
+        replyhydro(teks)
+        
+    } catch (err) {
+        console.error(err)
+        replyhydro('Terjadi kesalahan saat mengambil data dari Google.')
+    }
 }
 break
 case 'happymod':{
@@ -32250,69 +32441,91 @@ async function getMod(q) {
     }
 }
 break
-case 'yts': case 'ytsearch': {
+case 'yts':
+case 'ytsearch': {
     if (!text) return replyhydro(`Example : ${prefix + command} story wa anime`);
     const yts = require('yt-search');
-    async function searchYouTube(text) {
-        let search = await yts(text);
-        let groups = search.all.map((v) => {
-            return {
-                title: v.title, 
-                rows: [
+    await hydro.sendMessage(m.chat, {
+        react: { text: '🔎', key: m.key }
+    });
+
+    let ytsSearch = await yts(text);
+    const results = ytsSearch.all.slice(0, 8);
+
+    if (results.length === 0) {
+        return replyhydro('❌ Tidak ditemukan hasil pencarian.');
+    }
+
+    let slides = [];
+    for (let video of results) {
+        let { title, url, ago, views, author, image } = video;
+
+        let media = await prepareWAMessageMedia(
+            { image: { url: image } },
+            { upload: hydro.waUploadToServer }
+        );
+
+        slides.push({
+            header: proto.Message.InteractiveMessage.Header.fromObject({
+                title: `🎬 ${title}`,
+                hasMediaAttachment: true,
+                ...media
+            }),
+            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+                buttons: [
                     {
-                        title: "Download Video",
-                        description: `${v.url}`,
-                        id: '.ytmp4 ' + v.url
+                        name: "quick_reply",
+                        buttonParamsJson: `{
+                            "display_text": "🎥 Video",
+                            "id": ".ytmp4 ${url}"
+                        }`
                     },
                     {
-                        title: "Download Audio",
-                        description: `${v.url}`,
-                        id: '.ytmp3 ' + v.url
+                        name: "quick_reply",
+                        buttonParamsJson: `{
+                            "display_text": "🎵 Audio",
+                            "id": ".ytmp3 ${url}"
+                        }`
+                    },
+                    {
+                        name: "cta_copy",
+                        buttonParamsJson: `{
+                            "display_text": "🔗 Salin Link",
+                            "copy_code": "${url}"
+                        }`
                     }
                 ]
-            };
+            }),
+            footer: proto.Message.InteractiveMessage.Footer.create({
+                text: `📅 Rilis: ${ago} | 👀 Views: ${views} | 🎤 ${author?.name || "Unknown"}`
+            })
         });
+    }
 
-        let msg = generateWAMessageFromContent(m.chat, {
+    const msg = await generateWAMessageFromContent(
+        m.chat,
+        {
             viewOnceMessage: {
                 message: {
                     messageContextInfo: {
                         deviceListMetadata: {},
                         deviceListMetadataVersion: 2
                     },
-                    interactiveMessage: {
-                        body: {
-                            text: `🔎 Hasil Pencarian Dari ${text}
-Silahkan Pilih List di bawah ini`
-                        },
-                        footer: {
-                            text: null
-                        },
-                        header: proto.Message.InteractiveMessage.Header.create({
-                            ...(await prepareWAMessageMedia({ image: { url: search.all[0].thumbnail } }, { upload: hydro.waUploadToServer })),
-                            title: '',
-                            gifPlayback: true,
-                            subtitle: ownername,
-                            hasMediaAttachment: false
+                    interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+                        body: proto.Message.InteractiveMessage.Body.fromObject({
+                            text: `🔎 Hasil pencarian YouTube untuk *"${text}"*`
                         }),
-                        nativeFlowMessage: {
-                            buttons: [
-                                {
-                                    name: "single_select",
-                                    buttonParamsJson: JSON.stringify({
-                                        title: "PILIH DISINI",
-                                        sections: groups
-                                    })
-                                }
-                            ]
-                        }
-                    }
+                        carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+                            cards: slides
+                        })
+                    })
                 }
             }
-        }, { quoted: m }, {});
-        await hydro.relayMessage(msg.key.remoteJid, msg.message, { messageId: msg.key.id });
-    }
-    searchYouTube(text);
+        },
+        { quoted: m }
+    );
+
+    await hydro.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
 }
 break;
 case 'warcall': {
@@ -32599,34 +32812,34 @@ case 'ytvideo': {
       await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
     } catch (err) {
-      console.log("❌ API utama gagal, mencoba API ke-2 (Siputzx)...");
+      console.log("❌ API utama gagal, mencoba API ke-2 (Anabot)...");
 
       try {
         await hydro.sendMessage(m.chat, { react: { text: "⏳", key: m.key } });
 
-        const siputzxApi = `https://api.siputzx.my.id/api/d/savefrom?url=${encodeURIComponent(link)}&type=video`;
-        let { data } = await axios.get(siputzxApi);
+        const anabotApi = `https://anabot.my.id/api/download/ytmp4?url=${link}&quality=${resolution}&apikey=freeApikey`;
+        let { data } = await axios.get(anabotApi);
 
-        if (!data || !data.status || !data.data || !data.data.length) {
-          throw new Error("Gagal mendapatkan URL download dari API Siputzx.");
+        if (!data || !data.success || !data.data || !data.data.result || !data.data.result.urls) {
+          throw new Error("Gagal mendapatkan URL download dari API Anabot.");
         }
 
-        const videoData = data.data[0];
-        const videoUrl = videoData.url;
-        const videoTitle = videoData.title || "yt-video";
+        const videoData = data.data.result;
+        const videoUrl = videoData.urls;
+        const videoTitle = videoData.metadata.title || "yt-video";
 
         const buffer = await getBuffer(videoUrl);
         const sizeMB = buffer.length / (1024 * 1024);
 
         const fileMsg = sizeMB > 100
           ? { document: buffer, mimetype: 'video/mp4', fileName: `${videoTitle}.mp4` }
-          : { video: buffer, mimetype: 'video/mp4', fileName: `${videoTitle}.mp4`, caption: `✅ *Berhasil Mengunduh*\n🎥 ${videoTitle}\n📌 Resolusi: auto` };
+          : { video: buffer, mimetype: 'video/mp4', fileName: `${videoTitle}.mp4`, caption: `✅ *Berhasil Mengunduh*\n🎥 ${videoTitle}\n📌 Resolusi: ${resolution}p` };
 
         await hydro.sendMessage(m.chat, fileMsg, { quoted: m });
         await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
 
       } catch (err2) {
-        console.log("❌ Fallback Siputzx juga gagal:", err2);
+        console.log("❌ Fallback Anabot juga gagal:", err2);
         await hydro.sendMessage(m.chat, { react: { text: "❌", key: m.key } });
         return replyhydro("⚠️ Maaf, video gagal diunduh. Silakan coba lagi dengan resolusi atau link berbeda.");
       }
@@ -32634,7 +32847,6 @@ case 'ytvideo': {
   }
 }
 break;
-
 case "get": case ".g": {
   if (m.key.fromMe) return
   if (!text) return reply("https://example.com");
@@ -32716,6 +32928,58 @@ case "get": case ".g": {
   }
 }
 break;
+case 'rch':
+case 'frch':
+case 'fakereactch':
+case 'fakerch':
+case 'reactch': {
+    if (args.length < 2) return replyhydro(`⚠️ *Format Salah!*
+Gunakan format:
+${prefix + command} <link_post> <emoji>
+
+📌 *Contoh:*
+${prefix + command} https://whatsapp.com/channel/xxx/123 😂 😱`)
+
+    const link = args[0]
+    const emoji = args.slice(1).join(" ").replace(/,/g, " ").split(/\s+/).filter(e => e.trim()).join(",")
+
+    try {
+        await hydro.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
+        const url = `https://react.whyux-xec.my.id/api/rch?link=${encodeURIComponent(link)}&emoji=${encodeURIComponent(emoji)}`
+        const res = await fetch(url, {
+            method: "GET",
+            headers: {
+                "x-api-key": reactkey
+            }
+        })
+
+        const json = await res.json()
+
+        if (json.success) {
+            let teks = `✅ *React Sent!*
+
+🔗 *Target:* ${json.link}
+🎭 *Emoji:* ${json.emojis.replace(/,/g, ' ')}
+
+🚀 *Powered by ${botname}*`
+            await hydro.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
+            replyhydro(teks)
+        } else {
+            let errMsg = json.details?.message || json.error || 'Unknown error'
+            let teks = `❌ *GAGAL MENGIRIM REAKSI*
+
+📝 *Pesan:* ${errMsg}`
+            await hydro.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
+            replyhydro(teks)
+        }
+
+    } catch (e) {
+        console.error(e)
+        await hydro.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
+        replyhydro("❌ *Terjadi Kesalahan Sistem*")
+    }
+}
+break
 case 'songs':
 case 'play': {
   if (!text) {
@@ -35599,38 +35863,83 @@ case 'spotify': case 'spotifysearch': case 'spotifys':  {
     });
 }
 break
-case 'spdl':
-case 'spotifydl': {
-    if (!text) return reply('Masukan Link Spotify!');
+case 'spdl': case 'spotifydl': {
+    hydro.sendMessage(m.chat, { react: { text: '⏱️', key: m.key } });
+
+    if (!text) return replyhydro(`Example:\n${prefix + command} Montagem Supersonic\natau link Spotify`);
 
     try {
-        let result = await spotifydl(text); 
-        let captionvid = `∘ Title: ${result.title}\n∘ Artist: ${result.artist}\n\n${botname}`;
+        const input = text;
+        const axios = (await import('axios')).default;
+        const FormData = require("form-data");
 
-        const p = await new canvafy.Spotify()
-            .setTitle(result.title)
-            .setAuthor("Spotify - Downloader")
-            .setTimestamp(40, 100)
-            .setOverlayOpacity(0.8)
-            .setBorder("#fff", 0.8)
-            .setImage(result.coverImage)
-            .setBlur(3)
-            .build();
+        const { data: s } = await axios.get(
+            `https://spotdown.org/api/song-details?url=${encodeURIComponent(input)}`,
+            {
+                headers: {
+                    origin: 'https://spotdown.org',
+                    referer: 'https://spotdown.org/',
+                    'user-agent': 'Mozilla/5.0'
+                }
+            }
+        );
 
-        await hydro.sendMessage(from, { image: p, caption: captionvid }, { quoted: m });
+        const song = s.songs?.[0];
+        if (!song) throw new Error('Track not found.');
 
-        await hydro.sendMessage(m.chat, {
-            audio: { url: result.mp3DownloadLink },
-            mimetype: 'audio/mpeg',
-            filename: `MP3 BY HYDRO`
-        }, { quoted: m });
+        const { data: audioData } = await axios.post(
+            'https://spotdown.org/api/download',
+            { url: song.url },
+            {
+                headers: {
+                    origin: 'https://spotdown.org',
+                    referer: 'https://spotdown.org/',
+                    'user-agent': 'Mozilla/5.0'
+                },
+                responseType: 'arraybuffer'
+            }
+        );
 
+        const thumbBuffer = await axios.get(song.thumbnail, { responseType: 'arraybuffer' });
+
+        const fd = new FormData();
+        fd.append("reqtype", "fileupload");
+        fd.append("fileToUpload", Buffer.from(thumbBuffer.data), "spotify_thumb.jpg");
+
+        const upload = await axios.post("https://catbox.moe/user/api.php", fd, {
+            headers: fd.getHeaders(),
+            timeout: 15000
+        });
+
+        const thumbUrl = upload.data;
+
+        await hydro.sendMessage(
+            m.chat,
+            {
+                audio: Buffer.from(audioData),
+                mimetype: "audio/mpeg",
+                fileName: `${song.title}.mp3`,
+                contextInfo: {
+                    externalAdReply: {
+                        title: song.title,
+                        body: song.artist,
+                        mediaType: 1,
+                        renderLargerThumbnail: true,
+                        thumbnailUrl: thumbUrl,
+                        sourceUrl: song.url
+                    }
+                },
+                caption: `🎵 *${song.title}*\n👤 ${song.artist}\n⏱ Duration: ${song.duration}`
+            },
+            { quoted: m }
+        );
+		await hydro.sendMessage(m.chat, { react: { text: "✅", key: m.key } });
     } catch (err) {
-        console.error(err);
-        reply('Gagal mengambil data lagu dari Spotify.');
+        console.log(err);
+        replyhydro(`❌ Error: ${err.message}`);
     }
 }
-break;
+break
 case 'bass': case 'blown': case 'deep': case 'earrape': case 'fast': case 'fat': case 'nightcore': case 'reverse': case 'robot': case 'slow': case 'smooth': case 'squirrel':
     try {
         let set;
@@ -36583,50 +36892,53 @@ case 'xnxxsearch': {
               break
 case 'pin':
 case 'pinterest': {
-  if (!text) return m.reply(`Contoh: ${prefix}pin christy jkt48`)
-  try {
-    const { data } = await axios.get(`https://api.siputzx.my.id/api/s/pinterest?query=${encodeURIComponent(text)}&type=image`)
-    if (!data.status || !data.data || data.data.length === 0) return m.reply('Gambar tidak ditemukan.')
+    if (!text) return m.reply(`Contoh: ${prefix}pin christy jkt48`)
 
-    const jumlahGambar = 15
-    const images = data.data.slice(0, jumlahGambar)
+    try {
+        const { data } = await axios.get(`https://api.naze.biz.id/search/pinterest?query=${encodeURIComponent(text)}&apikey=${nazekey}`)
 
-    let cards = await Promise.all(images.map(async (item, i) => {
-      return {
-        header: proto.Message.InteractiveMessage.Header.create({
-          ...(await prepareWAMessageMedia({ image: { url: item.image_url } }, { upload: hydro.waUploadToServer })),
-          title: '',
-          subtitle: `Gambar ${i + 1} dari ${images.length}`,
-          hasMediaAttachment: false
-        }),
-        body: { text: '' },
-        nativeFlowMessage: { buttons: [] }
-      }
-    }))
+ 
+        if (!data.success || !data.result || data.result.length === 0) return m.reply('Gambar tidak ditemukan.')
 
-    let msg = generateWAMessageFromContent(
-      m.chat,
-      {
-        viewOnceMessage: {
-          message: {
-            interactiveMessage: {
-              body: { text: `Hasil pencarian untuk *${text}*` },
-              carouselMessage: {
-                cards: cards,
-                messageVersion: 1
-              }
+        const jumlahGambar = 25
+        const images = data.result.slice(0, jumlahGambar)
+
+        let cards = await Promise.all(images.map(async (url, i) => {
+            return {
+                header: proto.Message.InteractiveMessage.Header.create({
+                    ...(await prepareWAMessageMedia({ image: { url: url } }, { upload: hydro.waUploadToServer })),
+                    title: '',
+                    subtitle: `Gambar ${i + 1} dari ${images.length}`,
+                    hasMediaAttachment: false
+                }),
+                body: { text: '' },
+                nativeFlowMessage: { buttons: [] }
             }
-          }
-        }
-      },
-      { quoted: m }
-    )
+        }))
 
-    await hydro.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
-  } catch (err) {
-    console.error(err)
-    m.reply('Terjadi kesalahan saat mengambil gambar.')
-  }
+        let msg = generateWAMessageFromContent(
+            m.chat,
+            {
+                viewOnceMessage: {
+                    message: {
+                        interactiveMessage: {
+                            body: { text: `Hasil pencarian untuk *${text}*` },
+                            carouselMessage: {
+                                cards: cards,
+                                messageVersion: 1
+                            }
+                        }
+                    }
+                }
+            },
+            { quoted: m }
+        )
+
+        await hydro.relayMessage(m.chat, msg.message, { messageId: msg.key.id })
+    } catch (err) {
+        console.error(err)
+        m.reply('Terjadi kesalahan')
+    }
 }
 break
 case 'ringtone': {
@@ -36962,14 +37274,14 @@ reply(String(err))
 }
 }
 if (budy.startsWith(">")) {
-if (!Ahmad) return
-try {
-let evaled = await eval(text)
-if (typeof evaled !== 'string') evaled = util.inspect(evaled)
-hydro.sendMessage(m.chat, {text: util.format(evaled)}, {quoted: m})
-} catch (e) {
-hydro.sendMessage(m.chat, {text: util.format(e)}, {quoted: m})
-}
+    if (!Ahmad) return
+    try {
+        let evaled = await eval(budy.slice(1)) 
+        if (typeof evaled !== 'string') evaled = util.inspect(evaled)
+        hydro.sendMessage(m.chat, {text: util.format(evaled)}, {quoted: m})
+    } catch (e) {
+        hydro.sendMessage(m.chat, {text: util.format(e)}, {quoted: m})
+    }
 }
 
 if (budy.startsWith('uu')){
@@ -37020,7 +37332,8 @@ console.log('Caught exception: ', err)
 
 function autoClearSession() {
     const sessionDir = './furina';
-    const clearInterval = 4 * 60 * 60 * 1000;
+    const tempDir = './temp'; // Definisi folder temp
+    const clearInterval = 4 * 60 * 60 * 1000; // 4 Jam
     
     setInterval(async () => {
         try {
@@ -37032,20 +37345,34 @@ function autoClearSession() {
                 file.startsWith('app-state')
             );
 
-            if (filteredFiles.length === 0) {
-                console.log(chalk.blue.bold('📂 [AUTO CLEAN] No session files to clean. Everything is tidy! 📑'));
-                return;
+            if (filteredFiles.length > 0) {
+                console.log(chalk.yellow.bold(`📂 [AUTO CLEAN] Starting session cleanup... 🗃️`));
+                filteredFiles.forEach(file => {
+                    fs.unlinkSync(path.join(sessionDir, file));
+                });
+                console.log(chalk.green.bold(`🗃️ [AUTO CLEAN] Successfully removed ${filteredFiles.length} session files! 📂`));
+            } else {
+                console.log(chalk.blue.bold(`📂 [AUTO CLEAN] No session files to clean. 📑`));
             }
 
-            console.log(chalk.yellow.bold('📂 [AUTO CLEAN] Starting session cleanup... 🗃️'));
-            
-            filteredFiles.forEach(file => {
-                fs.unlinkSync(path.join(sessionDir, file));
-            });
+            if (fs.existsSync(tempDir)) {
+                const tempFiles = fs.readdirSync(tempDir);
+                
+                if (tempFiles.length > 0) {
+                    console.log(chalk.magenta.bold(`🗑️ [TEMP CLEAN] Found files in temp, cleaning... 🧹`));
+                    
+                    tempFiles.forEach(file => {
+                        fs.unlinkSync(path.join(tempDir, file));
+                    });
 
-            console.log(chalk.green.bold(`🗃️ [AUTO CLEAN] Successfully removed ${filteredFiles.length} session files! 📂`));
+                    console.log(chalk.cyan.bold(`🗑️ [TEMP CLEAN] Successfully deleted ${tempFiles.length} files from temp folder! ✨`));
+                } else {
+                    console.log(chalk.blue.bold(`🗑️ [TEMP CLEAN] Temp folder is already empty. ✅`));
+                }
+            }
+
         } catch (error) {
-            console.error(chalk.red.bold('📑 [AUTO CLEAN ERROR]'), chalk.red.bold(error));
+            console.error(chalk.red.bold(`📑 [AUTO CLEAN ERROR]`), chalk.red.bold(error));
         }
     }, clearInterval);
 }

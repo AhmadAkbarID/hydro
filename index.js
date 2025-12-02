@@ -25,10 +25,13 @@ const {
     getAggregateVotesInPollMessage,
     proto
 } = require("@whiskeysockets/baileys")
+// Override Generator ID Baileys secara Global
+const crypto = require('crypto')
 const cfonts = require('cfonts');
 const { color, bgcolor } = require('./lib/color')
 const { TelegraPh } = require('./lib/uploader')
 const NodeCache = require("node-cache")
+const { exec } = require('child_process');
 const canvafy = require("canvafy")
 const { 
   addSewaGroup, 
@@ -45,6 +48,7 @@ let _welcome = JSON.parse(fs.readFileSync('./database/welcome.json'))
 let _left = JSON.parse(fs.readFileSync('./database/left.json'))
 const makeWASocket = require("@whiskeysockets/baileys").default
 const Pino = require("pino")
+const { randomBytes } = require('crypto')
 const readline = require("readline")
 const colors = require('colors')
 const { start } = require('./lib/spinner')
@@ -92,7 +96,7 @@ async function hydroInd() {
          creds: state.creds,
          keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
       },
-      browser: [ 'Mac OS', 'Safari', '10.15.7' ],
+      browser: [ "Android", "Chrome", "114.0.5735.196" ],
       patchMessageBeforeSending: (message) => {
             const requiresPatch = !!(
                 message.buttonsMessage ||
@@ -142,6 +146,19 @@ shouldSyncHistoryMessage: msg => {
       msgRetryCounterCache, // Resolve waiting messages
       defaultQueryTimeoutMs: undefined, // for this issues https://github.com/WhiskeySockets/Baileys/issues/276
    })
+    // === ANTI DETEKSI: ID MESSAGE SPOOFING (FIXED) ===
+    const _sendMessage = hydro.sendMessage
+    hydro.sendMessage = async (jid, content, options = {}) => {
+        if (!options.messageId) {
+             options.messageId = randomBytes(16).toString('hex').toUpperCase()
+        }
+        if (content.text) {
+            options.userAgent = "WhatsApp/2.23.13.76 A" 
+        }
+
+        return await _sendMessage(jid, content, options)
+    }
+    // =================================================
 if (!hydro.authState.creds.registered) {
 const phoneNumber = await question('Masukin nomor yang mau dijadikan bot.. contoh: 6285187063723\n');
 const pairinghydro = "FOCABARS";
@@ -160,30 +177,28 @@ try{
 		if (connection === 'close') {
 			let reason = new Boom(lastDisconnect?.error)?.output.statusCode
 			if (reason === DisconnectReason.badSession) {
-				console.log(`Bad Session File, Please Delete Session and Scan Again`);
-				exec('rm -rf ./furina')
+				console.log(`Sesi rusak.. Mohon hapus folder furina`);
 				hydroInd()
 			} else if (reason === DisconnectReason.connectionClosed) {
-				console.log("Connection closed, reconnecting....");
+				console.log("Koneksi terputus, menghubungkan ulang..");
 				hydroInd();
 			} else if (reason === DisconnectReason.connectionLost) {
-				console.log("Connection Lost from Server, reconnecting...");
+				console.log("Koneksi terputus dari server, menghubungkan ulang..");
 				hydroInd();
 			} else if (reason === DisconnectReason.connectionReplaced) {
-				console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First");
+				console.log("Koneksi bertabrakan.. mohon matikan sesi yang sedang bejalan");
 				hydroInd()
 			} else if (reason === DisconnectReason.loggedOut) {
-				console.log(`Device Logged Out, Please Scan Again And Run.`);
-				exec('rm -rf ./furina')
+				console.log(`Sesi terputus.. Mohon hapus folder furina`);
 				hydroInd();
 			} else if (reason === DisconnectReason.restartRequired) {
-				console.log("Restart Required, Restarting...");
+				console.log("Membutuhkan restart, Merestart..");
 				hydroInd();
 			} else if (reason === DisconnectReason.timedOut) {
-				console.log("Connection TimedOut, Reconnecting...");
+				console.log("Waktu habis.. Menghubungkan ulang");
 				hydroInd();
 			} else {
-			  console.log(`Unknown DisconnectReason: ${reason}|${connection}`)
+			  console.log(`Kesalahan tidak diketahui: ${reason}|${connection}`)
 			  hydroInd();
 			}
 		}
@@ -191,15 +206,7 @@ try{
 			console.log(color(`\n👀Menghubungkan...`, 'yellow'))
 		}
 		if (update.connection == "open" || update.receivedPendingNotifications == "true") {
-			await delay(1999)
-cfonts.say('HydroMD', {
-    font: 'block',
-    align: 'left',
-    colors: ['blue', 'blueBright'],
-    background: 'transparent',
-    maxLength: 14,
-    rawMode: false,
-});
+			await delay(1999);
 hydro.newsletterFollow('120363416755002041@newsletter')
 hydro.newsletterFollow('120363402564073751@newsletter')
 hydro.newsletterFollow('120363314571321104@newsletter')
@@ -216,7 +223,6 @@ await delay(5555)
 start(`🌊`)
 
 global.hydro = hydro
-
 hydro.ev.on('creds.update', await saveCreds)
 
     // Anti Call
@@ -666,12 +672,26 @@ hydro.sendFile = async (jid, path, filename = '', caption = '', quoted, ptt = fa
   }
 }
 hydro.ev.on('group-participants.update', async (anu) => {
-const { welcome } = require ('./lib/welcome')
-const iswel = _welcome.includes(anu.id)
-const isLeft = _left.includes(anu.id)
-welcome(iswel, isLeft, hydro, anu)
-})
-
+    try {
+        const metadata = await hydro.groupMetadata(anu.id)
+        
+        if (!store.groupMetadata) store.groupMetadata = {}
+        
+        store.groupMetadata[anu.id] = metadata
+    } catch (err) {
+    }
+    try {
+        const { welcome } = require('./lib/welcome')
+        
+        const iswel = _welcome.includes(anu.id)
+        const isLeft = _left.includes(anu.id)
+        
+        if (iswel || isLeft || anu.action == 'promote' || anu.action == 'demote') {
+    await welcome(iswel, isLeft, hydro, anu)
+}
+    } catch (err) {
+    }
+});
 hydro.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
       let mime = '';
       let res = await axios.head(url)
