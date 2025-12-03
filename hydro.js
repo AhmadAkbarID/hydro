@@ -45,7 +45,6 @@ const { addSewaGroup, checkSewaGroup, getSewaPosition, toMs, msToDate, getGcName
 const { ttsHololive, hololiveModels } = require('./scrape/holotts');
 const { msgFilter } = require('./lib/antispam')
 const nazekey = global.nz[Math.floor(Math.random() * global.nz.length)]
-const reactkey = global.frch[Math.floor(Math.random() * global.frch.length)]
 const geminikey = global.aiso[Math.floor(Math.random() * global.aiso.length)]
 const { ytDonlodMp3, ytDonlodMp4, ytPlayMp3, ytPlayMp4, ytSearch } = require('./scrape/yt')
 const anon = require('./lib/menfess') 
@@ -32943,40 +32942,53 @@ ${prefix + command} https://whatsapp.com/channel/xxx/123 😂 😱`)
     const link = args[0]
     const emoji = args.slice(1).join(" ").replace(/,/g, " ").split(/\s+/).filter(e => e.trim()).join(",")
 
-    try {
-        await hydro.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
-        const url = `https://react.whyux-xec.my.id/api/rch?link=${encodeURIComponent(link)}&emoji=${encodeURIComponent(emoji)}`
-        const res = await fetch(url, {
-            method: "GET",
-            headers: {
-                "x-api-key": reactkey
-            }
-        })
+    await hydro.sendMessage(m.chat, { react: { text: '⏳', key: m.key } })
 
-        const json = await res.json()
+    let success = false
+    let lastError = 'Unknown error'
 
-        if (json.success) {
-            let teks = `✅ *React Sent!*
+    for (const apiKey of global.frch) {
+        try {
+            const url = `https://react.whyux-xec.my.id/api/rch?link=${encodeURIComponent(link)}&emoji=${encodeURIComponent(emoji)}`
+            const res = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "x-api-key": apiKey
+                }
+            })
+
+            const json = await res.json()
+
+            if (json.success) {
+                let teks = `✅ *React Sent!*
 
 🔗 *Target:* ${json.link}
 🎭 *Emoji:* ${json.emojis.replace(/,/g, ' ')}
 
 🚀 *Powered by ${botname}*`
-            await hydro.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
-            replyhydro(teks)
-        } else {
-            let errMsg = json.details?.message || json.error || 'Unknown error'
-            let teks = `❌ *GAGAL MENGIRIM REAKSI*
-
-📝 *Pesan:* ${errMsg}`
-            await hydro.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-            replyhydro(teks)
+                await hydro.sendMessage(m.chat, { react: { text: '✅', key: m.key } })
+                replyhydro(teks)
+                success = true
+                break
+            } else {
+                lastError = json.details?.message || json.error || 'Unknown error'
+                if (!lastError.toLowerCase().includes('limit') && !lastError.toLowerCase().includes('coin')) {
+                    break
+                }
+            }
+        } catch (e) {
+            console.error(e)
+            lastError = "Terjadi Kesalahan Sistem"
         }
+    }
 
-    } catch (e) {
-        console.error(e)
+    if (!success) {
+        let teks = `❌ *GAGAL MENGIRIM REAKSI*
+
+📝 *Pesan:* ${lastError}
+💡 *Info:* Semua API Key telah dicoba atau limit habis.`
         await hydro.sendMessage(m.chat, { react: { text: '❌', key: m.key } })
-        replyhydro("❌ *Terjadi Kesalahan Sistem*")
+        replyhydro(teks)
     }
 }
 break
