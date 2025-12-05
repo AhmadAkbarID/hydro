@@ -13335,33 +13335,29 @@ case 'tt': {
 }
 break;
 //==============================================
-case 'instagram':
-case 'igdl':
-case 'ig':
-case 'igvideo':
-case 'igimage':
-case 'igvid':
-case 'igimg': {
-    if (!text) return replyhydro('Anda perlu memberikan URL video, postingan, reel, gambar Instagram apa pun')
-    hydro.sendMessage(m.chat, { react: { text: '⏱️', key: m.key }})
+case 'instagram': case 'igdl': case 'ig': case 'igvideo': case 'igimage': case 'igvid': case 'igimg': {
+    if (!text) return replyhydro(`Anda perlu memberikan URL video, postingan, reel, gambar Instagram apa pun`)
+    hydro.sendMessage(m.chat, { react: { text: `⏱️`, key: m.key }})
     try {
-        const data = await fetchJson(`https://api.naze.biz.id/download/instagram?url=${encodeURIComponent(text)}&apikey=${nazekey}`)
-        if (data.success && data.result && data.result.urls && data.result.urls.length > 0) {
-            const igCap = `Ini dia kak🔥`
-            for (const item of data.result.urls) {
-                if (item.is_video) {
-                    await hydro.sendMessage(m.chat, { video: { url: item.url }, caption: igCap }, { quoted: m })
+        const res = await fetchJson(`https://api.nekolabs.web.id/downloader/instagram?url=${encodeURIComponent(text)}`)
+        
+        if (res.success && res.result && res.result.downloadUrl && res.result.downloadUrl.length > 0) {
+            const { metadata, downloadUrl } = res.result
+            const cap = `👤 *Username:* ${metadata.username || '-'}\n❤️ *Like:* ${metadata.like || 0}\n💬 *Komentar:* ${metadata.comment || 0}\n📝 *Caption:* ${metadata.caption || '-'}`
+            
+            for (let url of downloadUrl) {
+                if (url.includes('.jpg') || url.includes('.jpeg') || url.includes('.png') || url.includes('.webp')) {
+                    await hydro.sendMessage(m.chat, { image: { url: url }, caption: cap }, { quoted: m })
                 } else {
-                    await hydro.sendMessage(m.chat, { image: { url: item.url }, caption: igCap }, { quoted: m })
+                    await hydro.sendMessage(m.chat, { video: { url: url }, caption: cap }, { quoted: m })
                 }
             }
         } else {
-            console.log('Error: Tidak ada media yang ditemukan di result')
-            await hydro.sendMessage(m.chat, { text: 'Maaf, media tidak ditemukan.' }, { quoted: m })
+            await hydro.sendMessage(m.chat, { text: 'Maaf, media tidak ditemukan.' }, { quoted: m });
         }
     } catch (error) {
-        console.error('Gagal fetch media IG:', error)
-        await hydro.sendMessage(m.chat, { text: 'Terjadi kesalahan saat mengambil media.' }, { quoted: m })
+        console.error('Gagal fetch media IG:', error);
+        await hydro.sendMessage(m.chat, { text: 'Terjadi kesalahan saat mengambil media.' }, { quoted: m });
     }
 }
 break
@@ -28686,7 +28682,7 @@ if (!text) return
             name: hostname,
             region: region, 
             size: images,
-            image: 'ubuntu-20-04-x64',
+            image: 'ubuntu-24-04-x64',
             ssh_keys: null,
             backups: false,
             ipv6: true,
@@ -33074,36 +33070,6 @@ fs.writeFileSync('./database/hyds.json', JSON.stringify(prem))
 replyhydro(`The Number ${prrkek} Has Been Own Jasher!`)
 }
 break
-case "lirik": {
-    if (!q) return replytolak("⚠ *Masukkan Judul Lagu*");
-    replyhydro(mess.wait);
-    
-    try {
-        const result = await lirik(q);
-        
-        if (result.error) {
-            return replyhydro(result.error);
-        }
-        
-        const caption = `┌──「 *Lirik Ditemukan* 」
-│
-│  ◦ *Judul* : ${result.trackName}
-│  ◦ *Artis* : ${result.artistName}
-│  ◦ *Album* : ${result.albumName}
-│  ◦ *Durasi* : ${Math.floor(result.duration / 60)}:${(result.duration % 60).toString().padStart(2, '0')}
-│
-└─────────────────
-
-${result.lyrics}`;
-        
-        await replyhydro(caption);
-        
-    } catch (error) {
-        console.error("Error di case lirik:", error);
-        replytolak(`❌ Gagal memproses permintaan lirik: ${error.message}`);
-    }
-}
-break;
 case 'addhydro': {
 if (!Ahmad) return replytolak(mess.only.owner)
 if (!args[0]) return replyhydro(`Use ${prefix+command} number\nExample ${prefix+command} 6285187063723`)
@@ -36751,102 +36717,35 @@ delete kuismath[m.sender.split('@')[0]]
             break
             case 'lirik':
             case 'lyrics': {
-async function googleLyrics(judulLagu) {
-  try {
-    const response = await fetch(`https://r.jina.ai/https://www.google.com/search?q=liirk+lagu+${encodeURIComponent(judulLagu)}&hl=en`, {
-      headers: {
-        'x-return-format': 'html',
-        'x-engine': 'cf-browser-rendering',
-      }
-    });
-    const text = await response.text();
-    const $ = cheerio.load(text);
-    const lirik = [];
-    const output = [];
-    const result = {};
+    if (!q) return replytolak("⚠ *Masukkan Judul Lagu*");
+    replyhydro(mess.wait);
     
-    $('div.PZPZlf').each((i, e)=>{
-      const penemu = $(e).find('div[jsname="U8S5sf"]').text().trim();
-      if(!penemu) output.push($(e).text().trim())
-    })
+    try {
+        const result = await lirik(q);
+        
+        if (result.error) {
+            return replyhydro(result.error);
+        }
+        
+        const caption = `┌──「 *Lirik Ditemukan* 」
+│
+│  ◦ *Judul* : ${result.trackName}
+│  ◦ *Artis* : ${result.artistName}
+│  ◦ *Album* : ${result.albumName}
+│  ◦ *Durasi* : ${Math.floor(result.duration / 60)}:${(result.duration % 60).toString().padStart(2, '0')}
+│
+└─────────────────
 
-    $('div[jsname="U8S5sf"]').each((i, el) => {
-      let out = '';
-      $(el).find('span[jsname="YS01Ge"]').each((j, span) => {
-        out += $(span).text() + '\n';
-      });
-      lirik.push(out.trim());
-    });
-
-    result.lyrics = lirik.join('\n\n');
-    result.title = output.shift();
-    result.subtitle = output.shift();
-    result.platform = output.filter(_=>!_.includes(':'));
-    output.forEach(_=>{
-      if (_.includes(':')){
-        const [ name, value ] = _.split(':');
-        result[name.toLowerCase()] = value.trim();
-      }
-    });
-    return result;
-  } catch (error) {
-    return { error: error.message };
-  }
+${result.lyrics}`;
+        
+        await replyhydro(caption);
+        
+    } catch (error) {
+        console.error("Error di case lirik:", error);
+        replytolak(`❌ Gagal memproses permintaan lirik: ${error.message}`);
+    }
 }
-  if (!text) return m.reply('Masukkan judul lagu yang ingin dicari liriknya.');
-  try {
-    const response = await fetch(`https://r.jina.ai/https://www.google.com/search?q=liirk+lagu+${encodeURIComponent(text)}&hl=en`, {
-      headers: {
-        'x-return-format': 'html',
-        'x-engine': 'cf-browser-rendering',
-      }
-    });
-    const html = await response.text();
-    const $ = cheerio.load(html);
-    const lirik = [];
-    const output = [];
-    const result = {};
-    
-    $('div.PZPZlf').each((i, e) => {
-      const penemu = $(e).find('div[jsname="U8S5sf"]').text().trim();
-      if (!penemu) output.push($(e).text().trim());
-    });
-
-    $('div[jsname="U8S5sf"]').each((i, el) => {
-      let out = '';
-      $(el).find('span[jsname="YS01Ge"]').each((j, span) => {
-        out += $(span).text() + '\n';
-      });
-      lirik.push(out.trim());
-    });
-
-    result.lyrics = lirik.join('\n\n');
-    result.title = output.shift();
-    result.subtitle = output.shift();
-    result.platform = output.filter(_ => !_.includes(':'));
-    output.forEach(_ => {
-      if (_.includes(':')) {
-        const [name, value] = _.split(':');
-        result[name.toLowerCase()] = value.trim();
-      }
-    });
-    if (!result.lyrics) return m.reply('*[ Lirik tidak ditemukan. ]*');
-    let pesan = `*Title :* ${result.title}\n`;
-    if (result.subtitle) pesan += `*Subtitle :* ${result.subtitle}\n`;
-    if (result.platform.length) pesan += `*Platform :* ${result.platform.join(', ')}\n`;
-    Object.keys(result).forEach(key => {
-      if (!['lyrics', 'title', 'subtitle', 'platform'].includes(key)) {
-        pesan += `*${key.replace(/_/g, ' ')} :* ${result[key]}\n`;
-      }
-    });
-    pesan += `\n*Lyrics :*\n${result.lyrics}`;
-
-    m.reply(pesan);
-  } catch (e) {
-    m.reply('Terjadi kesalahan saat mengambil lirik.');
-  }
-}
-break
+break;
 case 'gdrive': {
 		if (!args[0]) return replyhydro(`Silakan Masukan Link gdrive Anda`)
 	reply(mess.wait)
