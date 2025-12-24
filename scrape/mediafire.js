@@ -1,6 +1,7 @@
 const cheerio = require('cheerio');
 const { basename, extname } = require('path');
 const atob = require('atob');
+const fetch = require('node-fetch');
 
 async function mediafire(url) {
   try {
@@ -8,15 +9,13 @@ async function mediafire(url) {
     const $ = cheerio.load(html);
 
     const title = $("meta[property='og:title']").attr("content")?.trim() || "";
-    const size = html.match(/Download \\((.*?)\\)/)?.[1] || "Unknown";
+    const size = html.match(/Download\s+\((.*?)\)/)?.[1] || "Unknown";
 
-    const $a = $("a.popsok")
-      .filter((_, el) => $(el).attr("href") === "javascript:void(0)")
-      .first();
+    const $a = $("a.popsok").filter((_, el) => $(el).attr("href") === "javascript:void(0)").first();
     const b64 = $a.attr("data-scrambled-url");
     const dl = b64 ? atob(b64) : null;
 
-    if (!dl) throw new Error("Missing download URL");
+    if (!dl) throw new Error("Download URL tidak ditemukan.");
 
     return {
       name: title,
@@ -27,8 +26,8 @@ async function mediafire(url) {
       link: url,
     };
   } catch (e) {
-    throw new Error("Failed: " + e.message);
+    throw new Error("Gagal scrape: " + e.message);
   }
 }
 
-module.exports = mediafire; // <- WAJIB untuk bisa dipanggil dari hydro.js
+module.exports = mediafire;
