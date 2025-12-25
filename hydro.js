@@ -42,7 +42,6 @@ const { Sticker, StickerTypes } = require('wa-sticker-formatter')
 const JavaScriptObfuscator = require('javascript-obfuscator');
 const fg = require('api-dylux')
 const { addSewaGroup, checkSewaGroup, getSewaPosition, toMs, msToDate, getGcName, expiredCheck, remindSewa } = require('./lib/sewa');
-const { ttsHololive, hololiveModels } = require('./scrape/holotts');
 const { msgFilter } = require('./lib/antispam')
 const nazekey = global.nz[Math.floor(Math.random() * global.nz.length)]
 const geminikey = global.aiso[Math.floor(Math.random() * global.aiso.length)]
@@ -20022,36 +20021,6 @@ if (!m.isGroup) return replytolak(mess.only.group)
  ]
 }
 break
-case 'holotts': case 'hololive': case 'hololivetts': case 'vnholo': {
-  if (!text) return replyhydro(`❗ Contoh penggunaan:\n${prefix + command} <karakter>|<teks>\n\nContoh:\n${prefix + command} roboco|hello`);
-
-  const [charKey, ...textParts] = text.split('|');
-  const teks = textParts.join('|').trim();
-
-  if (!charKey || !teks) return replyhydro(`❗ Format salah!\nGunakan:\n${prefix + command} <karakter>|<teks>`);
-
-  const karakter = charKey.trim().toLowerCase();
-  if (!Object.keys(hololiveModels).includes(karakter)) {
-    return replyhydro(`❗ Karakter tidak ditemukan!\n\nKarakter yang tersedia:\n${Object.keys(hololiveModels).join(', ')}`);
-  }
-
-  await hydro.sendMessage(m.chat, { react: { text: "🎤", key: m.key } });
-
-  try {
-    const audioUrl = await ttsHololive(teks, karakter);
-
-    await hydro.sendMessage(m.chat, {
-      audio: { url: audioUrl },
-      mimetype: 'audio/mpeg',
-      ptt: true
-    }, { quoted: m });
-
-  } catch (err) {
-    replyhydro(`❌ Gagal membuat TTS: ${err.message}`);
-  }
-
-  break;
-}
 //==================================================================
 case 'tebakkalimat': {
   if (!m.isGroup) return replytolak(mess.only.group)
