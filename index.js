@@ -1,31 +1,9 @@
 require('./settings')
 const { modul } = require('./module');
 const moment = require('moment-timezone');
-const { baileys, boom, chalk, fs, figlet, FileType, path, pino, process, PhoneNumber, axios, yargs, _ } = modul;
-const { Boom } = boom
-const {
-	default: XeonBotIncConnect,
-	BufferJSON,
-	processedMessages,
-	PHONENUMBER_MCC,
-	initInMemoryKeyStore,
-	DisconnectReason,
-	AnyMessageContent,
-        makeInMemoryStore,
-	useMultiFileAuthState,
-	delay,
-	fetchLatestBaileysVersion,
-	generateForwardMessageContent,
-    prepareWAMessageMedia,
-    generateWAMessageFromContent,
-    generateMessageID,
-    downloadContentFromMessage,
-    jidDecode,
-    makeCacheableSignalKeyStore,
-    getAggregateVotesInPollMessage,
-    proto
-} = require("@whiskeysockets/baileys")
-// Override Generator ID Baileys secara Global
+const { boom, chalk, fs, figlet, FileType, path, pino, process, PhoneNumber, axios, yargs, _ } = modul;
+const { Boom } = boom;
+
 const crypto = require('crypto')
 const cfonts = require('cfonts');
 const { color, bgcolor } = require('./lib/color')
@@ -46,8 +24,10 @@ global.sewa = JSON.parse(fs.readFileSync('./database/sewa.json'))
 const { parsePhoneNumber } = require("libphonenumber-js")
 let _welcome = JSON.parse(fs.readFileSync('./database/welcome.json'))
 let _left = JSON.parse(fs.readFileSync('./database/left.json'))
-const makeWASocket = require("@whiskeysockets/baileys").default
-const Pino = require("pino")
+
+const socketon = require('socketon'); // ATAU require('./socketon')
+const makeWASocketon = socketon.makeWASocketon || socketon.default || socketon;
+
 const { randomBytes } = require('crypto')
 const readline = require("readline")
 const colors = require('colors')
@@ -57,7 +37,7 @@ const { imageToWebp, videoToWebp, writeExifImg, writeExifVid } = require('./lib/
 const { smsg, isUrl, generateMessageTag, getBuffer, getSizeMedia, fetchJson, await, sleep, reSize } = require('./lib/myfunc')
 
 const prefix = ''
-let phoneNumber = "6285187063723"
+let phoneNumber = global.botnumber
 global.db = JSON.parse(fs.readFileSync('./database/database.json'))
 if (global.db) global.db = {
 sticker: {},
@@ -70,15 +50,18 @@ chats: {},
 settings: {},
 ...(global.db || {})
 }
-const pairingCode = !!phoneNumber || process.argv.includes("--pairing-code")
 
-const useMobile = process.argv.includes("--mobile")
+// SESUAIKAN DENGAN SOCKETON
+const pairingNumber = phoneNumber; // Untuk socketon
+
 const owner = JSON.parse(fs.readFileSync('./database/owner.json'))
 
-const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })
-const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
+// Socketon mungkin tidak butuh store seperti Baileys
+const store = { contacts: {}, chats: {}, groupMetadata: {} }; // Simpan store manual
 
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 const question = (text) => new Promise((resolve) => rl.question(text, resolve))
+
 require('./hydro.js')
 nocache('../hydro.js', module => console.log(color('[ CHANGE ]', 'green'), color(`'${module}'`, 'green'), 'Updated'))
 require('./index.js')
@@ -86,271 +69,182 @@ nocache('../index.js', module => console.log(color('[ CHANGE ]', 'green'), color
 
 async function hydroInd() {
     await checkVersionUpdate();
-	const {  saveCreds, state } = await useMultiFileAuthState(`./${sessionName}`)
-	const msgRetryCounterCache = new NodeCache()
-    	const hydro = XeonBotIncConnect({
-        logger: pino({ level: 'silent' }),
-        printQRInTerminal: !pairingCode, // popping up QR in terminal log
-      mobile: useMobile, // mobile api (prone to bans)
-     auth: {
-         creds: state.creds,
-         keys: makeCacheableSignalKeyStore(state.keys, Pino({ level: "fatal" }).child({ level: "fatal" })),
-      },
-      browser: [ "Android", "Chrome", "114.0.5735.196" ],
-      patchMessageBeforeSending: (message) => {
-            const requiresPatch = !!(
-                message.buttonsMessage ||
-                message.templateMessage ||
-                message.listMessage
-            );
-            if (requiresPatch) {
-                message = {
-                    viewOnceMessage: {
-                        message: {
-                            messageContextInfo: {
-                                deviceListMetadataVersion: 2,
-                                deviceListMetadata: {},
-                            },
-                            ...message,
-                        },
-                    },
-                };
-            }
-            return message;
-        },
-      auth: {
-         creds: state.creds,
-         keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "silent" }).child({ level: "fatal" })),
-      },
-connectTimeoutMs: 60000,
-defaultQueryTimeoutMs: 0,
-keepAliveIntervalMs: 10000,
-emitOwnEvents: true,
-fireInitQueries: true,
-generateHighQualityLinkPreview: true,
-syncFullHistory: true,
-markOnlineOnConnect: true,
-shouldSyncHistoryMessage: msg => {
-        console.log(color(`\u001B[32mMemuat Chat [${msg.progress || 0}%]\u001B[39m`, 'blue'));
-        return !!msg.syncType;
-    },
-      getMessage: async (key) => {
-            if (store) {
-                const msg = await store.loadMessage(key.remoteJid, key.id)
-                return msg.message || undefined
-            }
-            return {
-                conversation: "Hydro Bot Here!"
-            }
-        },
-      msgRetryCounterCache, // Resolve waiting messages
-      defaultQueryTimeoutMs: undefined, // for this issues https://github.com/WhiskeySockets/Baileys/issues/276
-   })
-    // === ANTI DETEKSI: ID MESSAGE SPOOFING (FIXED) ===
-    const _sendMessage = hydro.sendMessage
-    hydro.sendMessage = async (jid, content, options = {}) => {
-        if (!options.messageId) {
-             options.messageId = randomBytes(16).toString('hex').toUpperCase()
-        }
-        if (content.text) {
-            options.userAgent = "WhatsApp/2.23.13.76 A" 
-        }
-
-        return await _sendMessage(jid, content, options)
-    }
-    // =================================================
-if (!hydro.authState.creds.registered) {
-const phoneNumber = await question('Masukin nomor yang mau dijadikan bot.. contoh: 6285187063723\n');
-const pairinghydro = "FOCABARS";
-let code = await hydro.requestPairingCode(phoneNumber, pairinghydro);
-code = code?.match(/.{1,4}/g)?.join("-") || code;
-console.log(`Ini kodenya:`, code);
-}
-    store.bind(hydro.ev)
-
-hydro.ev.on('connection.update', async (update) => {
-	const {
-		connection,
-		lastDisconnect
-	} = update
-try{
-		if (connection === 'close') {
-			let reason = new Boom(lastDisconnect?.error)?.output.statusCode
-			if (reason === DisconnectReason.badSession) {
-				console.log(`Sesi rusak.. Mohon hapus folder furina`);
-				hydroInd()
-			} else if (reason === DisconnectReason.connectionClosed) {
-				console.log("Koneksi terputus, menghubungkan ulang..");
-				hydroInd();
-			} else if (reason === DisconnectReason.connectionLost) {
-				console.log("Koneksi terputus dari server, menghubungkan ulang..");
-				hydroInd();
-			} else if (reason === DisconnectReason.connectionReplaced) {
-				console.log("Koneksi bertabrakan.. mohon matikan sesi yang sedang bejalan");
-				hydroInd()
-			} else if (reason === DisconnectReason.loggedOut) {
-				console.log(`Sesi terputus.. Mohon hapus folder furina`);
-				hydroInd();
-			} else if (reason === DisconnectReason.restartRequired) {
-				console.log("Membutuhkan restart, Merestart..");
-				hydroInd();
-			} else if (reason === DisconnectReason.timedOut) {
-				console.log("Waktu habis.. Menghubungkan ulang");
-				hydroInd();
-			} else {
-			  console.log(`Kesalahan tidak diketahui: ${reason}|${connection}`)
-			  hydroInd();
-			}
-		}
-		if (update.connection == "connecting" || update.receivedPendingNotifications == "false") {
-			console.log(color(`\n👀Menghubungkan...`, 'yellow'))
-		}
-		if (update.connection == "open" || update.receivedPendingNotifications == "true") {
-			await delay(1999);
-hydro.newsletterFollow('120363416755002041@newsletter')
-hydro.newsletterFollow('120363402564073751@newsletter')
-hydro.newsletterFollow('120363314571321104@newsletter')
-hydro.newsletterFollow('120363422125048324@newsletter')
-		}
-} catch (err) {
-	  console.log('Error in Connection.update '+err)
-	  hydroInd();
-	}
-	
-})
-
-await delay(5555) 
-start(`🌊`)
-
-global.hydro = hydro
-hydro.ev.on('creds.update', await saveCreds)
-
-    // Anti Call
-    hydro.ev.on('call', async (XeonPapa) => {
-    let botNumber = await hydro.decodeJid(hydro.user.id)
-    let XeonBotNum = db.settings[botNumber].anticall
-    if (!XeonBotNum) return
-    console.log(XeonPapa)
-    for (let XeonFucks of XeonPapa) {
-    if (XeonFucks.isGroup == false) {
-    if (XeonFucks.status == "offer") {
-    let XeonBlokMsg = await hydro.sendTextWithMentions(XeonFucks.from, `*${hydro.user.name}* can't receive ${XeonFucks.isVideo ? `video` : `voice` } call. Sorry @${XeonFucks.from.split('@')[0]} you will be blocked. If accidentally please contact the owner to be unblocked !`)
-    hydro.sendContact(XeonFucks.from, global.owner, XeonBlokMsg)
-    await sleep(8000)
-    await hydro.updateBlockStatus(XeonFucks.from, "block")
-    }
-    }
-    }
-    })
     
-hydro.ev.on('messages.upsert', async chatUpdate => {
-try {
-const kay = chatUpdate.messages[0]
-if (!kay.message) return
-kay.message = (Object.keys(kay.message)[0] === 'ephemeralMessage') ? kay.message.ephemeralMessage.message : kay.message
-if (kay.key && kay.key.remoteJid === 'status@broadcast')  {
-await hydro.readMessages([kay.key]) }
-if (!hydro.public && !kay.key.fromMe && chatUpdate.type === 'notify') return
-if (kay.key.id.startsWith('903D') && kay.key.id.length === 14) return
-const m = smsg(hydro, kay, store)
-require('./hydro')(hydro, m, chatUpdate, store)
-} catch (err) {
-console.log(err)}})
-    async function getMessage(key){
-        if (store) {
-            const msg = await store.loadMessage(key.remoteJid, key.id)
-            return msg?.message
-        }
-        return {
-            conversation: "Hydro Bot Ada Di Sini"
-        }
-    }
-    hydro.ev.on('messages.update', async chatUpdate => {
-        for(const { key, update } of chatUpdate) {
-			if(update.pollUpdates && !key.fromMe) {
-				const pollCreation = await getMessage(key)
-				if(pollCreation) {
-				    const pollUpdate = await getAggregateVotesInPollMessage({
-							message: pollCreation,
-							pollUpdates: update.pollUpdates,
-						})
-	                var toCmd = pollUpdate.filter(v => v.voters.length !== 0)[0]?.name
-	                if (toCmd == undefined) return
-                    var prefCmd = prefix+toCmd
-	                hydro.appenTextMessage(prefCmd, chatUpdate)
-				}
-			}
-		}
-    })
-// === Interval Cek Sewa ===
-setInterval(async () => {
-    try {
-        // hapus expired
-        sewa = expiredCheck(sewa)
-
-        // kirim reminder
-        await remindSewa(hydro, sewa)
-
-        // auto keluar grup kalau expired
-        for (let x of sewa) {
-            if (!x.id) continue // fix bug undefined
-            if (x.expired !== "PERMANENT" && x.expired <= Date.now()) {
-                try {
-                    await hydro.sendMessage(x.id, { text: "⏳ Masa sewa habis, bot akan keluar. Terima kasih telah menyewa 🙏" })
-                    await hydro.groupLeave(x.id)
-                } catch (e) {
-                    console.log("Gagal keluar grup:", e)
-                }
-            }
-        }
-    } catch (e) {
-        console.error("Interval sewa error:", e)
-    }
-}, 60 * 60 * 1000) // cek tiap 1 jam
-
-hydro.sendTextWithMentions = async (jid, text, quoted, options = {}) => hydro.sendMessage(jid, { text: text, contextInfo: { mentionedJid: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net') }, ...options }, { quoted })
-
-hydro.decodeJid = (jid) => {
-if (!jid) return jid
-if (/:\d+@/gi.test(jid)) {
-let decode = jidDecode(jid) || {}
-return decode.user && decode.server && decode.user + '@' + decode.server || jid
-} else return jid
-}
-
-hydro.ev.on('contacts.update', update => {
-for (let contact of update) {
-let id = hydro.decodeJid(contact.id)
-if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
-}
-})
-
-hydro.ev.on('groups.update', async (update) => {
-    try {
-        for (let x of update) {
-            if (x.id) {
-                // kalau approval dimatikan (join langsung)
-                if (x.joinApprovalMode === false) {
-                    let idx = sewa.findIndex(s => s.id === x.id && s.status === 'pending');
-                    if (idx !== -1) {
-                        sewa[idx].status = 'active';
-                        fs.writeFileSync('./database/sewa.json', JSON.stringify(sewa, null, 2));
-                        await hydro.sendMessage(x.id, { text: 
-                            `✅ Sewa telah aktif!\n\n` +
-                            `🏷️ Nama : *${await getGcName(x.id)}*\n` +
-                            `🆔 ID   : *${x.id}*\n` +
-                            `⏳ Durasi : *${msToDate(sewa[idx].expired - Date.now())}*`
-                        });
+    const hydro = await makeWASocketon({
+        sessionDir: './bot-session',
+        pairingNumber: phoneNumber,
+        
+        // Event handlers
+        onConnection: async (status) => {
+            if (status === 'open') {
+                console.log(color(`\n✅ Bot terhubung!`, 'green'));
+                await delay(1999);
+                
+                // Simpan user info ke global.hydro
+                global.hydro = {
+                    ...hydro,
+                    user: {
+                        id: hydro.userId || `${phoneNumber}@s.whatsapp.net`,
+                        name: 'Hydro Bot'
+                    },
+                    // Tambahkan method compatibility
+                    decodeJid: (jid) => {
+                        if (!jid) return jid;
+                        if (jid.includes('@s.whatsapp.net')) return jid;
+                        if (jid.includes('@g.us')) return jid;
+                        return jid + '@s.whatsapp.net';
+                    },
+                    getName: async (jid) => {
+                        // Implementasi sederhana
+                        if (jid.endsWith('@g.us')) {
+                            return 'Group';
+                        }
+                        return 'User';
+                    },
+                    sendMessage: hydro.sendMessage || hydro.reply,
+                    groupMetadata: async (jid) => {
+                        return { id: jid, subject: 'Group' };
                     }
+                };
+                
+                console.log('Bot siap digunakan!');
+            } else if (status === 'close') {
+                console.log('Koneksi terputus, mencoba menghubungkan ulang...');
+                setTimeout(hydroInd, 5000);
+            }
+        },
+        
+        onMessage: async (msg) => {
+            try {
+                // Format ulang message untuk kompatibilitas
+                const m = {
+                    ...msg,
+                    from: msg.from || msg.id,
+                    sender: msg.sender || msg.author,
+                    text: msg.body || msg.text || '',
+                    isGroup: msg.isGroup || false
+                };
+                
+                // Simpan ke store jika perlu
+                if (m.sender && !store.contacts[m.sender]) {
+                    store.contacts[m.sender] = { id: m.sender, name: m.pushName || 'User' };
                 }
+                
+                // Panggil handler utama
+                require('./hydro')(hydro, m, { messages: [m] }, store);
+            } catch (err) {
+                console.error('Error in onMessage:', err);
+            }
+        },
+        
+        onGroupJoin: async (msg) => {
+            try {
+                const metadata = await hydro.groupMetadata(msg.id);
+                store.groupMetadata[msg.id] = metadata;
+                
+                // Handle welcome
+                const iswel = _welcome.includes(msg.id);
+                if (iswel) {
+                    const { welcome } = require('./lib/welcome');
+                    await welcome(true, false, hydro, {
+                        id: msg.id,
+                        participants: [msg.author],
+                        action: 'add'
+                    });
+                }
+            } catch (err) {
+                console.error('Error in onGroupJoin:', err);
+            }
+        },
+        
+        onGroupLeave: async (msg) => {
+            try {
+                const isLeft = _left.includes(msg.id);
+                if (isLeft) {
+                    const { welcome } = require('./lib/welcome');
+                    await welcome(false, true, hydro, {
+                        id: msg.id,
+                        participants: [msg.author],
+                        action: 'remove'
+                    });
+                }
+            } catch (err) {
+                console.error('Error in onGroupLeave:', err);
+            }
+        },
+        
+        // Anti Call
+        onCall: async (call) => {
+            let botNumber = hydro.userId;
+            let XeonBotNum = db.settings[botNumber]?.anticall;
+            if (!XeonBotNum) return;
+            
+            if (!call.isGroup && call.status === "offer") {
+                let XeonBlokMsg = await hydro.sendMessage(call.from, 
+                    `*${hydro.user?.name || 'Hydro Bot'}* can't receive ${call.isVideo ? `video` : `voice`} call. Sorry @${call.from.split('@')[0]} you will be blocked. If accidentally please contact the owner to be unblocked!`,
+                    { mentions: [call.from] }
+                );
+                
+                // Send contact if available
+                if (global.owner) {
+                    await hydro.sendContact(call.from, global.owner, XeonBlokMsg);
+                }
+                
+                await sleep(8000);
+                await hydro.updateBlockStatus(call.from, "block");
+            }
+        },
+        
+        // Error handler
+        onError: (error) => {
+            console.error('Socketon Error:', error);
+        }
+    });
+    
+    // Simpan ke global
+    global.hydro = hydro;
+    
+    // Tambahkan method tambahan untuk kompatibilitas
+    hydro.ev = {
+        on: (event, handler) => {
+            // Map event Baileys ke Socketon
+            switch(event) {
+                case 'connection.update':
+                    // Handle di onConnection
+                    break;
+                case 'creds.update':
+                    // Tidak diperlukan di Socketon
+                    break;
+                case 'call':
+                    // Handle di onCall
+                    break;
+                case 'messages.upsert':
+                    // Handle di onMessage
+                    break;
+                case 'group-participants.update':
+                    // Handle di onGroupJoin/onGroupLeave
+                    break;
             }
         }
-    } catch (e) {
-        console.error("groups.update error:", e);
-    }
-});
-
-hydro.getName = (jid, withoutContact  = false) => {
+    };
+    
+    // Fungsi helper untuk kompatibilitas
+    hydro.sendTextWithMentions = async (jid, text, quoted, options = {}) => {
+        const mentions = [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net');
+        return await hydro.sendMessage(jid, { 
+            text: text, 
+            mentions: mentions,
+            ...options 
+        }, { quoted });
+    };
+    
+    hydro.decodeJid = (jid) => {
+        if (!jid) return jid;
+        if (jid.includes('@s.whatsapp.net') || jid.includes('@g.us')) return jid;
+        return jid + '@s.whatsapp.net';
+    };
+    
+   hydro.getName = (jid, withoutContact  = false) => {
 id = hydro.decodeJid(jid)
 withoutContact = hydro.withoutContact || withoutContact 
 let v
@@ -722,12 +616,38 @@ hydro.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
      * @returns 
      */
     hydro.sendPoll = (jid, name = '', values = [], selectableCount = 1) => { return hydro.sendMessage(jid, { poll: { name, values, selectableCount }}) }
-
-return hydro
-
+    
+    // Interval cek sewa (sama seperti sebelumnya)
+    setInterval(async () => {
+        try {
+            sewa = expiredCheck(sewa);
+            await remindSewa(hydro, sewa);
+            
+            for (let x of sewa) {
+                if (!x.id) continue;
+                if (x.expired !== "PERMANENT" && x.expired <= Date.now()) {
+                    try {
+                        await hydro.sendMessage(x.id, { text: "⏳ Masa sewa habis, bot akan keluar. Terima kasih telah menyewa 🙏" });
+                        await hydro.groupLeave(x.id);
+                    } catch (e) {
+                        console.log("Gagal keluar grup:", e);
+                    }
+                }
+            }
+        } catch (e) {
+            console.error("Interval sewa error:", e);
+        }
+    }, 60 * 60 * 1000);
+    
+    return hydro;
 }
-hydroInd()
+
+// Fungsi helper untuk delay
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Jalankan bot
+hydroInd().catch(console.error);
 
 process.on('uncaughtException', function (err) {
-console.log('Caught exception: ', err)
-})
+    console.log('Caught exception: ', err);
+});
