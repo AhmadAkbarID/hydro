@@ -14,16 +14,10 @@
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](COMPLETE_GUIDE.md#contributing) for details.
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+I really appreciate the contributions you all have made, therefore I'm displaying them above.
 
 <a href="https://github.com/IbraDecode/socketon/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=IbraDecode/socketon" alt="contributors" />
+  <img src="https://contrib.rocks/image?repo=AhmadAkbarID/hydro" alt="contributors" />
 </a>
 
 ---
