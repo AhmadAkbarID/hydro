@@ -10,7 +10,25 @@
 <a href="https://github.com/AhmadAkbarID/hydro/pulls?q=is%3Apr+is%3Aclosed"><img title="Pull Request" src="https://img.shields.io/github/issues-pr-closed/AhmadAkbarID/hydro?label=PullRequest&color=red&style=flat-square"></a>
 </div>
 
-This script is created by [Ahmad](https://github.com/AhmadAkbarID) using Node.js and the [WhiskeySocket/Baileys](https://github.com/WhiskeySockets/Baileys) library. The script is currently in the development phase (BETA), so there may still be some errors that can be ignored. If errors persist even after debugging, please contact the owner for assistance. ~ By Ahmad
+---
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](COMPLETE_GUIDE.md#contributing) for details.
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+<a href="https://github.com/IbraDecode/socketon/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=IbraDecode/socketon" alt="contributors" />
+</a>
+
+---
+
+This script is created by [Ahmad](https://github.com/AhmadAkbarID) using Node.js and the [Socketon](https:://npmjs.com/package/socketon) library. The script is currently in the development phase (BETA), so there may still be some errors that can be ignored. If errors persist even after debugging, please contact the owner for assistance. ~ By Ahmad
 
 #### Join Group
 [![Grup WhatsApp](https://img.shields.io/badge/WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/DPdgVJLsKGk2U3feeuk9cw) 
