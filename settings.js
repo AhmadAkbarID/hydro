@@ -18,12 +18,11 @@ global.ig = '@focabar'
 global.tele = 'miminhydro'
 global.ttowner = '@focabar'
 global.ownername = 'FocaBars'
-global.owner = ['6285187063723'] // SETTING JUGA DI FOLDER DATABASE 
+global.owner = ['6285187063723','6288276554694'] // SETTING JUGA DI FOLDER DATABASE 
 global.ownernomer = '6285187063723'
 global.socialm = 'GitHub: -'
 global.location = 'Indonesia' 
 //========================Setting API=====================\\
-global.rotp = 'otp_WGMiBdzfbDWpnyZf'
 global.nz = [
     'nz-e98e71fd41',
     'nz-f0ccb09fe1',
@@ -31,25 +30,9 @@ global.nz = [
     'nz-97bf45bd87',
     'nz-4ce5fb3be3'
     ]
-global.aiso = [
-    'AIzaSyBhUYKWmbG8BpGsBsm2QiEBzJhufdSwq1w',
-    'AIzaSyDOPNhY2hIMnYPaUNRpHDmhMR04xau18xE',
-    'AIzaSyCpX7QkYD4uKMxg3AaQjffWV8M6ZixfNsk',
-    'AIzaSyB38oowbo9Q5hBsvgbx0q3BLtRdF9A_l-U',
-    'AIzaSyAkO0aCzjVkNNQah_twiwWenC4vc6QBhvs',
-    'AIzaSyAJhP3ffhBXYY_h5-OUFjLVbWGZWDvoIOs',
-    'AIzaSyAF-DA3wbbhLOZweeoNXQ8vO1ULVOVKCsE',
-    'AIzaSyBeNgb-GOFYR5f2q5UY13AUpWmDcN8ziI4'
-    ]
 global.frch = [
-    '2ac6db40b186ebddcd359782c652552defdb3745d8e25124acf53a45ed535549',
-    '7f28014dc52133378100170da05e50b5d9c26d45f3af5c891c2141aee9fbc58b',
-    '615ab71a6766295a82b529c695db5956d2ae943cc1e8c3cc470ecbe97e0f772f',
-    '9341744c45536d9370fba2e953bfe538d8465019d7f9582a4e61331e66b260cb',
-    'e6b2851dbfbc98817f92c9f0f53a2506ee097b7abc8d9f82349b77b308894234',
-    'fed89247615189b1640800f4ca7b1df07f159df5d84446cbce206ea95349e2bd',
-    'da3fb578e45b4d1117ccc1a4d23b5be0b0f8a9608806731e882580bf0b296f89',
-    '87792bbc7341e34e1dd27304bf6380dd28e4e0d504f5606439044ddc3f43bdb3'
+    "29015f61cbaa2b36f26bcd61c0b087c0421e4f8f16c67809d4b67091863bf483",
+    "3b00b2f1d5201dee96ed46eca909ef4be8abdbad1bc876fe6384bc42256ed24f"
     ] // Kalo mau nambah api sendiri ke https://asitha.top/login?ref=ahmadakb6455
 //========================setting Payment=====================\\
 global.nodana = '085187063723' // KOSONG KAN JIKA TIDAK ADA
@@ -246,6 +229,8 @@ global.doc3 = 'application/vnd.openxmlformats-officedocument.wordprocessingml.do
 global.doc4 = 'application/zip'
 global.doc5 = 'application/pdf'
 global.doc6 = 'application/vnd.android.package-archive'
+global.supaurl = 'https://uzyzpgujphlmesbmcwca.supabase.co'
+global.supakey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6eXpwZ3VqcGhsbWVzYm1jd2NhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUwNjQwMjcsImV4cCI6MjA3MDY0MDAyN30.SwjgDAcEDLvjmzKzxHPdtHdjLbH1Zsr20MbPI4s6F94'
 
 let file = require.resolve(__filename)
 fs.watchFile(file, () => {

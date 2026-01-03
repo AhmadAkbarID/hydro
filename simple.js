@@ -13,7 +13,7 @@ const {
     generateWAMessageFromContent,
     WAMessageStubType,
     WA_DEFAULT_EPHEMERAL,
-} = require('socketon')
+} = require('@whiskeysockets/baileys')
 const { toAudio, toPTT, toVideo } = require('./converter')
 const chalk = require('chalk')
 const fetch = require("node-fetch")
@@ -1006,7 +1006,7 @@ hydro.setBio = async (status) => {
     m = M.fromObject(m)
     if (m.key) {
         m.id = m.key.id
-        m.isBaileys = m.id && m.id.length === 16 || m.id.startsWith('3EB0') && m.id.length === 12 || false
+        m.isBaileys = m.id && m.id.length === 16 || false 
         m.chat = hydro.decodeJid(m.key.remoteJid || message.message?.senderKeyDistributionMessage?.groupId || '')
         m.isGroup = m.chat.endsWith('@g.us')
         m.sender = hydro.decodeJid(m.key.fromMe && hydro.user.id || m.participant || m.key.participant || m.chat || '')
