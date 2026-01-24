@@ -325,7 +325,7 @@ hydro.ev.emit('messages.upsert', msg)
         const text = args.join(" ")
         const q = text
         const quoted = m.quoted ? m.quoted : m
-        const mime = (q.msg || q).mimetype || ''
+        const mime = (quoted.msg || quoted).mimetype || ''
         const qmsg = (quoted.msg || quoted)
         const isMedia = /image|video|sticker|audio/.test(mime)
         const isImage = (type == 'imageMessage')
@@ -396,7 +396,7 @@ hydro.ev.emit('messages.upsert', msg)
     	const mentionUser = [...new Set([...(m.mentionedJid || []), ...(m.quoted ? [m.quoted.sender] : [])])]
     	const mentionByTag = type == 'extendedTextMessage' && m.message.extendedTextMessage.contextInfo != null ? m.message.extendedTextMessage.contextInfo.mentionedJid : []
         const mentionByReply = type == 'extendedTextMessage' && m.message.extendedTextMessage.contextInfo != null ? m.message.extendedTextMessage.contextInfo.participant || '' : ''
-    const numberQuery = text.replace(new RegExp('[()+-/ +/]', 'gi'), '') + '@s.whatsapp.net'
+    const numberQuery = q.replace(new RegExp('[()+-/ +/]', 'gi'), '') + '@s.whatsapp.net'
         const usernya = mentionByReply ? mentionByReply : mentionByTag[0]
         const Input = mentionByTag[0] ? mentionByTag[0] : mentionByReply ? mentionByReply : q ? numberQuery : false
     	const isEval = body.startsWith('=>')
