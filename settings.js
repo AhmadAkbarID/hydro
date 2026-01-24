@@ -12,6 +12,7 @@ global.antispam = false//auto kick spammer (true to on, false to off)
 global.channel = '120363416755002041@newsletter' // GANTI DENGAN ID CHMU KALO ADA
 global.channeln = 'HYDRO COMMUNITY 📢📦' // GANTI DENGAN NAMA CH MU
 //===============SETTING MENU==================\\
+global.prefix = ['','!','.','#','&']
 global.thumbnail = 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg'
 global.music = 'https://raw.githubusercontent.com/AhmadAkbarID/media/main/menu.mp3'
 global.ig = '@focabar'
@@ -34,6 +35,7 @@ global.frch = [
     "29015f61cbaa2b36f26bcd61c0b087c0421e4f8f16c67809d4b67091863bf483",
     "3b00b2f1d5201dee96ed46eca909ef4be8abdbad1bc876fe6384bc42256ed24f"
     ] // Kalo mau nambah api sendiri ke https://asitha.top/login?ref=ahmadakb6455
+global.rotp = "otp_taAmmgLxiZKDDfLb"
 //========================setting Payment=====================\\
 global.nodana = '085187063723' // KOSONG KAN JIKA TIDAK ADA
 global.nogopay = '085187063723' // KOSONG KAN JIKA TIDAK ADA 
@@ -59,8 +61,8 @@ global.packname = "HYDRO"
 global.author = "\n\n\n\n\nDibuat Oleh Asisten Hydro\nNo hape/wa : 6283867608750"
 global.creator = "6285187063723@s.whatsapp.net"
 //======================== CPANEL FITUR ===========================\\
-global.domain = 'https://panel.hydroarchon.xyz' // Isi Domain Lu jangan kasih tanda / di akhir link
-global.apikey = 'ptla_rBcXGJhiY4FHkclS6xVVcPk5gu5tGMUTfn6PWhEIsyq' // Isi Apikey Plta Lu
+global.domain = 'https://panel.sekedarstore.com' // Isi Domain Lu jangan kasih tanda / di akhir link
+global.apikey = 'ptla_RiqNf0iCr6s08DLTwkXgWndOhZRJ4VxKRi4oJG4Wtu6' // Isi Apikey Plta Lu
 global.capikey = 'ptlc_dHqgrA1oZZ0n6AA4hiT2uCKGKHpKxU5xjL1bxAJPKDx' // Isi Apikey Pltc Lu
 //=========================================================//
 global.apiDigitalOcean = "-"
@@ -74,7 +76,7 @@ global.docker2 = "ghcr.io/cekilpedia/vip:sanzubycekil" //jangan di ubah
 global.eggsnya2 = '15' // id eggs yang dipakai
 global.location2 = '1' // id location
 //===========================//
-global.virtuSimApiKey = 'k6R8Zfw1xGVBdgPvO5hNyuS'
+global.virtuSimApiKey = 'k6R8Z1xGVBdgPvO5hNyuS'
 global.domainotp = "https://claudeotp.com/api"
 global.eggsnya = '15' // id eggs yang dipakai
 global.nodes = '2'
@@ -205,7 +207,6 @@ global.rpg = {
 }
 
 //new
-global.prefix = ['','!','.','#','&']
 global.sessionName = 'furina'
 global.hituet = 0
 //media target

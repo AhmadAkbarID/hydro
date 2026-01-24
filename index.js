@@ -43,6 +43,9 @@ const {
   getGcName 
 } = require('./lib/sewa')
 global.sewa = JSON.parse(fs.readFileSync('./database/sewa.json'))
+let autoCloseDB = JSON.parse(fs.readFileSync('./database/autoco.json'));
+function saveAutoClose() {
+    fs.writeFileSync('./database/autoco.json', JSON.stringify(autoCloseDB, null, 2))}
 const { parsePhoneNumber } = require("libphonenumber-js")
 let _welcome = JSON.parse(fs.readFileSync('./database/welcome.json'))
 let _left = JSON.parse(fs.readFileSync('./database/left.json'))
@@ -135,13 +138,7 @@ shouldSyncHistoryMessage: msg => {
         return !!msg.syncType;
     },
       getMessage: async (key) => {
-            if (store) {
-                const msg = await store.loadMessage(key.remoteJid, key.id)
-                return msg.message || undefined
-            }
-            return {
-                conversation: "Hydro Bot Here!"
-            }
+            return null;
         },
       msgRetryCounterCache, // Resolve waiting messages
       defaultQueryTimeoutMs: undefined, // for this issues https://github.com/WhiskeySockets/Baileys/issues/276
@@ -254,13 +251,7 @@ require('./hydro')(hydro, m, chatUpdate, store)
 } catch (err) {
 console.log(err)}})
     async function getMessage(key){
-        if (store) {
-            const msg = await store.loadMessage(key.remoteJid, key.id)
-            return msg?.message
-        }
-        return {
-            conversation: "Hydro Bot Ada Di Sini"
-        }
+        return null;
     }
     hydro.ev.on('messages.update', async chatUpdate => {
         for(const { key, update } of chatUpdate) {
@@ -279,6 +270,37 @@ console.log(err)}})
 			}
 		}
     })
+// Auto CO
+setInterval(async () => {
+    const now = moment.tz('Asia/Jakarta').format('HH:mm')
+    let needsSave = false
+    for (const groupId in autoCloseDB) {
+        const config = autoCloseDB[groupId]
+        if (!config.status) continue
+        if (now === config.tutup || now === config.buka) {
+            try {
+                const metadata = await hydro.groupMetadata(groupId)
+                if (now === config.tutup && !metadata.announce) {
+                    await hydro.groupSettingUpdate(groupId, 'announcement')
+                    await hydro.sendMessage(groupId, {
+                        text: `🌙 *Selamat Malam Semua!*\nGrup ini telah *ditutup otomatis* pada *${config.tutup} WIB*.\n\n🛌 Waktunya istirahat~`
+                    })
+                }
+                if (now === config.buka && metadata.announce) {
+                    await hydro.groupSettingUpdate(groupId, 'not_announcement')
+                    await hydro.sendMessage(groupId, {
+                        text: `☀️ *Selamat Pagi!*\nGrup ini telah *dibuka otomatis* pada *${config.buka} WIB*.\n\n💬 Selamat ngobrol dan semangat harinya! 🌻`
+                    })
+                }
+            } catch (e) {
+                autoCloseDB[groupId].status = false
+                needsSave = true
+            }
+        }
+    }
+    if (needsSave && typeof saveAutoClose === 'function') saveAutoClose()
+}, 60000)
+// Sewa
 setInterval(async () => {
     try {
         const now = Date.now()
