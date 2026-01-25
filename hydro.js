@@ -16365,7 +16365,6 @@ case 'edit': case 'editimg': case 'editimage': case 'editgambar': case 'nanobana
 
   try {
     let imgData = await qmsg.download();
-
     let resultUrl = await nanoEdit(imgData, text);
 
     await hydro.sendMessage(m.chat, { react: { text: '✅', key: m.key } });
@@ -16374,7 +16373,7 @@ case 'edit': case 'editimg': case 'editimage': case 'editgambar': case 'nanobana
       m.chat,
       {
         image: { url: resultUrl },
-        caption: `✅ *Editing Image*\n📝 Prompt: ${text}`
+        caption: `✅ *Editimg Image*\n📝 Prompt: ${text}`
       },
       { quoted: m }
     );
@@ -16385,7 +16384,7 @@ case 'edit': case 'editimg': case 'editimage': case 'editgambar': case 'nanobana
     replytolak('❌ Gagal mengedit gambar.');
   }
 }
-break;
+break
 case 'putihkan': case 'cerahkan': {
   let qmsg = m.quoted ? m.quoted : m;
   let mime = (qmsg.msg || qmsg).mimetype || "";
