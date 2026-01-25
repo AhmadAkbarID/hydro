@@ -9,18 +9,18 @@ global.autokickmorroco = false //auto kick 212 (true to on, false to off)
 global.antispam = false//auto kick spammer (true to on, false to off)
 
 //===============SETTING MENU==================\\
-global.channel = '120363416755002041@newsletter' // GANTI DENGAN ID CHMU KALO ADA
+global.channel = '0029Vb6DhliL2AU4vfMaZ32t@newsletter' // GANTI DENGAN ID CHMU KALO ADA
 global.channeln = 'HYDRO COMMUNITY 📢📦' // GANTI DENGAN NAMA CH MU
 //===============SETTING MENU==================\\
 global.prefix = ['','!','.','#','&']
 global.thumbnail = 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg'
 global.music = 'https://raw.githubusercontent.com/AhmadAkbarID/media/main/menu.mp3'
 global.ig = '@focabar'
-global.tele = 'miminhydro'
-global.ttowner = '@focabar'
-global.ownername = 'FocaBars'
-global.owner = ['6285187063723','6288276554694'] // SETTING JUGA DI FOLDER DATABASE 
-global.ownernomer = '6285187063723'
+global.tele = '--'
+global.ttowner = '@Lanzroblox_03'
+global.ownername = 'ASRULXD'
+global.owner = ['6282323053210','62'] // SETTING JUGA DI FOLDER DATABASE 
+global.ownernomer = '6282323053219'
 global.socialm = 'GitHub: -'
 global.location = 'Indonesia' 
 //========================Setting API=====================\\
@@ -37,19 +37,19 @@ global.frch = [
     ] // Kalo mau nambah api sendiri ke https://asitha.top/login?ref=ahmadakb6455
 global.rotp = "otp_taAmmgLxiZKDDfLb"
 //========================setting Payment=====================\\
-global.nodana = '085187063723' // KOSONG KAN JIKA TIDAK ADA
-global.nogopay = '085187063723' // KOSONG KAN JIKA TIDAK ADA 
+global.nodana = '082323053219' // KOSONG KAN JIKA TIDAK ADA
+global.nogopay = '082323053219' // KOSONG KAN JIKA TIDAK ADA 
 global.noovo = false // KOSONG KAN JIKA TIDAK ADA
 //==================setting Payment Name===========================\\
 global.andana = 'foca / Ahmad Akbar' // KOSONG KAN JIKA TIDAK ADA
-global.angopay = 'Ahmad Akbar' // KOSONG KAN JIKA TIDAK ADA
+global.angopay = 'ASRULXD' // KOSONG KAN JIKA TIDAK ADA
 global.anovo = false // KOSONG KAN JIKA TIDAK ADA
 //==================setting bot===========================\\
-global.botname = "Asisten Hydro 🌊"
-global.ownernumber = '6285187063723'
-global.botnumber = '6283867608750'
-global.ownername = 'FocaBars'
-global.ownerNumber = ["6285187063723@s.whatsapp.net"]
+global.botname =  "ASISTEN ASRULXD"
+global.ownernumber = '6282323053219'
+global.botnumber = '6285751102517'
+global.ownername = 'ASRUL'
+global.ownerNumber = ["6282323053219@s.whatsapp.net"]
 global.ownerweb = ""
 global.websitex = ""
 global.wagc = "https://chat.whatsapp.com/LqCKICVcCgiJcrxttSRci3"
@@ -58,8 +58,8 @@ global.themeemoji = '🏞️'
 global.wm = "Asisten Hydro ||| WhatsApps Bots"
 global.botscript = 'Dah gede nyari sc 🗿🖕' //script link
 global.packname = "HYDRO"
-global.author = "\n\n\n\n\nDibuat Oleh Asisten Hydro\nNo hape/wa : 6283867608750"
-global.creator = "6285187063723@s.whatsapp.net"
+global.author = "\n\n\n\n\nDibuat Oleh Asisten Hydro\nNo hape/wa : 6282323053219"
+global.creator = "6282323053219@s.whatsapp.net"
 //======================== CPANEL FITUR ===========================\\
 global.domain = 'https://panel.sekedarstore.com' // Isi Domain Lu jangan kasih tanda / di akhir link
 global.apikey = 'ptla_RiqNf0iCr6s08DLTwkXgWndOhZRJ4VxKRi4oJG4Wtu6' // Isi Apikey Plta Lu
