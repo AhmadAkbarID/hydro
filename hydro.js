@@ -3514,7 +3514,7 @@ hydro.ev.emit('messages.upsert', msg)
  
 if (isCmd && !m.key.fromMe) {
     const user = global.db.users[m.sender]
-    const restrictedCmds = ['menu', 'allmenu', 'brat', 'bratvid', 'iqc', 'hd', 'play', 'ytmp4', 'ytmp4']
+    const restrictedCmds = ['menu', 'allmenu', 'brat', 'bratvid', 'iqc', 'hd', 'play', 'ytmp3', 'ytmp4']
     
     if (user && !user.registered && restrictedCmds.includes(command)) {
         return hydro.sendMessage(m.chat, {
