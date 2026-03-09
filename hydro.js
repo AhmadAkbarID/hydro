@@ -104,9 +104,7 @@ try {
     const Ahmad = [...(global.owner || []), global.ownernomer, global.botnumber]
         .map(v => v ? v.replace(/[^0-9]/g, '') + '@s.whatsapp.net' : '')
         .includes(m.sender);
-        
-    if (m.key.fromMe) return;
-
+    
     const rawId = String(m.key.id || '');
     const baseId = rawId.split('-')[0];
 
@@ -116,7 +114,7 @@ try {
     if (baseId.match(/[^0-9A-F]/gi)) isOtherBot = true;
     if (baseId.length !== 32 && !baseId.startsWith('3EB0') && !baseId.startsWith('3A')) isOtherBot = true;
 
-    if (isOtherBot && !Ahmad) return; 
+    if (isOtherBot && !Ahmad && !m.key.fromMe) return;
     
     const text = args.join(" ")
     const q = text
