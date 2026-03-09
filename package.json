@@ -1,0 +1,44 @@
+{
+  "name": "Hydro-Termux",
+  "version": "1.0.0",
+  "description": "Hydro Support Termux",
+  "main": "index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "whatsapp",
+    "base",
+    "bot",
+    "bot-termux"
+  ],
+  "author": "AhmadAkbarID",
+  "license": "MIT",
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "awesome-phonenumber": "^5.9.0",
+    "axios": "^0.24.0",
+    "cfonts": "^3.3.0",
+    "chalk": "^4.1.2",
+    "colors": "^1.4.0",
+    "figlet": "^1.5.0",
+    "file-type": "^16.5.3",
+    "fluent-ffmpeg": "^2.1.3",
+    "human-readable": "^0.2.1",
+    "jimp": "^0.16.13",
+    "libphonenumber-js": "^1.10.0",
+    "lodash": "^4.17.21",
+    "moment-timezone": "^0.5.48",
+    "node-fetch": "^2.7.0",
+    "node-webpmux": "^3.2.1",
+    "performance-now": "^2.1.0",
+    "pino": "^7.0.5",
+    "quickchart-js": "^3.1.3",
+    "socketon": "latest",
+    "yargs": "^17.2.1"
+  }
+}
