@@ -2,8 +2,9 @@ const chalk = require("chalk")
 const fs = require("fs")
 
 // ======================== Setting Menu & Media ===================== \\
-/*
+
 global.prefix = ['','!','.','#','&']
+/*
 global.thumbnail = 'https://raw.githubusercontent.com/AhmadAkbarID/media/refs/heads/main/menu.jpg' 
 global.music = 'https://raw.githubusercontent.com/AhmadAkbarID/media/main/menu.mp3'
 global.defaultpp = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
