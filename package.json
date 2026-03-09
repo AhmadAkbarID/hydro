@@ -17,7 +17,7 @@
     "bot-termux"
   ],
   "author": "AhmadAkbarID",
-  "license": "MIT",
+  "license": "GPLv3",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "awesome-phonenumber": "^5.9.0",
